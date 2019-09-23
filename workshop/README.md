@@ -1,8 +1,8 @@
-# Telco Churn Workshop
+# Cloud Native Applications Workshop
 
 ## Agenda
 
-We'll be using the Cloud Pak for Data platform to perform the following tasks:
+We'll be using the Cloud Pak for Applications platform to perform the following tasks:
 
 * **Pre-work**
   * Setting up a project
