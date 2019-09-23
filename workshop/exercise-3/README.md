@@ -45,7 +45,7 @@ Spend an minute looking through the sections of the notebook to get an overview.
 
 ### Get transactions for Explainability
 
-Under `8.9 Identify transactions for Explainability` run the cell. It will produce a series of UIDs for indidvidual ML scoring transactions. Copy one of them to examine in the next section.
+Under `8.9 Identify transactions for Explainability` run the cell. It will produce a series of UIDs for individual ML scoring transactions. Copy one of them to examine in the next section.
 
 ## 2. Utilize the dashboard for Openscale
 
@@ -59,7 +59,7 @@ Click on the left-hand menu icon for `Insights`, then choose the tile for your c
 
 You can see the top monitor highlighted, for the feature `Sex`.
 
-By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to veiw the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
+By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to view the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
 
 ![OpenScale Fairness Monitor](../.gitbook/assets/images/aios/OpenScaleFairnessMonitor.png)
 
