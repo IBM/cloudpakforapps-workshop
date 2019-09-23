@@ -116,7 +116,7 @@ Verify all the rows were loaded. Click `Load More Data` to continue.
 
 ![Data has been loaded!](../.gitbook/assets/images/db2/db2-6-csv-loaded.png)
 
-Repeat the process for [`products.csv`](../../data/split/products.csv) and [`customer-service.csv`](../../data/split/customer-service.csv), call these tables `PRODUCTS` and `CUSTOMERS`. Note that there will be an additional panel to configure data, the defaults are accetable.
+Repeat the process for [`products.csv`](../../data/split/products.csv) and [`customer-service.csv`](../../data/split/customer-service.csv), call these tables `PRODUCTS` and `CUSTOMERS`. Note that there will be an additional panel to configure data, the defaults are acceptable.
 
 ![Repeat the process for the other data sets](../.gitbook/assets/images/db2/db2-8-csv-config-products.png)
 
@@ -149,7 +149,7 @@ At this point of the workshop we will be using Cloud Pak for Data for the remain
 
 ### Log into Cloud Pak for Data
 
-Launch a browser and naviate to your Cloud Pak for Data deployment
+Launch a browser and navigate to your Cloud Pak for Data deployment
 
 > **NOTE** Your instructor will provide a URL and credentials to log into Cloud Pak for Data!
 
@@ -165,6 +165,6 @@ Click on *New project*
 
 ![Start a new project](../.gitbook/assets/images/manage/cpd-new-project.png)
 
-Create a new project, choose `Analytics project`, give it a unique name, and click *OK. Click `Create` on the next screen.
+Create a new project, choose `Analytics project`, give it a unique name, and click *OK*. Click `Create` on the next screen.
 
 ![Pick a name](../.gitbook/assets/images/manage/cpd-new-project-name.png)
