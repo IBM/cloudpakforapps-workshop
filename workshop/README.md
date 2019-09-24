@@ -37,7 +37,7 @@ We'll be using the Cloud Pak for Applications platform to perform the following 
   * Run locally in Rapid Local Deevloperment Mode
   * Deploy to your local kubernetes (?)
   
-### Kabanero for Operators  (Common Track)
+### Kabanero for All  (Common Track)
 
 * **Deploy Application from Customer Stack & Repository**
   * Build and deploy an application using the customer stack, repository and pipelines build by the Architects' and Operators' tracks
