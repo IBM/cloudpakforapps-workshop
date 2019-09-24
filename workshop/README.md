@@ -37,8 +37,8 @@ We'll be using the Cloud Pak for Applications platform to perform the following 
   
 ### Kabanero for All  (Common Track)
 
-* **Deploy Application from Customer Stack & Repository**
-  * Build and deploy an application using the custom stack, repository and pipelines build by the Architects' and Operators' tracks
+* **Deploy Application from Custom Stack & Repository**
+  * Build and deploy an application using the custom stack, repository and pipelines built by the Architects' and Operators' tracks
   
 ## About Cloud Pak for Applications
 
