@@ -1,4 +1,6 @@
-# Exercise 3: Monitoring models
+# Exercise 3: Deploying to OpenShift with Appsody
+
+(Rewrite everything beow this line)
 
 This section is broken up into the following steps:
 
