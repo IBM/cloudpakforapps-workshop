@@ -30,15 +30,15 @@ We'll be using the Cloud Pak for Applications platform to perform the following 
   
 ### Kabanero for Operators  (Track 2)
 
-* **Building a Simple Tekton pipeline**
+* **Building a simple Tekton pipeline**
   * ?
 * **Create a Tekton pipleline for a custom collection**
   * Build a pipeline that will fit into a custom Kabanero collection
   
 ### Kabanero for All  (Common Track)
 
-* **Deploy Application from Customer Stack & Repository**
-  * Build and deploy an application using the custom stack, repository and pipelines build by the Architects' and Operators' tracks
+* **Deploy Application from Custom Stack & Repository**
+  * Build and deploy an application using the custom stack, repository and pipelines built by the Architects' and Operators' tracks
   
 ## About Cloud Pak for Applications
 
