@@ -4,23 +4,47 @@
 
 We'll be using the Cloud Pak for Applications platform to perform the following tasks:
 
-* **Pre-work**
-  * Setting up a project
-  * About the data set
-  * (Optional) Seeding our Db2 database
-* **Data Analysis**
-  * Add a new Data Source connection
-  * Virtualize Db2 data with Data Virtualization
-  * Visualize data with Cognos Dashboards
-* **Machine Learning**
-  * Build a model with Spark
-  * Deploying a model with Watson Machine Learning
-  * Testing the model with built-in UI
-  * (Optional) Create a Python Flask app that uses the model
-* **Monitoring models**
-  * Monitor model with Watson OpenScale
+### Kabanero for Developers (Common Track)
 
-## About Cloud Pak for Data
+* **Pre-work**
+  * Configuring your envionment with Docker, git, (a local kubernetes cluster ?) and access to IBM Managed OpenShift
+* **Appsody with Codewind**
+  * Install Appsody into the IDE with Codewind
+  * Learn about the developer flow, building your first application with Appsody
+* **Using Appsody CLI to develop/test/debug applications**
+  * Use the Appsody CLI to quickly create a backend and frontend applications for a sample applciation using two different technologies (Spring and nodejs express)
+  * Run locally in Rapid Local Deevloperment Mode
+  * Deploy to your local kubernetes (?)
+* **Deploying to OpenShift with Appsody**
+  * Deploy the build application to IBM Managed OpenShift
+
+### Kabanero for Solution Architects (Track 1)
+
+* **Building a custom Appsody Stack repository**
+  * Create a repository that will contain custom appsody stacks
+  * Learn how to manage these custom stacks and how to make them available to developers.
+* **Customizing an existing Appsody Stack**
+  * Create a customer stack, to be hosted in our customer repository
+* **Building your own Appsody Stack**
+  * (Do we want to do this as part of this workshop?)
+  
+### Kabanero for Operators  (Track 2)
+
+* **Building a Simple Tekton pipeline**
+  * ?
+* **Create a Tekton pipleline for a custom collection**
+  * Build a pipeline that will fit into a custom Kabanero collection
+  * Run locally in Rapid Local Deevloperment Mode
+  * Deploy to your local kubernetes (?)
+  
+### Kabanero for Operators  (Common Track)
+
+* **Deploy Application from Customer Stack & Repository**
+  * Build and deploy an application using the customer stack, repository and pipelines build by the Architects' and Operators' tracks
+  
+## About Cloud Pak for Applications
+
+(Rewrite the below to Applications)...
 
 Cloud Pak for Data represents an all-in-one platform for all your data needs. Cloud Pak for data tries to eliminate silos between Architect, Data Scientist, Developer, and Data Stewards. Cloud Pak for Data helps to streamline work by creating a pipeline for collecting, organizing, analyzing, and consuming data.
 
