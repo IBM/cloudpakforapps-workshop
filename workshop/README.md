@@ -12,11 +12,11 @@ We'll be using the Cloud Pak for Applications platform to perform the following 
   * Install Appsody into the IDE with Codewind
   * Learn about the developer flow, building your first application with Appsody
 * **Using Appsody CLI to develop/test/debug applications**
-  * Use the Appsody CLI to quickly create a backend and frontend applications for a sample applciation using two different technologies (Spring and nodejs express)
-  * Run locally in Rapid Local Deevloperment Mode
+  * Use the Appsody CLI to quickly create frontend and backend applications for a sample application using two different technologies (Spring and nodejs express)
+  * Run locally in Rapid Local Devlopement Mode
   * Deploy to your local kubernetes (?)
 * **Deploying to OpenShift with Appsody**
-  * Deploy the build application to IBM Managed OpenShift
+  * Deploy the built applications to IBM Managed OpenShift
 
 ### Kabanero for Solution Architects (Track 1)
 
@@ -24,7 +24,7 @@ We'll be using the Cloud Pak for Applications platform to perform the following 
   * Create a repository that will contain custom appsody stacks
   * Learn how to manage these custom stacks and how to make them available to developers.
 * **Customizing an existing Appsody Stack**
-  * Create a customer stack, to be hosted in our customer repository
+  * Create a custom stack, to be hosted in our custom repository
 * **Building your own Appsody Stack**
   * (Do we want to do this as part of this workshop?)
   
@@ -34,13 +34,11 @@ We'll be using the Cloud Pak for Applications platform to perform the following 
   * ?
 * **Create a Tekton pipleline for a custom collection**
   * Build a pipeline that will fit into a custom Kabanero collection
-  * Run locally in Rapid Local Deevloperment Mode
-  * Deploy to your local kubernetes (?)
   
 ### Kabanero for All  (Common Track)
 
 * **Deploy Application from Customer Stack & Repository**
-  * Build and deploy an application using the customer stack, repository and pipelines build by the Architects' and Operators' tracks
+  * Build and deploy an application using the custom stack, repository and pipelines build by the Architects' and Operators' tracks
   
 ## About Cloud Pak for Applications
 
