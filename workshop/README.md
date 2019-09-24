@@ -42,9 +42,9 @@ We'll be using the Cloud Pak for Applications platform to perform the following 
   
 ## About Cloud Pak for Applications
 
-(Rewrite the below to Applications)...
+IBM® Cloud Pak for Applications is an enterprise-ready, containerized software solution for modernizing existing applications and developing new cloud-native apps that run on Red Hat® OpenShift®. Built on IBM WebSphere® offerings and Red Hat OpenShift Container Platform with IBM Kabanero Enterprise, Cloud Pak for Applications provides a long-term solution to help you transition between public, private, and hybrid clouds, and create new business applications.
 
-Cloud Pak for Data represents an all-in-one platform for all your data needs. Cloud Pak for data tries to eliminate silos between Architect, Data Scientist, Developer, and Data Stewards. Cloud Pak for Data helps to streamline work by creating a pipeline for collecting, organizing, analyzing, and consuming data.
+(Rewrite the below to Applications)...
 
 ![Cloud Pak for Data pipeline](.gitbook/assets/images/generic/cp4data.png)
 
