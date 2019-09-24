@@ -1,5 +1,7 @@
 # Pre-work
 
+(Rewrite everything beow this line)
+
 This section is broken up into the following steps:
 
 1. [Clone the repo](#1-clone-the-repo)
