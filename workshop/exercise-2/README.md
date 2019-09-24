@@ -1,4 +1,6 @@
-# Exercise 2: Machine Learning
+# Exercise 2: Using Appsody CLI to develop/test/debug applications
+
+(Rewrite everything beow this line)
 
 This section is broken up into the following steps:
 
