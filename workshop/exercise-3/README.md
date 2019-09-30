@@ -19,9 +19,9 @@ In order to deploy the applications to the IBM Cloud Kubernetes Service, complet
 
 * [Create a private container registry in IBM Cloud Container Registry](https://cloud.ibm.com/docs/services/Registry?topic=registry-registry_setup_cli_namespace#registry_setup_cli_namespace)
 
-* In order for the backend application to access the Dacadoo Health Score API, visit https://models.dacadoo.com/doc/ to request an API key for evaluation purposes. Access to this API is granted individually to insurance professionals. There is a mock implementation of the API in the code that you can use if you do not want to register.
+* In order for the backend application to access the Dacadoo Health Score API, visit <https://models.dacadoo.com/doc/> to request an API key for evaluation purposes. Access to this API is granted individually to insurance professionals. There is a mock implementation of the API in the code that you can use if you do not want to register.
 
-# Steps
+## Steps
 
 1. [Deploy the backend application to the IBM Cloud](#4-deploy-the-backend-application-to-the-IBM-Cloud)
 1. [Deploy the frontend application to the IBM Cloud](#5-deploy-the-frontend-application-to-the-IBM-Cloud)
@@ -85,7 +85,7 @@ spec:
     - name: DACADOO_APIKEY
       valueFrom:
         secretKeyRef:
-          name: dacadoo-secret 
+          name: dacadoo-secret
           key: apikey<b>
   .
   .
@@ -136,7 +136,7 @@ spec:
     - name: DACADOO_APIKEY
       valueFrom:
         secretKeyRef:
-          name: dacadoo-secret 
+          name: dacadoo-secret
           key: apikey
   .
   .
