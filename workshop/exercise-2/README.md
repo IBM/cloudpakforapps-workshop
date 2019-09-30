@@ -27,7 +27,7 @@ In order to build and test applications on your local workstation, complete the 
 * [Install the Appsody CLI](https://appsody.dev/docs/getting-started/installation)
 * [Install Docker](https://docs.docker.com/get-started/)
 
-# Steps
+## Steps
 
 1. [Clone the repo](#1-clone-the-repo).
 2. [Create the frontend application and run it locally](#2-create-the-frontend-application-and-run-it-locally)
@@ -47,9 +47,9 @@ The frontend application is written in Node.js Express.  First let's initialize 
 Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 
 ```bash
-$ mkdir quote-frontend
-$ cd quote-frontend
-$ appsody init nodejs-express
+mkdir quote-frontend
+cd quote-frontend
+appsody init nodejs-express
 ```
 
 After `appsody init` completes, list the content of the directory.  You'll see that Appsody has created a starter application for you.
@@ -65,7 +65,7 @@ drwxrwxrwx 1 gregd gregd  4096 Sep 10 13:48 test
 It's possible to run this application on your workstation immediately.
 
 ```bash
-$ appsody run
+appsody run
 ```
 
 Appsody builds a containerized version of the application for you and runs it in Docker.
@@ -74,11 +74,11 @@ You can enter `http://localhost:3000` in a browser to see the default endpoint s
 The Node.js Express stack also provides out-of-the-box health checking and application metrics endpoints
 and a performance monitoring and analysis dashboard (which is only present in this development container and not the production container which we'll build later).
 
-- Health endpoint: http://localhost:3000/health
-- Liveness endpoint: http://localhost:3000/live
-- Readiness endpoint: http://localhost:3000/ready
-- Metrics endpoint: http://localhost:3000/metrics
-- Dashboard endpoint: http://localhost:3000/appmetrics-dash (development only)
+* Health endpoint: http://localhost:3000/health
+* Liveness endpoint: http://localhost:3000/live
+* Readiness endpoint: http://localhost:3000/ready
+* Metrics endpoint: http://localhost:3000/metrics
+* Dashboard endpoint: http://localhost:3000/appmetrics-dash (development only)
 
 While the containerized application is running you can edit the application and your changes will be reflected in the running container.
 You can test this by editing the app.js module and changing the message returned by the default endpoint.
@@ -88,7 +88,7 @@ Then re-enter `http://localhost:3000` in your browser and you will see the new m
 We're going to replace the starter code with the insurance quote frontend application.
 First you must edit the package.json file and add the following dependencies:
 
-```
+```json
   .
   .
   .
@@ -123,14 +123,17 @@ This works as follows.
 * `quote.js` uses the [config](https://www.npmjs.com/package/config) module to get the value for the backend URL.
 * When the application runs in development mode, the config module uses `config/development.json` to find the value for the backend URL.
 This file sets the URL to the mock endpoint.
-    ```
+
+    ```json
     {
       "backendUrl": "http://localhost:3000/quote/test"
     }
     ```
+
 * When the application runs in production mode (which we'll see later), the config module uses `config/custom-environment-variables.json` to find the value for the backend URL.
 This file sets the URL from the `BACKEND_URL` environment variable.
-    ```
+
+    ```json
     {
       "backendUrl": "BACKEND_URL"
     }
@@ -140,8 +143,8 @@ Press `Ctrl-C` in the window where the application is running to stop it.
 
 Appsody provides a way to run automated tests against the containerized application.
 
-```
-$ appsody test
+```bash
+appsody test
 ```
 
 This runs tests that come packaged with the stack (such as tests of the health and metrics endpoints),
@@ -154,16 +157,16 @@ The backend application is written in Spring Boot.  Let's initialize an Appsody 
 Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 
 ```bash
-$ mkdir quote-backend
-$ cd quote-backend
-$ appsody init java-spring-boot2
+mkdir quote-backend
+cd quote-backend
+appsody init java-spring-boot2
 ```
 
 Again you'll see that Appsody has created a starter application for you.
 It's possible to run this application on your workstation immediately.
 
 ```bash
-$ appsody run
+appsody run
 ```
 
 Appsody builds a containerized version of the application for you and runs it in Docker.
@@ -171,15 +174,15 @@ You can enter `http://localhost:8080` in a browser to see the default endpoint s
 
 The Spring Boot 2 stack also provides out-of-the-box health checking and application metrics endpoints.
 
-- Health endpoint: http://localhost:8080/actuator/health
-- Liveness endpoint: http://localhost:8080/actuator/liveness
-- Metrics endpoint: http://localhost:8080/actuator/metrics
-- Prometheus endpoint: http://localhost:8080/actuator/prometheus
+* Health endpoint: http://localhost:8080/actuator/health
+* Liveness endpoint: http://localhost:8080/actuator/liveness
+* Metrics endpoint: http://localhost:8080/actuator/metrics
+* Prometheus endpoint: http://localhost:8080/actuator/prometheus
 
 We're going to replace the starter code with the insurance quote backend application.
 Edit the pom.xml file and add the following dependency to the dependencies section.
 
-```
+```java
   <dependencies>
     .
     .
@@ -199,7 +202,7 @@ You can test the backend API using [curl](https://curl.haxx.se/download.html).
 The file [quote-backend/backend-input.json](quote-backend/backend-input.json) contains sample input for the API.
 Issue the `curl` command from the `quote-backend` directory.
 
-```
+```bash
 $ curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
 {"quotedAmount":30,"basis":"mocked backend computation"}
 ```
@@ -210,10 +213,12 @@ This works as follows:
 
 * `src/main/java/application/Quote.java` uses `@Value("${DACADOO_URL}")` and `@Value("${DACADOO_APIKEY}")` to get the values of the Dacadoo Health Score API endpoint URL and the API key.
 * `src/main/resources/application.yaml` defines mock values for the URL and API key.
-    ```
+
+    ```yaml
     DACADOO_URL: http://localhost:8080/mockscore
     DACADOO_APIKEY: TEST
     ```
+
 * When the application runs in production mode (which we'll see later), environment variables can be used to set the URL and API key.
 Environment variables override the values in the `application.yaml` file.
 
@@ -221,8 +226,8 @@ Press `Ctrl-C` in the window where the application is running to stop it.
 
 You can use `appsody test` to run automated tests for this application.
 
-```
-$ appsody test
+```bash
+appsody test
 ```
 
 Look at [quote-backend/src/test/java/application/QuoteTests.java](quote-backend/src/test/java/application/QuoteTests.java) to see the tests for the backend application.
