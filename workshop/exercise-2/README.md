@@ -1,272 +1,230 @@
 # Exercise 2: Using Appsody CLI to develop/test/debug applications
 
-(Rewrite everything below this line)
+In this exercise, we will show how to create a sample insurance quote application using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
 
-This section is broken up into the following steps:
+* a command-line interface to develop containerized applications, test them locally, and then build and deploy them to Kubernetes
+* a set of pre-configured "stacks" and templates for popular open source runtimes (such as Node.js and Spring Boot) on which to build applications
 
-1. [Build a model with Spark](#1-build-a-model-with-spark)
-1. [Create a project release](#2-create-a-project-release)
-1. [Testing the model](#3-testing-the-model-with-cloud-pak-for-data)
-1. [(Optional) Create a Python Flask app that uses the model](#4-optional-create-a-python-flask-app-that-uses-the-model)
+When you have completed this exercise, you will understand how to
 
-## 1. Build a model with Spark
+* create a frontend web application and a backend REST application using the Appsody Node.js Express and Spring Boot stacks
+* test the applications locally in a containerized environment
+* deploy the applications to the IBM Cloud Kubernetes Service
 
-For this part of the exercise we're going to build a model with a Jupyter notebook, by importing our data, and creating a machine learning model by using a Random Forest Classifier.
+<!--add an image in this path-->
+![architecture](doc/source/images/architecture.png)
 
-### Import the notebook
+## Flow
 
-At the project overview click the *New Asset* button, and choose *Add notebook*.
+1. The user enters the URL of the frontend application into a browser.  The frontend application displays an insurance quote form in response.
+2. The user fills in the form and clicks a button to submit it.  The frontend application validates the form data and sends a REST request to the backend application.
+3. The backend application uses the [Dacadoo Health Score API](https://info.dacadoo.com/) to compute a health score from the form data and then computes a quote from that.
 
-![Add a new asset](../.gitbook/assets/images/wml/wml-1-add-asset.png)
+## Prerequisites
 
-On the next panel select the *From URL* tab, give your notebook a name, provide the following URL, and choose the Python 3.6 environment:
+In order to build and test applications on your local workstation, complete the following steps.
+
+* [Install the Appsody CLI](https://appsody.dev/docs/getting-started/installation)
+* [Install Docker](https://docs.docker.com/get-started/)
+
+# Steps
+
+1. [Clone the repo](#1-clone-the-repo).
+2. [Create the frontend application and run it locally](#2-create-the-frontend-application-and-run-it-locally)
+3. [Create the backend application and run it locally](#3-create-the-backend-application-and-run-it-locally)
+
+### 1. Clone the repo
+
+Clone the `appsody-sample-quote-app` repo locally. In a terminal, run:
 
 ```bash
-https://raw.githubusercontent.com/IBM/cloudpakfordata-telco-churn-workshop/master/notebooks/TelcoChurnICP4D.ipynb
+git clone https://github.com/IBM/appsody-sample-quote-app
 ```
 
-> The notebook is hosted in the same repo as [the workshop](https://github.com/IBM/cloudpakfordata-telco-churn-workshop).
->
-> * **Notebook**: [TelcoChurnICP4D.ipynb](https://github.com/IBM/cloudpakfordata-telco-churn-workshop/blob/master/notebooks/TelcoChurnICP4D.ipynb)
-> * **Notebook with output**: [with-output/TelcoChurnICP4DOutput.ipynb](https://github.com/IBM/cloudpakfordata-telco-churn-workshop/blob/master/notebooks/with-output/TelcoChurnICP4DOutput.ipynb)
+### 2. Create the frontend application and run it locally
 
-![Add notebook name and URL](../.gitbook/assets/images/wml/wml-2-add-name-and-url.png)
-
-When the Jupyter notebook is loaded and the kernel is ready then we can start executing cells.
-
-![Notebook loaded](../.gitbook/assets/images/wml/wml-3-notebook-loaded.png)
-
-### Run the notebook
-
-Spend an minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook. While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (i.e. `[17]`).
-
-#### Install Python packages
-
-Section `1.0 Install required packages` will show the libraries that come pre-installed on Cloud Pak for Data. Note that we'll have to upgrade the installed version of Watson Machine Learning Python Client. This workshop uses [`pyspark`](https://spark.apache.org/docs/latest/api/python/index.html), and [`sklearn`](https://scikit-learn.org/stable/) to build our model.
-
-#### Add the data set to the notebook
-
-Section `2.0 Load and Clean data` will load the virtualized data from the previous exercise. Highlight the cell labelled `# Place cursor ...` by clicking on it. Click on the *10/01* button to select a specific data set. Choose The *Remote* tab, and pick the virtualized data set that has all three joined tables (i.e. `User999.billing+products+customers`), and opt to insert the data as a *Pandas DataFrame*.
-
-![Add the data as a Pandas DataFrame](../.gitbook/assets/images/wml/wml-4-add-dataframe.png)
-
-By adding data a block of code will be added to the notebook. The code will automatically load that data set and create a Pandas DataFrame.
-
-![Generated code to handle Pandas DataFrame](../.gitbook/assets/images/wml/wml-5-generated-code-dataframe.png)
-
-> **IMPORTANT**: Don't forget to update the next cell `df = df1` with the variable from the generated code.
-
-Continue to run the remaining cells in the section to clean the data.
-
-#### Create the model
-
-Section `3.0 Create a model` will split the data into training and test data, and create a model using the Random Forest Classifier algorithm.
-
-![Building the pipeline and model](../.gitbook/assets/images/wml/wml-6-buid-pipeline-and-model.png)
-
-Continue to run the remaining cells in the section to build the model.
-
-#### Save the model
-
-Section `4.0 Save the model` will save the model to your project. Update the `MODEL_NAME` variable to something unique and easisly identifiable.
-
-```python
-MODEL_NAME = "user123 customer churn model"
-```
-
-Continue to run the remaining cells in the section to save the model to Cloud Pak for Data. We'll be able to test it out with the Cloud Pak for Data tools in just a few minutes!
-
-The main snippet of Python that saves the model locally looks like:
-
-```python
-from dsx_ml.ml import save
-
-save(name=MODEL_NAME, model=model, test_data=test_data, algorithm_type='Classification',
-     description='This is a SparkML Model to Classify Telco Customer Churn Risk')
-```
-
-#### Deploy to Watson Machine Learning
-
-Section `5.0 Deploy the model to Watson Machine Learning` will deploy your model to the Watson Machine Learning service with the Watson Machine Learning client. Update the credentials in the cell seen below. Your instructor will provide the URL, which will be the URL of the cluster. For today's workshop on 9/19/19, this will be `169.54.164.135`. So the URL will be: `"url": "https://169.54.164.135"`. The username and password are the same used to log into Cloud Pak for Data.
-
-![Update credentials](../.gitbook/assets/images/wml/wml-7-update-credentials.png)
-
-Once deployed the model and deployment will be viewed.
-
-![Building the pipeline and model](../.gitbook/assets/images/wml/wml-8-deploy-to-wml.png)
-
-We've successfully built and deployed a machine learning model. Congratulations!
-
-## 2. Create a project release
-
-Next, we'll create a project release and tag the model under version control. We'll use model management and deployment to make the released model available as a web service (REST API).
-
-### Commit the project changes
-
-On the project home click on the *Git* button on the top row and choose *Commit*
-
-![Commit the project changes](../.gitbook/assets/images/wml/project-1-git-commit.png)
-
-A list of the assets will appear that were created in this project. Provide a commit message to identify the changes being pushed.
-
-![Provide a commit message](../.gitbook/assets/images/wml/project-2-git-commit-message.png)
-
-Again, click the same *Git* button and this time choose *Push*.
-
-![Push a new version](../.gitbook/assets/images/wml/project-3-git-push.png)
-
-Provide a version tag under *Create version tag for release*. Add a tag, i.e. `v1` or `v2` and click *Push*.
-
-![Provide a commit message](../.gitbook/assets/images/wml/project-4-git-push-version.png)
-
-### Release a new version
-
-Now that we have a committed and tagged version of the project, we can create a project release and deploy it as a web service.
-
-To start creating a new project release, go the (☰) menu and click on the *Manage deployments* option.
-
-![(☰) Menu -> Manage deployments](../.gitbook/assets/images/wml/project-5-manage-deployments.png)
-
-Click on `+ Add Project Release` to start creating a new project release.
-
-![There are currently no releases for this project](../.gitbook/assets/images/wml/project-6-new-project-release.png)
-
-On the next panel ensure the *From IBM Cloud Pak for Data* tab is selected, and give your project release a name and route. Select the project and version from the drop down menus, and click on *Create*.
-
-![Fill in the project release details](../.gitbook/assets/images/wml/project-7-new-project-release-details.png)
-
-### Configure project release
-
-It's now time to configure the project release. Here we will choose what assets will be deployed and how they will be deployed.
-
-We start by deploying the model we built as a web service. Click on the model on the list of *Assets* and choose to add a *Web Service*.
-
-![Deploy the model as a web service](../.gitbook/assets/images/wml/project-8-deployment-overview.png)
-
-Give the web service a *Name*, select a *Model version*, and *Web Service environment*. Click the *Create* button.
-
-![Deploy the model as a web service](../.gitbook/assets/images/wml/project-9-add-web-service.png)
-
-Once created the model details will appear, take note of the *Endpoint* and *Deployment token* that have been generated.
-
-![Endpoint and token for the deployed model](../.gitbook/assets/images/wml/project-10-model-endpoint.png)
-
-> **NOTE**: The deployment is not yet active. We need to launch and enable it before it can be used.
-
-### Deploy the project
-
-* You will be brought back to the project release page where you will see your model is *Disabled*. Click the *Launch* button to deploy your project.
-
-![Deploy your project](../.gitbook/assets/images/wml/project-11-model-disabled.png)
-
-Once the deployment is complete click on the action action menu (vertical 3 dots) of the model and select *Enable*.
-
-![Endpoint and token for the deployed model](../.gitbook/assets/images/wml/project-12-model-enabled.png)
-
-## 3. Testing the model
-
-Cloud Pak for Data offers tools to quickly test out Watson Machine Learning models. We begin with the built-in tooling.
-
-### Test the saved model with built-in tooling
-
-Once the model is enabled we can test the API interface from Cloud Pak for Data. Click the enabled model deployment. From the *API* tab, default values are given and we can simply click the *Submit* button. The results are shown on the right.
-
-![Testing the deployed model](../.gitbook/assets/images/wml/testing-1-api.png)
-
-### Test the deployed model with cURL
-
-Clicking the *Generate Code* button will pop open a window with some copy for you to copy. The code will use the cURL command line utility to test the REST APIs. Here's an example of the generated code that can be run from a terminal window with the `curl` command.
+The frontend application is written in Node.js Express.  First let's initialize an Appsody project that uses the Node.js Express stack.
+Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 
 ```bash
-curl -k -X POST \
-  https://9.10.111.122:31843/dmodel/v1/churn1/pyscript/churn/score \
-  -H 'Authorization: Bearer yeJhbGaaaiJSUzI1NiIsInR5cCI6IkpXVCJ9...jJDMbgsGqy9C_AsK5n28HysmH2NeXzEN9A' \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/json' \
-  -d '{"args":{"input_json":[{"ID":4,"GENDER":"F","STATUS":"M","CHILDREN":2,"ESTINCOME":52004,"HOMEOWNER":"N","AGE":25,"TOTALDOLLARVALUETRADED":5030,"TOTALUNITSTRADED":23,"LARGESTSINGLETRANSACTION":1257,"SMALLESTSINGLETRANSACTION":125,"PERCENTCHANGECALCULATION":3,"DAYSSINCELASTLOGIN":2,"DAYSSINCELASTTRADE":19,"NETREALIZEDGAINS_YTD":0,"NETREALIZEDLOSSES_YTD":251}]}}'
+$ mkdir quote-frontend
+$ cd quote-frontend
+$ appsody init nodejs-express
 ```
 
-## 4. (Optional) Create a Python Flask app that uses the model
-
-You can also access the web service directly through the REST API. This allows you to use your model for inference in any of your apps. For this workshop we'll be using a Python Flask application to collect information, score it against the model, and show the results.
-
-### Install dependencies
-
-The general recommendation for Python development is to use a virtual environment ([`venv`](https://docs.python.org/3/tutorial/venv.html)). To install and initialize a virtual environment, use the `venv` module on Python 3 (you install the virtualenv library for Python 2.7):
-
-In a terminal go to the cloned repo directory.
+After `appsody init` completes, list the content of the directory.  You'll see that Appsody has created a starter application for you.
 
 ```bash
-git clone https://github.com/IBM/cloudpakfordata-telco-churn-workshop
-cd cloudpakfordata-telco-churn-workshop
+$ ls -l
+-rwxrwxrwx 1 gregd gregd   130 Sep 10 13:48 app.js
+-rwxrwxrwx 1 gregd gregd 51421 Sep 10 13:48 package-lock.json
+-rwxrwxrwx 1 gregd gregd   455 Sep 10 13:48 package.json
+drwxrwxrwx 1 gregd gregd  4096 Sep 10 13:48 test
 ```
 
-Initialize a virtual environment with [`venv`](https://docs.python.org/3/tutorial/venv.html).
+It's possible to run this application on your workstation immediately.
 
 ```bash
-# Create the virtual environment using Python. Use one of the two commands depending on your Python version.
-# Note, it may be named python3 on your system.
-python -m venv venv       # Python 3.X
-virtualenv venv           # Python 2.X
-
-# Source the virtual environment. Use one of the two commands depending on your OS.
-source venv/bin/activate  # Mac or Linux
-./venv/Scripts/activate   # Windows PowerShell
+$ appsody run
 ```
 
-> **TIP** To terminate the virtual environment use the `deactivate` command.
+Appsody builds a containerized version of the application for you and runs it in Docker.
+You can enter `http://localhost:3000` in a browser to see the default endpoint served by the application.
 
-Finally, install the Python requirements.
+The Node.js Express stack also provides out-of-the-box health checking and application metrics endpoints
+and a performance monitoring and analysis dashboard (which is only present in this development container and not the production container which we'll build later).
+
+- Health endpoint: http://localhost:3000/health
+- Liveness endpoint: http://localhost:3000/live
+- Readiness endpoint: http://localhost:3000/ready
+- Metrics endpoint: http://localhost:3000/metrics
+- Dashboard endpoint: http://localhost:3000/appmetrics-dash (development only)
+
+While the containerized application is running you can edit the application and your changes will be reflected in the running container.
+You can test this by editing the app.js module and changing the message returned by the default endpoint.
+Watch the `appsody run` console session for the application to restart.
+Then re-enter `http://localhost:3000` in your browser and you will see the new message.
+
+We're going to replace the starter code with the insurance quote frontend application.
+First you must edit the package.json file and add the following dependencies:
+
+```
+  .
+  .
+  .
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "config": "^3.2.0",
+    "express-validator": "^6.2.0",
+    "pug": "^2.0.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+  .
+  .
+  .
+```
+
+The Node.js Express stack installs the package dependencies into the containerized application.
+However it won't do this when the containerized application is already running.
+You must stop the current application by pressing `Ctrl-C` and then re-run `appsody run` to start it back up.
+
+Now copy the files from the `quote-frontend` directory in this git repo to your Appsody project.
+Watch for the container to restart and then refresh your browser again.
+You will see a form appear.
+
+![quoteform](doc/source/images/screenshot.png)
+
+You can fill in the form and hit the button to submit it and a response will appear.
+In this case the frontend application is not sending a request to the backend application.
+Instead it is configured to use a mock endpoint for testing purposes in development mode.
+This works as follows.
+
+* `quote.js` uses the [config](https://www.npmjs.com/package/config) module to get the value for the backend URL.
+* When the application runs in development mode, the config module uses `config/development.json` to find the value for the backend URL.
+This file sets the URL to the mock endpoint.
+    ```
+    {
+      "backendUrl": "http://localhost:3000/quote/test"
+    }
+    ```
+* When the application runs in production mode (which we'll see later), the config module uses `config/custom-environment-variables.json` to find the value for the backend URL.
+This file sets the URL from the `BACKEND_URL` environment variable.
+    ```
+    {
+      "backendUrl": "BACKEND_URL"
+    }
+    ```
+
+Press `Ctrl-C` in the window where the application is running to stop it.
+
+Appsody provides a way to run automated tests against the containerized application.
+
+```
+$ appsody test
+```
+
+This runs tests that come packaged with the stack (such as tests of the health and metrics endpoints),
+and of course you can add your own tests of your application as well.
+Look at [quote-frontend/test/test.js](quote-frontend/test/test.js) to see the tests for the frontend application.
+
+### 3. Create the backend application and run it locally
+
+The backend application is written in Spring Boot.  Let's initialize an Appsody project that uses the Spring Boot 2 stack.
+Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 
 ```bash
-cd flaskapp
-pip install -r requirements.txt
+$ mkdir quote-backend
+$ cd quote-backend
+$ appsody init java-spring-boot2
 ```
 
-### Update environment variables
-
-It's best practice to store configurable information as environment variables, instead of hard-coding any important information. To reference our model and supply an API key, we'll pass these values in via a file that is read, the key-value pairs in this files are stored as environment variables.
-
-Copy the `env.sample` file to `.env`.
+Again you'll see that Appsody has created a starter application for you.
+It's possible to run this application on your workstation immediately.
 
 ```bash
-cp env.sample .env
+$ appsody run
 ```
 
-Edit `.env` to reference the `URL` and `TOKEN`.
+Appsody builds a containerized version of the application for you and runs it in Docker.
+You can enter `http://localhost:8080` in a browser to see the default endpoint served by the application.
 
-* `URL` is your web service URL for scoring.
-* `TOKEN` is your deployment access token.
+The Spring Boot 2 stack also provides out-of-the-box health checking and application metrics endpoints.
 
-```bash
-# Required: Provide your web service URL for scoring.
-# E.g., URL=https://9.10.222.3:31843/dmodel/v1/project/pyscript/tag/score
-URL=
+- Health endpoint: http://localhost:8080/actuator/health
+- Liveness endpoint: http://localhost:8080/actuator/liveness
+- Metrics endpoint: http://localhost:8080/actuator/metrics
+- Prometheus endpoint: http://localhost:8080/actuator/prometheus
 
-# Required: Provide your web service deployment access token.
-#           This TOKEN should start with "Bearer ".
-# E.g., TOKEN=Bearer abCdwFg.fgH1r2... (and so on, tokens are long).
-TOKEN=
+We're going to replace the starter code with the insurance quote backend application.
+Edit the pom.xml file and add the following dependency to the dependencies section.
+
+```
+  <dependencies>
+    .
+    .
+    .
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.8</version>
+    </dependency>
+  </dependencies>
 ```
 
-### Start the application
+Now copy the files from the `quote-backend` directory in this git repo to your Appsody project.
+Watch for the container to restart.
 
-Start the flask server by running the following command:
+You can test the backend API using [curl](https://curl.haxx.se/download.html).
+The file [quote-backend/backend-input.json](quote-backend/backend-input.json) contains sample input for the API.
+Issue the `curl` command from the `quote-backend` directory.
 
-```bash
-python telcochurn.py
+```
+$ curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
+{"quotedAmount":30,"basis":"mocked backend computation"}
 ```
 
-Use your browser to go to [http://0.0.0.0:5000](http://0.0.0.0:5000) and try it out.
+In this case the backend application is not sending a request to the Dacadoo health score API.
+Instead it is configured to use a mock endpoint for testing purposes in development mode.
+This works as follows:
 
-> **TIP**: Use `ctrl`+`c` to stop the Flask server when you are done.
+* `src/main/java/application/Quote.java` uses `@Value("${DACADOO_URL}")` and `@Value("${DACADOO_APIKEY}")` to get the values of the Dacadoo Health Score API endpoint URL and the API key.
+* `src/main/resources/application.yaml` defines mock values for the URL and API key.
+    ```
+    DACADOO_URL: http://localhost:8080/mockscore
+    DACADOO_APIKEY: TEST
+    ```
+* When the application runs in production mode (which we'll see later), environment variables can be used to set the URL and API key.
+Environment variables override the values in the `application.yaml` file.
 
-### Sample output
+Press `Ctrl-C` in the window where the application is running to stop it.
 
-The user inputs various values
+You can use `appsody test` to run automated tests for this application.
 
-![Input a bunch of data...](../.gitbook/assets/images/generic/input.png)
+```
+$ appsody test
+```
 
-The churn percentage is returned:
+Look at [quote-backend/src/test/java/application/QuoteTests.java](quote-backend/src/test/java/application/QuoteTests.java) to see the tests for the backend application.
 
-![Get the churn percentage as a result](../.gitbook/assets/images/generic/score.png)
+(We need to decide if we are going to get them to deploy to a local k8s environment, e.g. Docker Desktop, which doesn't need any credentials...and then the next exercise only deals with likely production issues....or whether we leave all deployments to the next exercise)
