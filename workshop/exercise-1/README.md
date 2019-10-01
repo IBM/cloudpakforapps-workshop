@@ -1,79 +1,476 @@
-# Exercise 1: Appsody with Codewind
+# Exercise 1: Introduction to  Appsody and Codewind
 
-(Rewrite everything below this line)
+(This is very mush still a work in progress - converted from the Garage tutorial - much to be changed and removed)
 
-This section is broken up into the following steps:
+In this exercise, we will introduce Appsody, which is the underpinning development flow in Kabanero, along with its integration into IDEs using Codewind. In particular you will become experienced with  
 
-1. [Add a new Data Source connection](#1-add-a-new-data-source-connection)
-1. [Assign virtualized data to your project](#2-assign-virtualized-data)
-1. [Use Data Refinery to visualize and clean data](#3-use-data-refinery-to-visualize-and-clean-data)
+* the components of the Appsody development toolbox
+* the concept of pre-configured "stacks" and templates for popular open source runtimes (such as Node.js and Spring Boot) on which to build applications
+* the Appsody command-line interface to develop containerized applications, how to run and test them locally,
 
-## 1. Add a new Data Source connection
+## Prerequisites
 
-For Cloud Pak for Data to read our Db2 Warehouse data we need to add a new *Data Source* to Cloud Pak for Data. This requires inputting the usual JDBC details.
+You should have already carried out the prerequisites defined in [Exercise 0](/workshop/exercise-0/README.md). Check that you have access to the Appsody CLI by typing (the exact version number my be greater than shown below):
 
-To add a new data source, go to the (☰) menu and click on the *Connections* option.
+```bash
+$ appsody version
+appsody 0.4.5
+```
 
-![(☰) Menu -> Collections](../.gitbook/assets/images/connections/cpd-conn-menu.png)
+## Configure your access to Appsody stacks
 
-At the overview, click *Add connection*.
+The Appsody CLI gives you access to stacks, which are stored in stack repositories. These can be local, private to the Enterprise or public. To get the list of available repos, run this command.
 
-![Overview page](../.gitbook/assets/images/connections/conn-1-overview-empty.png)
+``` bash
+$ appsody repo list
 
-Start by giving your new *Connection* a name and select *Db2 Warehouse on Cloud* as your connection type. More fields should apper. Fill the new fields with the same credentials for your own Db2 Warehouse connection from the previous section (or ask your instructor for shared credentials). Click `Test Connection` and, after that succeeds, click `Add`.
+NAME            URL
+*appsodyhub     https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+experimental    https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
+```
 
-![Add a Db2 Warehouse on Cloud connection](../.gitbook/assets/images/connections/conn-2-details.png)
+The exact repo list may be different to the above. `appsodyhub` is the hub for public repositories. For this workshop we are going to use the private enterprise-grade collection of stacks that come with Kabanero Enterprise (which is part of CLoud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
 
-The new connection will be listed in the overview.
+## Add Kabanero Collection to appsody
 
-![Connection has been added!](../.gitbook/assets/images/connections/conn-3-overview-db2.png)
+From the Cloud Pak for Applications landing page get the `CollectionHub` URL, for example:
 
-## 2. Assign virtualized data
+`https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml`
 
-> **IMPORTANT**: A note to the instructors of this workshop. At this point go to the [Admin Guide](../admin-guide/README.md#virtualize-db2-data-with-data-virtualization) and follow the `Virtualize Db2 data with Data Virtualization` section.
+Use the appsody CLI to add the Collection repo.
 
-For this section we'll now use the Data Virtualization tool to import the data from Db2 Warehouse, which is now exposed as an Connection in Cloud Pak for Data.
+``` bash
+appsody repo add kabanero https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
+```
 
-### Assign the data to your project
+Now is we get the list of repos, we should see Kabanero listed:
 
-From the menu click on *Collections -> Virtualized Data*, you'll be brought to the *My data* section. Here you should see the data that the administrator has assigned to you. Choose the three data sets available and click *Assign* to start importing it to your project.
+``` bash
+$ appsody repo list
 
-![Select the data you want to import](../.gitbook/assets/images/dv/dv-8-select-data.png)
+NAME            URL
+*appsodyhub     https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+kabanero        https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
+experimental    https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
+```
 
-From here, choose the project you previously created.
+We can now list the appsody stacks available in the Kabanero collection:
 
-![Assign the data to a project](../.gitbook/assets/images/dv/dv-9-assign.png)
+``` bash
+$ appsody list kabanero
 
-Switching to our project should show all three virtualized tables, and two joined tables. Do not go to the next section until this step is performed.
+REPO            ID                      VERSION         TEMPLATES               DESCRIPTION
+kabanero        java-microprofile       0.2.11          *default                Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
+kabanero        java-spring-boot2       0.3.9           *default, kotlin        Spring Boot using OpenJ9 and Maven
+kabanero        nodejs                  0.2.5           *simple                 Runtime for Node.js applications
+kabanero        nodejs-express          0.2.5           *simple, skaffold       Express web framework for Node.js
+kabanero        nodejs-loopback         0.1.4           *scaffold               LoopBack 4 API Framework for Node.js
+```
 
-![Our data sets at the end of this section](../.gitbook/assets/images/dv/dv-project-data-all.png)
+Given that we'll exclusively be using the kabanero stacks in this workshop, for each of use we can set the kabanero repository to be the default for the CLI: 
 
-## 3. Use Data Refinery to visualize and clean data
+``` bash
+appsody repo set-default kabanero
+```
 
-Before we build our model we're going to take a quick detour to the *Data Refinery* tool. Data Refinery can quickly filter and mutate data, create quick visualizations, and do other data cleansing tasks from an easy to use user interface.
+Now is we get the list of repos, we should see kabanero is the default:
 
-### Load the *BILLING* data table into data refinery
+``` bash
+$ appsody repo list
 
-From the *Project* home, click on *Data sets*, *TABLE*, and choose the *USER123.BILLING* table.
+NAME            URL
+*kabanero       https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
+appsodyhub      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+experimental    https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
+```
 
-![Launch the BILLING table](../.gitbook/assets/images/dr/dr-1-launch-billing.png)
+## Appsody CLI
 
-Data Refinery should launch and open the data like the image below:
+### Create a new Application
 
-![Data Refinery view of the BILLING table](../.gitbook/assets/images/dr/dr-2-view-billing.png)
+We will now use on of the stacks to create an application. First, create a new directory for the project and change directory into it.
 
-The *Operation* button can perform many tasks related to data cleansing such as: substituting values, removing and renaming columns, converting column types, etc.
+``` bash
+mkdir appsody_sample_nodejs-express
+cd appsody_sample_nodejs-express/
+```
 
-![Data Refinery operations](../.gitbook/assets/images/dr/dr-3-operations.png)
+Initialize the project using `appsody init`:
 
-Clicking on the *Profile* tab will bring up a quick view of several histograms about the data.
+``` bash
+appsody init kabanero/nodejs-express
+```
 
-![Data Refinery Profile tab](../.gitbook/assets/images/dr/dr-4-profile.png)
+The directory has been initialized with a minimal set of artifacts (which is, in fact, a sample application that uses the chosen stack)
 
-Clicking on the *Visualizations* tab will bring up an option to choose which columns to visualize. In this case, we'll pick *TotalCharges*. Click on *Visualize data* when ready.
+``` bash
+.
+├── .appsody-config.yaml
+├── .gitignore
+├── .vscode
+│   ├── launch.json
+│   └── tasks.json
+├── app.js
+├── package-lock.json
+├── package.json
+└── test
+    └── test.js
+```
 
-![Use Data Refinery to visualize data](../.gitbook/assets/images/dr/dr-5-visualize.png)
+The key artifacts are:
 
-We can quickly see the data in a histogram by default, switching between different chart types in seconds.
+* app.js  
+  Node.js application module (the default sample application is a simple "hello world")
 
-![See the visualization in seconds](../.gitbook/assets/images/dr/dr-6-chart.png)
+* package.json  
+  NPM package JSON file
+
+* test.js  
+  A simple test module
+
+### Run the Application
+
+The sample application comes ready to run using appsody:
+
+``` bash
+appsody run
+```
+
+This step results in the stack image, with the sample application mounted into it, run in you local Docker environment. The output has the endpoint for the application.
+
+``` bash
+Running development environment...
+Running command: docker pull kabanero/nodejs-express:0.2
+Running docker command: docker run --rm -p 3000:3000 -p 8080:8080 -p 9229:9229 --name appsody-sample-nodejs-express-dev -v /Users/csantanapr/dev/kabanero/appsody_sample_nodejs-express/:/project/user-app -v appsody-sample-nodejs-express-deps:/project/user-app/node_modules -v /Users/csantanapr/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller kabanero/nodejs-express:0.2 --mode=run
+[Container] Running APPSODY_PREP command: npm install --prefix user-app
+audited 295 packages in 1.546s
+[Container] found 0 vulnerabilities
+[Container]
+[Container] Running command:  npm start
+[Container]
+[Container] > nodejs-express@0.2.6 start /project
+[Container] > node server.js
+[Container]
+[Container] [Sun Sep 22 23:29:50 2019] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.0.5.201909191743 (Agent Core 4.0.5)
+[Container] [Sun Sep 22 23:29:51 2019] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
+[Container] App started on PORT 3000
+```
+
+We can now check that this is running by hitting the endpoint <http://localhost:3000>:
+
+``` bash
+$ curl http://localhost:3000
+Hello from Appsody!
+```
+
+By default, the template sample application also provides the following endpoints.
+
+* Readiness endpoint: <http://localhost:3000/ready>
+* Liveness endpoint: <http://localhost:3000/live>
+* Health check endpoint: <http://localhost:3000/health>
+* Metrics endpoint: <http://localhost:3000/metrics>
+
+For more details on this particular stack, refer to [Node.js Express
+Stack](https://github.com/appsody/stacks/blob/master/incubator/nodejs-express/README.md).
+
+### Stop the Application
+
+To stop the application container, run this command from the same diectory (e.g. in another terminal window):
+
+``` bash
+appsody stop
+```
+
+Alternatively, you can also press `Ctrl+C` in the first window that is running the application.
+
+### Test the Application
+
+A stack will typically come with a test framework - and this can be initiated by running:
+
+``` bash
+$ appsody test
+Running test environment
+Running command: docker pull kabanero/nodejs-express:0.2
+Running docker command: docker run --rm -p 3000:3000 -p 8080:8080 -p 9229:9229 --name appsody-sample-nodejs-express-dev -v /Users/csantanapr/dev/kabanero/appsody_sample_nodejs-express/:/project/user-app -v appsody-sample-nodejs-express-deps:/project/user-app/node_modules -v /Users/csantanapr/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller kabanero/nodejs-express:0.2 --mode=test
+[Container] Running APPSODY_PREP command: npm install --prefix user-app
+added 170 packages from 578 contributors and audited 295 packages in 2.76s
+...
+[Container] Running command:  npm test && npm test --prefix user-app
+[Container]
+[Container] > nodejs-express@0.2.6 test /project
+[Container] > mocha
+...
+[Container] App started on PORT 3000
+...
+[Container]
+[Container]   7 passing (44ms)
+[Container]
+[Container]
+[Container] > nodejs-express-simple@0.1.0 test /project/user-app
+[Container] > mocha
+[Container]
+...
+[Container] App started on PORT 3000
+[Container]   Node.js Express Simple template
+[Container]     / endpoint
+[Container]       ✓ status
+[Container]
+[Container]
+[Container]   1 passing (40ms)
+[Container]
+[Container] The file watcher is not running because no APPSODY_RUN/TEST/DEBUG_ON_CHANGE action was specified or it has been disabled using the --no-watcher flag.
+```
+
+### Debug the Application
+
+As well as supporting the running and testing of your application, an appsody stack enables the execution of your application in debug mode. Typically the stack will be configured to support whatever the appropriate debugger is for the language and technology components within it.
+
+Open your editor. We are using `VS Code`. Add the project to your workspace, or use the command `code .`
+
+![js\_lab1\_vscode\_project.png](images/js_lab1_vscode_project.png)
+
+Open a new terminal window inside VS Code use `View->Terminal`
+
+![js\_lab1\_vscode\_terminal.png](images/js_lab1_vscode_terminal.png)
+
+To debug the application including reloading the application on code changes run the below command:
+
+``` bash
+appsody debug
+```
+
+The output indicates the debug environment is being used
+
+``` bash
+Running debug environment
+Running command: docker pull kabanero/nodejs-express:0.2
+Running docker command: docker run --rm -p 3000:3000 -p 8080:8080 -p 9229:9229 --name appsody-sample-nodejs-express-dev -v /Users/csantana23/dev/kabanero/appsody_sample_nodejs-express/:/project/user-app -v appsody-sample-nodejs-express-deps:/project/user-app/node_modules -v /Users/csantana23/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller kabanero/nodejs-express:0.2 --mode=debug
+[Container] Running APPSODY_PREP command: npm install --prefix user-app
+audited 295 packages in 1.154s
+[Container] found 0 vulnerabilities
+[Container]
+[Container] Running command:  npm run debug
+[Container]
+[Container] > nodejs-express@0.2.6 debug /project
+[Container] > node --inspect=0.0.0.0 server.js
+[Container]
+[Container] Debugger listening on ws://0.0.0.0:9229/35c7d2cb-ced9-4c57-94f1-a58a5e078302
+[Container] For help, see: https://nodejs.org/en/docs/inspector
+[Container] [Sun Sep 22 23:38:35 2019] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.0.5.201909191743 (Agent Core 4.0.5)
+[Container] [Sun Sep 22 23:38:35 2019] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
+[Container] App started on PORT 3000
+```
+
+Now you can again open the application at <http://localhost:3000/>
+
+![js\_lab1\_endpoint.png](images/js_lab1_endpoint.png)
+
+Let us make a code change.
+
+![js\_lab1\_code\_change.png](images/js_lab1_code_change.png)
+
+Here, the debugger will reload the application for you.
+
+Refresh the browser to see the changes:
+
+![js\_lab1\_endpoint\_test.png](images/js_lab1_endpoint_test.png)
+
+You can attach to the Node.js debugger using `VSCode`. To access the debug view use `View->Debug` or click Debug icon on left menu:
+
+![js\_lab1\_vscode\_debug.png](images/js_lab1_vscode_debug.png)
+
+Add a breakpoint to the application, click to the left of the line number:
+
+![js\_lab1\_vscode\_breakpoint.png](images/js_lab1_vscode_breakpoint.png)
+
+Click on the debug task `Appsody: Attach node`:
+
+![js\_lab1\_vscode\_attach.png](images/js_lab1_vscode_attach.png)
+
+Refresh the browser and watch how the debugger stops at the breakpoint:
+
+![js\_lab1\_vscode\_attach\_break.png](images/js_lab1_vscode_attach_break.png)
+
+### Build the application
+
+Up until now, we have been using appsody in what we call "Rapid Local Development Mode", where we can cycle round code changes, testing and debugging them - all within a local Docker environment. Appsody is managing this environment possible, through a combination of the CLI, the stack and appsody code within that stack. Once you are ready to deploy the application outside of appsody control, there are two additional appsody commands to help you.
+
+These enable a couple of capabilities:
+
+* support for building a standalone docker image (containing your application and the stack technologies), that can be deployed either using regular Docker commands, or manually to a kubernetes cluster.
+* support deploying the final image directly to a kubernetes cluster, under control of the Appsody Operator. We will cover deployment in [Exercise 3](/workshop/exercise-3/README.md).
+
+In this section we will carry out the first of these - i.e. simply building a standalone image. Perhaps unsurprisingly, this is enacted by:
+
+``` bash
+$ appsody build
+.
+.
+.
+[Docker] Removing intermediate container 264b4dd86f2c
+[Docker]  ---> 3a7e5ca613f2
+[Docker] Step 20/21 : EXPOSE 3000
+[Docker]  ---> Running in fb7b734205a8
+[Docker] Removing intermediate container fb7b734205a8
+[Docker]  ---> badce710593d
+[Docker] Step 21/21 : CMD ["npm", "start"]
+[Docker]  ---> Running in 961a344e2c68
+[Docker] Removing intermediate container 961a344e2c68
+[Docker]  ---> e417d7dfc54c
+[Docker] Successfully built e417d7dfc54c
+[Docker] Successfully tagged appsody-sample-nodejs-express:latest
+Built docker image appsody-sample-nodejs-express
+```
+
+We now have a standalone image (independant of appsody). We can run this in our local Docker environment in the normal way (making sure we map the exposed port):
+
+``` bash
+$ docker run -p 3000:3000 appsody-sample-nodejs-express
+
+> nodejs-express@0.2.6 start /project
+> node server.js
+
+[Tue Oct  1 19:49:45 2019] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.0.5.201910011945 (Agent Core 4.0.5)
+[Tue Oct  1 19:49:46 2019] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
+App started on PORT 3000
+```
+
+Again, hitting the endpoint of <http://localhost:3000/> should give us the hello message.
+
+You now have seen the basics of the appsody CLI in operation. We'll now take things up a level, and see how the CLI can be integrated into an IDE (VS Code in this case).
+
+## Appsody tasks on VS Code
+
+To access the build tasks on VS code, go to: Terminal > Run Build Task...
+
+![js\_lab1\_build\_task\_menu.png](images/js_lab1_build_task_menu.png)
+
+You will see a list of available tasks:
+
+![js\_lab1\_build\_task\_list.png](images/js_lab1_build_task_list.png)
+
+Click on `Appsody: run` and this will run the application:
+
+![js\_lab1\_build\_task\_run.png](images/js_lab1_build_task_run.png)
+
+Once, it is successfully started, you can, again, access the application at <http://localhost:3000/>:
+
+![js\_lab1\_endpoint.png](images/js_lab1_endpoint.png)
+
+You can also run the `Appsody: stop` task:
+
+![js\_lab1\_build\_task\_stop.png](images/js_lab1_build_task_stop.png)
+
+## Codewind on VS Code
+
+Codewind simplifies and enhances development in containers by extending industry-standard IDEs with features to write, debug, and deploy cloud-native applications. It helps you to get started quickly with templates or samples, or you can also pull in your applications and let Codewind get them cloud-ready.
+
+Codewind supports VS Code, Eclipse Che, and Eclipse. In this lab, we are using VS Code as our IDE.
+
+### Getting the Codewind extension
+
+To get codewind extension you need [VS Code version 1.28 or later](https://code.visualstudio.com/download).
+
+Go to the extensions view and search for codewind from the VS code market place:
+
+![Codewind extensions](images/js_lab1_vscode_codewind_extension.png)
+
+You will find `Codewind` then click `install` to get it. Also, if you want to use Codewind for Node.js performance analysis, you need to install `Codewind Node.js Profiler`.
+
+Once you get them installed, we can now open the `Codewind` in the VS Code: View > Open View...
+
+![sb\_lab1\_vscode\_view.png](images/sb_lab1_vscode_view.png)
+
+It gives you you a list of options. Select `Codewind`:
+
+![sb\_lab1\_vscode\_code\_explorer.png](images/sb_lab1_vscode_code_explorer.png)
+
+This opens `Codewind`:
+
+![sb\_lab1\_vscode\_codewind\_explorer.png](images/sb_lab1_vscode_codewind_explorer.png)
+
+### Adding the application
+
+You can create a new project or add an existing project to Codewind. Since, we already created one using appsody earlier, we can add the existing project.
+
+Right click on `Projects` under Codewind. Select `Add Existing Project` in the menu:
+
+![sb\_lab1\_codewind\_add\_existing\_project.png](images/sb_lab1_codewind_add_existing_project.png)
+
+> **Note** Before doing this, copy your project to the codewind workspace, in the directory `codewind-workspaces/` in your HOME directory. At this point in time, codewind only accepts the projects that are available in the `codewind workspace`.
+
+From the codewind workspace, select the project you created earlier:
+
+![js\_lab1\_add\_existing\_prj\_from\_workspace.png](images/js_lab1_add_existing_prj_from_workspace.png)
+
+The codewind extension asks you for confirmation as follows. Click `Yes`. The project will be added.
+
+Once it is successfully built, it starts running:
+
+![js\_lab1\_appsody\_project\_running.png](images/js_lab1_appsody_project_running.png)
+
+You can open the CodeWind workspace, right click on `Projects`:
+
+![js\_lab1\_codewind\_open\_workspace.png](images/js_lab1_codewind_open_workspace.png)
+
+### Project Options
+
+Go to the application and `right click` on it to access the various options available:
+
+![js\_lab1\_codewind\_project\_options.png](images/js_lab1_codewind_project_options.png)
+
+Click `Open App` to access the application:
+
+![js\_lab1\_codewind\_open\_app.png](images/js_lab1_codewind_open_app.png)
+
+> **Note** Codewind exposes your applications on different external ports. This will allow you to run multiple projects of same type.
+
+To get the overview of your project, click on `Open Project Overview`:
+
+![js\_lab1\_codewind\_project\_overview.png](images/js_lab1_codewind_project_overview.png)
+
+ You can access the container shell directly from the IDE by using `Open Container Shell`:
+
+![js\_lab1\_codewind\_container\_shell.png](images/js_lab1_codewind_container_shell.png)
+
+To access the logs of the application, click on `Show all logs`:
+
+![js\_lab1\_codewind\_project\_logs.png](images/js_lab1_codewind_project_logs.png)
+
+You can also hide the logs if you want to by using `Hide all logs` option:
+
+If you have multiple applications and want to manage the logs for them, you can use `Manage logs`:
+
+You can also run the application by using `Restart in Run Mode`:
+
+![js\_lab1\_codewind\_project\_restart\_in\_run\_mode.png](images/js_lab1_codewind_project_restart_in_run_mode.png)
+
+Once it is restarted, you can access the application by clicking on the button as shown below:
+
+![js\_lab1\_restart\_in\_run\_mode\_app.png](images/js_lab1_restart_in_run_mode_app.png)
+
+Similarly, you can also do debugging by using `Restart in Debug Mode`.
+
+### Application Performance, Monitor, Profiling with Codewind
+
+You can launch the app monitor by selecting `Open Appplication Monitor`:
+
+![js\_lab1\_codewind\_app\_monitor.png](images/js_lab1_codewind_app_monitor.png)
+
+The monitor dashboard will open in the browser:
+
+![js\_lab1\_app\_monitor\_dashboard.png](images/js_lab1_app_monitor_dashboard.png)
+
+You can launch the app performance dashboard by selecting `Open Performance Dashboard`:
+
+![js\_lab1\_app\_performance.png](images/js_lab1_app_performance.png)
+
+The performance dashboard will open in the browser:
+
+![js\_lab1\_app\_performance\_dashboard.png](images/js_lab1_app_performance_dashboard.png)
+
+You can click Run Test and have Monitor and Performance dashboards side by side during the test:
+
+![js\_lab1\_app\_side\_by\_side\_perf\_test.png](images/js_lab1_app_side_by_side_perf_test.png)
+
+> **Note** Profiling the node.js code is currently not working an [issue](https://github.com/eclipse/codewind-node-profiler/issues/5) is opened on the github repo for the codewind node.js profiler extension.

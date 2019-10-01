@@ -4,6 +4,8 @@ This section is broken up into the following steps:
 
 1. [Install Docker](#1-install-docker)
 1. [Install the Appsody CLI](#2-install-the-appsody-cli)
+1. [Check access to your Managed OpenShift Cluster](#3-check-access-to-your-managed-openshift-cluster)
+1. [Check that Cloud Pak for Applications has been installed in the Cluster](#4-check-that-Cloud-Pak-for-Applications-has-been-installed-in-the-Cluster)
 
 ## 1. Install Docker
 
@@ -16,3 +18,11 @@ A key part of the Appsody development experience is Rapid Local Development Mode
 Appsody includes a CLI which allows you to manage you stack based development. This should be installed on your development machine:
 
 [Install the Appsody CLI](https://appsody.dev/docs/getting-started/installation)
+
+## 3. Check access to your Managed OpenShift Cluster
+
+You should already have been provided with details of a managed OpenShift cluster that has been provisioned for you. Check you have access to this by: TBA
+
+## 4. Check that Cloud Pak for Applications has been installed in the Cluster
+
+Cloud Pak for Applications should already have been installed in your managed OpenShift cluster. Check you have access to this by: TBAå
