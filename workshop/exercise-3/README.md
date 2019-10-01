@@ -2,7 +2,7 @@
 
 (Rewrite this to use OpenShift not IKS)
 
-n this exercise, we will show how to deploy the sample insurance quote application built in Exercise 2 to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
+In this exercise, we will show how to deploy the sample insurance quote application built in Exercise 2 to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
 
 When you have completed this exercise, you will understand how to
 
