@@ -1,105 +1,244 @@
 # Exercise 3: Deploying to OpenShift with Appsody
 
-(Rewrite everything below this line)
+(Rewrite this to use OpenShift not IKS)
 
-This section is broken up into the following steps:
+n this exercise, we will show how to deploy the sample insurance quote application built in Exercise 2 to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
 
-1. [Configure OpenScale in a Jupyter Notebook](#1-configure-openscale-in-a-jupyter-notebook)
-1. [Utilize the dashboard for OpenScale](#2-utilize-the-dashboard-for-openscale)
+When you have completed this exercise, you will understand how to
 
-## 1. Configure OpenScale in a Jupyter Notebook
+* use appsody to build and package an application with the stack contents ready for deployment
+* deploy the applications to the IBM Cloud Kubernetes Service
 
-For this part of the exercise we're going to configure our Watson OpenScale service by running a Jupyter Notebook.
+## Prerequisites
 
-### Import the notebook
+In order to deploy the applications to the IBM Cloud Kubernetes Service, complete the following steps.
 
-At the project overview click the *New Asset* button, and choose *Add notebook*.
+* [Install the CLIs to manage a cluster](https://cloud.ibm.com/docs/containers?topic=containers-cs_cli_install#cs_cli_install_steps)
 
-![Add a new asset](../.gitbook/assets/images/wml/wml-1-add-asset.png)
+* [Create a free Kubernetes cluster in IBM Kubernetes Service](https://cloud.ibm.com/docs/containers?topic=containers-getting-started#classic-cluster-create)
 
-On the next panel select the *From URL* tab, give your notebook a name, provide the following URL, and choose the Python 3.6 environment:
+* [Create a private container registry in IBM Cloud Container Registry](https://cloud.ibm.com/docs/services/Registry?topic=registry-registry_setup_cli_namespace#registry_setup_cli_namespace)
+
+* In order for the backend application to access the Dacadoo Health Score API, visit <https://models.dacadoo.com/doc/> to request an API key for evaluation purposes. Access to this API is granted individually to insurance professionals. There is a mock implementation of the API in the code that you can use if you do not want to register.
+
+## Steps
+
+1. [Deploy the backend application to the IBM Cloud](#4-deploy-the-backend-application-to-the-IBM-Cloud)
+1. [Deploy the frontend application to the IBM Cloud](#5-deploy-the-frontend-application-to-the-IBM-Cloud)
+
+### 1. Deploy the backend application to the IBM Cloud
+
+We are now going to deploy both applications to the IBM Cloud Kubernetes Service starting with the backend application.
+
+We will use the `appsody deploy` command for the deployments.  This command:
+
+* builds a deployment image for production usage (i.e. it does not include development-mode tools)
+* pushes the image to your designated image registry
+* builds a deployment yaml file
+* applies the yaml file to your Kubernetes cluster
+
+In order to have the backend application sends requests to the Dacadoo Health Score API,
+we need to create a secret that contains the configuration for making requests to the Dacadoo server.
+(Note: If you do not want to use the Dacadoo Health Score API, you can skip this setup and continue to use the mock endpoint.)
 
 ```bash
-https://raw.githubusercontent.com/IBM/cloudpakfordata-telco-churn-workshop/master/notebooks/ConfigureOpenScale.ipynb
+kubectl create secret generic dacadoo-secret --from-literal=url=<url> --from-literal=apikey=<apikey>
 ```
 
-> The notebook is hosted in the same repo as [the workshop](https://github.com/IBM/cloudpakfordata-telco-churn-workshop).
->
-> * **Notebook**: [ConfigureOpenScale.ipynb](https://github.com/IBM/cloudpakfordata-telco-churn-workshop/blob/master/notebooks/ConfigureOpenScale.ipynb)
-> * **Notebook with output**: [with-output/ConfigureOpenScaleOutput.ipynb](https://github.com/IBM/cloudpakfordata-telco-churn-workshop/blob/master/notebooks/with-output/ConfigureOpenScaleOutput.ipynb)
+where
 
-![Add notebook name and URL](../.gitbook/assets/images/wml/wml-2-add-name-and-url.png)
+* `<url>` is the URL of the Dacadoo server (e.g. `https://models.dacadoo.com/score/2`)
+* `<apikey>` is the API key that you obtained when you registered to use the API.
 
-When the Jupyter notebook is loaded and the kernel is ready then we can start executing cells.
+We need to modify the deployment yaml to pass the secret's values to the application.
+The initial deployment yaml can be generated as follows.
 
-![Notebook loaded](../.gitbook/assets/images/aios/OpenScaleNotebook.png)
+```bash
+appsody deploy --generate-only
+```
 
-### Update credentials
+This creates a file named `app-deploy.yaml` in your project.  Edit the file.
+You will notice that this yaml file contains an `AppsodyApplication` custom resource.
+This resource is handled by an Appsody operator that is installed into your cluster the first time you deploy an Appsody application.
+The operator handles creating the standard Kubernetes resources (such as Deployment) from the `AppsodyApplication` resource.
+It is beyond the scope of this code pattern to go into the details of this resource or the operator.
+If you would like to know more about it, take a look at the [user guide](https://github.com/appsody/appsody-operator/blob/master/doc/user-guide.md).
 
-* In the notebook section 1.2 you will add your ICP platform credentials.
-* For the `url` field, change `https://w.x.y.z:31843` to use the IP address of your ICP cluster, i.e for today's workshop on 9/19/19 it will be `"url": "169.54.164.135:31843"`. Make sure you have the port appended `31843`.
-* For the `username`, use your login username.
-* For the `password`, user your login password.
+Add the following bold lines to the yaml file.  These lines instruct Kubernetes how to set environment variables from the secret we just created.
+Be careful to match the indentation (`env:` is indented the same number of spaces as `applicationImage:`).
 
-### Run the notebook
+```yaml
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  name: quote-backend
+spec:
+  # Add fields here
+  version: 1.0.0
+  applicationImage: quote-backend
+  <b>env:
+    - name: DACADOO_URL
+      valueFrom:
+        secretKeyRef:
+          name: dacadoo-secret
+          key: url
+    - name: DACADOO_APIKEY
+      valueFrom:
+        secretKeyRef:
+          name: dacadoo-secret
+          key: apikey<b>
+  .
+  .
+  .
+```
 
-Spend an minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook. While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (i.e. `[17]`).
+You do not need to update `applicationImage` with your image registry because the `appsody deploy` command will take care of that.
+However, because we're going to push the image to a private registry, we need to update the yaml with the pull secret which is needed to authenticate to the registry.
+Your cluster is prepopulated with secrets to access each regional registry.
 
-### Get transactions for Explainability
+```bash
+$ kubectl get secrets --field-selector type=kubernetes.io/dockerconfigjson
+NAME                TYPE                             DATA   AGE
+default-au-icr-io   kubernetes.io/dockerconfigjson   1      1d
+default-de-icr-io   kubernetes.io/dockerconfigjson   1      1d
+default-icr-io      kubernetes.io/dockerconfigjson   1      1d
+default-jp-icr-io   kubernetes.io/dockerconfigjson   1      1d
+default-uk-icr-io   kubernetes.io/dockerconfigjson   1      1d
+default-us-icr-io   kubernetes.io/dockerconfigjson   1      1d
+```
 
-Under `8.9 Identify transactions for Explainability` run the cell. It will produce a series of UIDs for indidvidual ML scoring transactions. Copy one of them to examine in the next section.
+In order to determine which region you are using, you can use the `ibmcloud cr region` command.
 
-## 2. Utilize the dashboard for Openscale
+```bash
+$ ibmcloud cr region
+You are targeting region 'us-south', the registry is 'us.icr.io'.
+```
 
-Now that you have created a machine learning model and configured Openscale, you can utilize the OpenScale dashboard to gather insights.
+In this example the registry is `us.icr.io` so the corresponding secret to use is `default-us-icr-io`.
+Add the following bold line to the yaml file (but use the correct secret for your region):
 
-### Use the insights dashboard
+```yaml
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  name: quote-backend
+spec:
+  # Add fields here
+  version: 1.0.0
+  applicationImage: quote-backend
+  <b>pullSecret: default-us-icr-io</b>
+  env:
+    - name: DACADOO_URL
+      valueFrom:
+        secretKeyRef:
+          name: dacadoo-secret
+          key: url
+    - name: DACADOO_APIKEY
+      valueFrom:
+        secretKeyRef:
+          name: dacadoo-secret
+          key: apikey
+  .
+  .
+  .
+```
 
-Click on the left-hand menu icon for `Insights`, then choose the tile for your configured model (or the 3-dot menu on the tile and then `View Details`:
+This completes the editing of the yaml file so save it.
 
-![OpenScale Insight Dashboard Tile Open](../.gitbook/assets/images/aios/OpenScaleInsightDashTileOpen.png)
+At this point we're almost ready to push the image to the registry and deploy it to the cluster.
+In order to push the image we need to login to the image registry first.
 
-You can see the top monitor highlighted, for the feature `Sex`.
+```bash
+ibmcloud cr login
+```
 
-By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to veiw the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
+Now use `appsody deploy` to push the image and deploy it.
 
-![OpenScale Fairness Monitor](../.gitbook/assets/images/aios/OpenScaleFairnessMonitor.png)
+```bash
+appsody deploy -t <your image registry>/<your namespace>/quote-backend:1 --push
+```
 
-Once you open the details page, you can see more information:
+where
 
-![OpenScale Fairness Detail](../.gitbook/assets/images/aios/OpenScaleFairnessDetail.png)
+* `<your image registry>` is the host name of your regional registry, for example `us.icr.io`
+* `<your namespace>` is a namespace you created in your registry
 
-Click on `View Transactions` to drill deeper:
+After the deployment completes, you can test the service using curl.
 
-![OpenScale View Transactions](../.gitbook/assets/images/aios/OpenScaleFairnessViewTransactions.png)
+```bash
+$ curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://<node IP address>:<node port>/quote
+{"quotedAmount":70,"basis":"Dacadoo Health Score API"}
+```
 
-Now, go back to the top-level page when you click the Monitor Deployment tile and click `Configure Monitors`. Click the `Fairness` menu, then the `Debias Endpoint` tab:
+where
 
-![OpenScale Monitors Fairness](../.gitbook/assets/images/aios/OpenScaleMonitorFairness.png)
+* `<node IP address>` is the external IP address of your node which you can obtain using the command `kubectl get node -o wide`
+* `<node port>` is the node port assigned to the service which you can obtain using the command `kubectl get svc quote-backend`
 
-Then scroll down for code examples on how to use the Fairness Debiased endpoint:
+Note: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis"
+("mocked backend computation" instead of "Dacadoo Health Score API").
 
-![OpenScale Debiased endpoint](../.gitbook/assets/images/aios/OpenScaleDebiasedEndpoint.png)
+Note that because we are using a free Kubernetes cluster, the AppsodyApplication is limited to exposing the service via a node port.
+If you use a standard cluster with Knative installed, or a Red Hat OpenShift on IBM Cloud cluster, you have the option to expose the service via
+an ingress resource or a route resource.
 
-Similarly, you can choose the `Quality` menu and choose the `Feedback` tab to get code for Feedback Logging.
+### 2. Deploy the frontend application to the IBM Cloud
 
-### Examine an individual transaction
+We are now going to deploy the frontend application to the IBM Cloud Kubernetes Service.
+The steps are similar to what we did for the backend application.
 
-Click on the left-hand menu icon for `Explain a transaction` and enter the transaction UID you copied previously into the search bar.
+First we need to generate the deployment yaml so that we can edit it.
+Change the current directory back to the frontend application and generate the deployment yaml.
 
-![Explain a transaction](../.gitbook/assets/images/aios/OpenScaleExplainTransaction.png)
+```bash
+cd ../quote-frontend
+appsody deploy --generate-only
+```
 
-From the info icon next to `Details`:
-"Explanations show the most significant factors when determining an outcome. Classification models also include advanced explanations. Advanced explanations are not available for regression, image, and unstructured text models."
+Edit the file that was created, `app-deploy.yaml`, and add the following bold lines to the yaml file.
+The `pullSecret` should be the same value you used in the backend application.
+The `env` section defines an environment variable with the URL of the backend application within the cluster.
+Be careful to match the indentation (`pullSecret:` and `env:` are indented the same number of spaces as `applicationImage:`).
 
-Click on the info icon next to `Minimum changes for No Risk outcome` and look at the feature values:
-"Pertinent Negative
-If the feature values were set to these values, the prediction would change. This is the minimum set of changes in feature values to generate a different prediction. Each feature value is changed so that it moves towards its median value in the training data."
+```yaml
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  name: quote-frontend
+spec:
+  # Add fields here
+  version: 1.0.0
+  applicationImage: quote-frontend
+  <b>pullSecret: default-us-icr-io
+  env:
+  - name: BACKEND_URL
+    value: http://quote-backend:8080/quote</b>
+  .
+  .
+  .
+```
 
-Click on the info icon next to `Maximum changes allowed for the same outcome` and look at the feature values:
-"Pertinent Positive
-The prediction will not change even if the feature values are set to these values. This is the maximum change allowed while maintaining the existing prediction. Each feature value is changed so that it moves towards its median value in the training data."
+Save the yaml file and do the deployment.
 
-You can see under `Most important factors influencing prediction` the Feature, Value, and Weight of the most important factors for this score.
+```bash
+appsody deploy -t <your image registry>/<your namespace>/quote-frontend:1 --push
+```
 
-A full breakdown of the factors contributing to either "Risk" or "No Risk" are at the bottom.
+where
+
+* `<your image registry>` is the host name of your regional registry, for example `us.icr.io`
+* `<your namespace>` is a namespace you created in your registry
+
+After the deployment completes, use a browser to open the frontend application.
+Use `http://<node IP address>:<nodeport>` where
+
+* `<node IP address>` is the external IP address of your node which you can obtain using the command `kubectl get node -o wide`
+* `<node port>` is the node port assigned to the service which you can obtain using the command `kubectl get svc quote-frontend`
+
+Fill in the form and click the button to submit it.
+You should get a quote from the backend application.
+
+![quoteform2](doc/source/images/screenshot2.png)
+
+Note: If you are not using the Dacadoo Health Score API, you may see different text after the quote
+("determined using mocked backend computation" instead of "determined using Dacadoo Health Score API").
