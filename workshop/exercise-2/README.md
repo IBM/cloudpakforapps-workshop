@@ -21,10 +21,7 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-In order to build and test applications on your local workstation, complete the following steps.
-
-* [Install the Appsody CLI](https://appsody.dev/docs/getting-started/installation)
-* [Install Docker](https://docs.docker.com/get-started/)
+You should have already carried out the prerequisites defined in [Exercise 0](/workshop/exercise-0/README.md).
 
 ## Steps
 
