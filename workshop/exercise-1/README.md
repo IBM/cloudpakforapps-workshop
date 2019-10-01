@@ -67,7 +67,7 @@ kabanero        nodejs-express          0.2.5           *simple, skaffold       
 kabanero        nodejs-loopback         0.1.4           *scaffold               LoopBack 4 API Framework for Node.js
 ```
 
-Given that we'll exclusively be using the kabanero stacks in this workshop, for each of use we can set the kabanero repository to be the default for the CLI: 
+Given that we'll exclusively be using the kabanero stacks in this workshop, for each of use we can set the kabanero repository to be the default for the CLI:
 
 ``` bash
 appsody repo set-default kabanero
