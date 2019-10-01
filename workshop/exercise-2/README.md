@@ -9,7 +9,6 @@ When you have completed this exercise, you will understand how to
 
 * create a frontend web application and a backend REST application using the Appsody Node.js Express and Spring Boot stacks
 * test the applications locally in a containerized environment
-* deploy the applications to the IBM Cloud Kubernetes Service
 
 <!--add an image in this path-->
 ![architecture](doc/source/images/architecture.png)
@@ -86,20 +85,21 @@ Watch the `appsody run` console session for the application to restart.
 Then re-enter `http://localhost:3000` in your browser and you will see the new message.
 
 We're going to replace the starter code with the insurance quote frontend application.
-First you must edit the package.json file and add the following dependencies:
+First you must edit the package.json file and add the following to the `dependencies` section:
 
 ```json
   .
   .
   .
   "dependencies": {
+    .
+    .
     "body-parser": "^1.19.0",
     "config": "^3.2.0",
     "express-validator": "^6.2.0",
     "pug": "^2.0.0",
     "request": "^2.88.0"
   },
-  "devDependencies": {
   .
   .
   .
