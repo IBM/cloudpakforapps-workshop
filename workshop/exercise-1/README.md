@@ -1,7 +1,5 @@
 # Exercise 1: Introduction to  Appsody and Codewind
 
-(This is very mush still a work in progress - converted from the Garage tutorial - much to be changed and removed)
-
 In this exercise, we will introduce Appsody, which is the underpinning development flow in Kabanero, along with its integration into IDEs using Codewind. In particular you will become experienced with  
 
 * the components of the Appsody development toolbox
