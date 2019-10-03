@@ -54,5 +54,5 @@ Cloud Pak for Applications:
   * Mobile Foundation
   * IBM Cloud Private
   * Transformation Advisory
-  * any more
+  * ...and more
 * ... can be deployed on any major cloud provider supporting OpenShift (IBM Cloud, AWS, Azure, GCP)
