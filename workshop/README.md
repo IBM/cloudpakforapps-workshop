@@ -44,33 +44,15 @@ We'll be using the Cloud Pak for Applications platform to perform the following 
 
 IBM® Cloud Pak for Applications is an enterprise-ready, containerized software solution for modernizing existing applications and developing new cloud-native apps that run on Red Hat® OpenShift®. Built on IBM WebSphere® offerings and Red Hat OpenShift Container Platform with IBM Kabanero Enterprise, Cloud Pak for Applications provides a long-term solution to help you transition between public, private, and hybrid clouds, and create new business applications.
 
-(Rewrite the below to Applications)...
-
-![Cloud Pak for Data pipeline](.gitbook/assets/images/generic/cp4data.png)
-
 ### A few other noteworthy mentions
 
-Cloud Pak for Data:
+Cloud Pak for Applications:
 
-* ... can be installed on Red Hat OpenShift or stand-alone
-* ... can be extended to include over 20 [add-ons](https://docs-icpdata.mybluemix.net/extend/com.ibm.icpdata.doc/zen/admin/add-ons.html)
-  * Watson Assistant
-  * Watson OpenScale
-  * R Studio
-  * Data Virtualization
-  * any many more
-* ... can be deployed on any major cloud provider (AWS, Azure, GCP)
-* ... provides a free 7-day trial -- [Cloud Pak Experience](https://www.ibm.com/cloud/garage/cloud-pak-experiences/)
-
-![Cloud Pak for Data stack](.gitbook/assets/images/generic/cpd-stack.png)
-
-### Our Cloud Pak for Data environment
-
-For this workshop we'll be using Cloud Pak for Data with the following add-ons:
-
-* Watson Machine Learning
-* Watson OpenScale
-* Data Virtualization
-* Data Refinery
-
-The environment was deployed on an 8-node cluster with 3 master nodes (32 VCPU, 32 GB RAM), and 5 worker nodes (32 VCPU, 128 GB RAM).
+* ... includes
+  * Kabanero Enterprise
+  * WebSphere
+  * Mobile Foundation
+  * IBM Cloud Private
+  * Transformation Advisory
+  * any more
+* ... can be deployed on any major cloud provider supporting OpenShift (IBM Cloud, AWS, Azure, GCP)
