@@ -1,6 +1,6 @@
 # Exercise 1: Introduction to  Appsody and Codewind
 
-In this exercise, we will introduce Appsody, which is the underpinning development flow in Kabanero, along with its integration into IDEs using Codewind. In particular you will become experienced with  
+In this exercise, we will introduce Appsody, which is the underpinning development flow in Kabanero, along with its integration into IDEs using Codewind. In particular you will become experienced with:
 
 * the components of the Appsody development toolbox
 * the concept of pre-configured "stacks" and templates for popular open source runtimes (such as Node.js and Spring Boot) on which to build applications
@@ -12,22 +12,21 @@ You should have already carried out the prerequisites defined in [Exercise 0](/w
 
 ```bash
 $ appsody version
-appsody 0.4.5
+appsody 0.4.6
 ```
 
 ## Configure your access to Appsody stacks
 
 The Appsody CLI gives you access to stacks, which are stored in stack repositories. These can be local, private to the Enterprise or public. To get the list of available repos, run this command.
 
-``` bash
+```bash
 $ appsody repo list
 
 NAME            URL
 *appsodyhub     https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-experimental    https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
 ```
 
-The exact repo list may be different to the above. `appsodyhub` is the hub for public repositories. For this workshop we are going to use the private enterprise-grade collection of stacks that come with Kabanero Enterprise (which is part of CLoud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
+The exact repo list may be different to the above. `appsodyhub` is the hub for public repositories. For this workshop we are going to use the private enterprise-grade collection of stacks that come with Kabanero Enterprise (which is part of Cloud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
 
 ## Add Kabanero Collection to appsody
 
@@ -37,71 +36,77 @@ From the Cloud Pak for Applications landing page get the `CollectionHub` URL, fo
 
 Use the appsody CLI to add the Collection repo.
 
-``` bash
+```bash
 appsody repo add kabanero https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
 ```
 
-Now is we get the list of repos, we should see Kabanero listed:
+Now when we get our list of repos, we should see Kabanero listed:
 
-``` bash
+```bash
 $ appsody repo list
 
 NAME            URL
 *appsodyhub     https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 kabanero        https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
-experimental    https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
 ```
 
 We can now list the appsody stacks available in the Kabanero collection:
 
-``` bash
+```bash
 $ appsody list kabanero
 
-REPO            ID                      VERSION         TEMPLATES               DESCRIPTION
-kabanero        java-microprofile       0.2.11          *default                Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
-kabanero        java-spring-boot2       0.3.9           *default, kotlin        Spring Boot using OpenJ9 and Maven
-kabanero        nodejs                  0.2.5           *simple                 Runtime for Node.js applications
-kabanero        nodejs-express          0.2.5           *simple, skaffold       Express web framework for Node.js
-kabanero        nodejs-loopback         0.1.4           *scaffold               LoopBack 4 API Framework for Node.js
+REPO    	ID               	VERSION  	TEMPLATES        	DESCRIPTION
+kabanero	java-microprofile	0.2.11   	*default         	Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
+kabanero	java-spring-boot2	0.3.9    	*default, kotlin 	Spring Boot using OpenJ9 and Maven
+kabanero	nodejs           	0.2.5    	*simple          	Runtime for Node.js applications
+kabanero	nodejs-express   	0.2.5    	*simple, skaffold	Express web framework for Node.js
+kabanero	nodejs-loopback  	0.1.4    	*scaffold        	LoopBack 4 API Framework for Node.js
 ```
 
 Given that we'll exclusively be using the kabanero stacks in this workshop, for each of use we can set the kabanero repository to be the default for the CLI:
 
-``` bash
+```bash
 appsody repo set-default kabanero
 ```
 
 Now is we get the list of repos, we should see kabanero is the default:
 
-``` bash
+```bash
 $ appsody repo list
 
 NAME            URL
 *kabanero       https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
 appsodyhub      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-experimental    https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
 ```
 
 ## Appsody CLI
+
+In this section we'll be using the following appsody commands:
+
+* `appsody init`
+* `appsody run`
+* `appsody test`
+* `appsody debug`
+* `appsody build`
 
 ### Create a new Application
 
 We will now use on of the stacks to create an application. First, create a new directory for the project and change directory into it.
 
-``` bash
+```bash
 mkdir appsody_sample_nodejs-express
 cd appsody_sample_nodejs-express/
 ```
 
 Initialize the project using `appsody init`:
 
-``` bash
+```bash
 appsody init kabanero/nodejs-express
 ```
 
 The directory has been initialized with a minimal set of artifacts (which is, in fact, a sample application that uses the chosen stack)
 
-``` bash
+```bash
 .
 ├── .appsody-config.yaml
 ├── .gitignore
@@ -117,26 +122,26 @@ The directory has been initialized with a minimal set of artifacts (which is, in
 
 The key artifacts are:
 
-* app.js  
+* app.js
   Node.js application module (the default sample application is a simple "hello world")
 
-* package.json  
+* package.json
   NPM package JSON file
 
-* test.js  
+* test.js
   A simple test module
 
 ### Run the Application
 
 The sample application comes ready to run using appsody:
 
-``` bash
+```bash
 appsody run
 ```
 
 This step results in the stack image, with the sample application mounted into it, run in you local Docker environment. The output has the endpoint for the application.
 
-``` bash
+```bash
 Running development environment...
 Running command: docker pull kabanero/nodejs-express:0.2
 Running docker command: docker run --rm -p 3000:3000 -p 8080:8080 -p 9229:9229 --name appsody-sample-nodejs-express-dev -v /Users/csantanapr/dev/kabanero/appsody_sample_nodejs-express/:/project/user-app -v appsody-sample-nodejs-express-deps:/project/user-app/node_modules -v /Users/csantanapr/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller kabanero/nodejs-express:0.2 --mode=run
@@ -156,7 +161,7 @@ audited 295 packages in 1.546s
 
 We can now check that this is running by hitting the endpoint <http://localhost:3000>:
 
-``` bash
+```bash
 $ curl http://localhost:3000
 Hello from Appsody!
 ```
@@ -173,9 +178,9 @@ Stack](https://github.com/appsody/stacks/blob/master/incubator/nodejs-express/RE
 
 ### Stop the Application
 
-To stop the application container, run this command from the same diectory (e.g. in another terminal window):
+To stop the application container, run this command from the same directory (e.g. in another terminal window):
 
-``` bash
+```bash
 appsody stop
 ```
 
@@ -185,7 +190,7 @@ Alternatively, you can also press `Ctrl+C` in the first window that is running t
 
 A stack will typically come with a test framework - and this can be initiated by running:
 
-``` bash
+```bash
 $ appsody test
 Running test environment
 Running command: docker pull kabanero/nodejs-express:0.2
@@ -225,21 +230,21 @@ As well as supporting the running and testing of your application, an appsody st
 
 Open your editor. We are using `VS Code`. Add the project to your workspace, or use the command `code .`
 
-![js\_lab1\_vscode\_project.png](images/js_lab1_vscode_project.png)
+![Initialized Appsody code](images/js_lab1_vscode_project.png)
 
-Open a new terminal window inside VS Code use `View->Terminal`
+Open a new terminal window inside VS Code use `View` -> `Terminal`
 
-![js\_lab1\_vscode\_terminal.png](images/js_lab1_vscode_terminal.png)
+![Open the embedded terminal](images/js_lab1_vscode_terminal.png)
 
 To debug the application including reloading the application on code changes run the below command:
 
-``` bash
+```bash
 appsody debug
 ```
 
 The output indicates the debug environment is being used
 
-``` bash
+```bash
 Running debug environment
 Running command: docker pull kabanero/nodejs-express:0.2
 Running docker command: docker run --rm -p 3000:3000 -p 8080:8080 -p 9229:9229 --name appsody-sample-nodejs-express-dev -v /Users/csantana23/dev/kabanero/appsody_sample_nodejs-express/:/project/user-app -v appsody-sample-nodejs-express-deps:/project/user-app/node_modules -v /Users/csantana23/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller kabanero/nodejs-express:0.2 --mode=debug
@@ -261,37 +266,37 @@ audited 295 packages in 1.154s
 
 Now you can again open the application at <http://localhost:3000/>
 
-![js\_lab1\_endpoint.png](images/js_lab1_endpoint.png)
+![The application running in debug mode](images/js_lab1_endpoint.png)
 
-Let us make a code change.
+Update the message and save the change.
 
-![js\_lab1\_code\_change.png](images/js_lab1_code_change.png)
+![Change the message](images/js_lab1_code_change.png)
 
-Here, the debugger will reload the application for you.
+The debugger will now rebuild the container and reload the application for you.
 
 Refresh the browser to see the changes:
 
-![js\_lab1\_endpoint\_test.png](images/js_lab1_endpoint_test.png)
+![The application running with the new changes](images/js_lab1_endpoint_test.png)
 
-You can attach to the Node.js debugger using `VSCode`. To access the debug view use `View->Debug` or click Debug icon on left menu:
+You can attach to the Node.js debugger using VS Code. To access the debug view use `View` -> `Debug` or click Debug icon on left menu:
 
-![js\_lab1\_vscode\_debug.png](images/js_lab1_vscode_debug.png)
+![Open the embedded debugger](images/js_lab1_vscode_debug.png)
 
 Add a breakpoint to the application, click to the left of the line number:
 
-![js\_lab1\_vscode\_breakpoint.png](images/js_lab1_vscode_breakpoint.png)
+![Add a breakpoint](images/js_lab1_vscode_breakpoint.png)
 
-Click on the debug task `Appsody: Attach node`:
+Click on the debug task `Appsody: Attach node` and click the `Play` button:
 
-![js\_lab1\_vscode\_attach.png](images/js_lab1_vscode_attach.png)
+![Attach the debugger to Appsody](images/js_lab1_vscode_attach.png)
 
 Refresh the browser and watch how the debugger stops at the breakpoint:
 
-![js\_lab1\_vscode\_attach\_break.png](images/js_lab1_vscode_attach_break.png)
+![The debugger in action](images/js_lab1_vscode_attach_break.png)
 
 ### Build the application
 
-Up until now, we have been using appsody in what we call "Rapid Local Development Mode", where we can cycle round code changes, testing and debugging them - all within a local Docker environment. Appsody is managing this environment possible, through a combination of the CLI, the stack and appsody code within that stack. Once you are ready to deploy the application outside of appsody control, there are two additional appsody commands to help you.
+Up until now, we have been using appsody in what we call "Rapid Local Development Mode", where we can cycle round code changes, testing and debugging them - all within a local Docker environment. Appsody is making this environment possible, through a combination of the CLI, the stack and appsody code within that stack. Once you are ready to deploy the application outside of appsody control, there are two additional appsody commands to help you.
 
 These enable a couple of capabilities:
 
@@ -300,7 +305,7 @@ These enable a couple of capabilities:
 
 In this section we will carry out the first of these - i.e. simply building a standalone image. Perhaps unsurprisingly, this is enacted by:
 
-``` bash
+```bash
 $ appsody build
 .
 .
@@ -320,9 +325,17 @@ $ appsody build
 Built docker image appsody-sample-nodejs-express
 ```
 
-We now have a standalone image (independant of appsody). We can run this in our local Docker environment in the normal way (making sure we map the exposed port):
+We now have a standalone image (independant of appsody), we can view the image using our local Docker environment:
 
-``` bash
+```bash
+$ docker images
+REPOSITORY                                  TAG                 IMAGE ID            CREATED             SIZE
+appsody-sample-nodejs-express               latest              0be125eee32c        3 minutes ago       945MB
+```
+
+We can run this with our local Docker environment in the normal way (making sure we map the exposed port):
+
+```bash
 $ docker run -p 3000:3000 appsody-sample-nodejs-express
 
 > nodejs-express@0.2.6 start /project
@@ -339,25 +352,25 @@ You now have seen the basics of the appsody CLI in operation. We'll now take thi
 
 ## Appsody tasks on VS Code
 
-To access the build tasks on VS code, go to: Terminal > Run Build Task...
+To access the build tasks on VS code, go to: `Terminal` > `Run Build Task`...
 
-![js\_lab1\_build\_task\_menu.png](images/js_lab1_build_task_menu.png)
+![View Build Tasks](images/js_lab1_build_task_menu.png)
 
 You will see a list of available tasks:
 
-![js\_lab1\_build\_task\_list.png](images/js_lab1_build_task_list.png)
+![List of possible tasks](images/js_lab1_build_task_list.png)
 
 Click on `Appsody: run` and this will run the application:
 
-![js\_lab1\_build\_task\_run.png](images/js_lab1_build_task_run.png)
+![Choose `Appsody: run`](images/js_lab1_build_task_run.png)
 
-Once, it is successfully started, you can, again, access the application at <http://localhost:3000/>:
+Once it is successfully started, you can, again, access the application at <http://localhost:3000/>:
 
-![js\_lab1\_endpoint.png](images/js_lab1_endpoint.png)
+![View the running app, again](images/js_lab1_endpoint.png)
 
 You can also run the `Appsody: stop` task:
 
-![js\_lab1\_build\_task\_stop.png](images/js_lab1_build_task_stop.png)
+![Choose `Appsody: stop`](images/js_lab1_build_task_stop.png)
 
 ## Codewind on VS Code
 
@@ -369,23 +382,23 @@ Codewind supports VS Code, Eclipse Che, and Eclipse. In this lab, we are using V
 
 To get codewind extension you need [VS Code version 1.28 or later](https://code.visualstudio.com/download).
 
-Go to the extensions view and search for codewind from the VS code market place:
+Go to the extensions view and search for `Codewind` from the VS Code marketplace:
 
 ![Codewind extensions](images/js_lab1_vscode_codewind_extension.png)
 
 You will find `Codewind` then click `install` to get it. Also, if you want to use Codewind for Node.js performance analysis, you need to install `Codewind Node.js Profiler`.
 
-Once you get them installed, we can now open the `Codewind` in the VS Code: View > Open View...
+Once installed, in VS Code, go to `View` > `Open View` ...
 
-![sb\_lab1\_vscode\_view.png](images/sb_lab1_vscode_view.png)
+![Open a new view](images/sb_lab1_vscode_view.png)
 
 It gives you you a list of options. Select `Codewind`:
 
-![sb\_lab1\_vscode\_code\_explorer.png](images/sb_lab1_vscode_code_explorer.png)
+![Choose the Codewind option](images/sb_lab1_vscode_code_explorer.png)
 
 This opens `Codewind`:
 
-![sb\_lab1\_vscode\_codewind\_explorer.png](images/sb_lab1_vscode_codewind_explorer.png)
+![Codewind menu](images/sb_lab1_vscode_codewind_explorer.png)
 
 ### Adding the application
 
@@ -393,23 +406,23 @@ You can create a new project or add an existing project to Codewind. Since, we a
 
 Right click on `Projects` under Codewind. Select `Add Existing Project` in the menu:
 
-![sb\_lab1\_codewind\_add\_existing\_project.png](images/sb_lab1_codewind_add_existing_project.png)
+![Choose to add an existing project](images/sb_lab1_codewind_add_existing_project.png)
 
 > **Note** Before doing this, copy your project to the codewind workspace, in the directory `codewind-workspaces/` in your HOME directory. At this point in time, codewind only accepts the projects that are available in the `codewind workspace`.
 
 From the codewind workspace, select the project you created earlier:
 
-![js\_lab1\_add\_existing\_prj\_from\_workspace.png](images/js_lab1_add_existing_prj_from_workspace.png)
+![Add our project to Codewind](images/js_lab1_add_existing_prj_from_workspace.png)
 
 The codewind extension asks you for confirmation as follows. Click `Yes`. The project will be added.
 
 Once it is successfully built, it starts running:
 
-![js\_lab1\_appsody\_project\_running.png](images/js_lab1_appsody_project_running.png)
+![App will build and run](images/js_lab1_appsody_project_running.png)
 
 You can open the CodeWind workspace, right click on `Projects`:
 
-![js\_lab1\_codewind\_open\_workspace.png](images/js_lab1_codewind_open_workspace.png)
+![Open the CodeWind workspace](images/js_lab1_codewind_open_workspace.png)
 
 ### Project Options
 
