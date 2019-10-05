@@ -119,22 +119,24 @@ This works as follows.
 
 * `quote.js` uses the [config](https://www.npmjs.com/package/config) module to get the value for the backend URL.
 * When the application runs in development mode, the config module uses `config/development.json` to find the value for the backend URL.
+
 This file sets the URL to the mock endpoint.
 
-    ```json
-    {
-      "backendUrl": "http://localhost:3000/quote/test"
-    }
-    ```
+```json
+{
+    "backendUrl": "http://localhost:3000/quote/test"
+}
+```
 
 * When the application runs in production mode (which we'll see later), the config module uses `config/custom-environment-variables.json` to find the value for the backend URL.
+
 This file sets the URL from the `BACKEND_URL` environment variable.
 
-    ```json
-    {
-      "backendUrl": "BACKEND_URL"
-    }
-    ```
+```json
+{
+    "backendUrl": "BACKEND_URL"
+}
+```
 
 Press `Ctrl-C` in the window where the application is running to stop it.
 
@@ -217,6 +219,7 @@ This works as follows:
     ```
 
 * When the application runs in production mode (which we'll see later), environment variables can be used to set the URL and API key.
+
 Environment variables override the values in the `application.yaml` file.
 
 Press `Ctrl-C` in the window where the application is running to stop it.

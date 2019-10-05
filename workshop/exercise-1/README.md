@@ -55,12 +55,12 @@ We can now list the appsody stacks available in the Kabanero collection:
 ```bash
 $ appsody list kabanero
 
-REPO    	ID               	VERSION  	TEMPLATES        	DESCRIPTION
-kabanero	java-microprofile	0.2.11   	*default         	Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
-kabanero	java-spring-boot2	0.3.9    	*default, kotlin 	Spring Boot using OpenJ9 and Maven
-kabanero	nodejs           	0.2.5    	*simple          	Runtime for Node.js applications
-kabanero	nodejs-express   	0.2.5    	*simple, skaffold	Express web framework for Node.js
-kabanero	nodejs-loopback  	0.1.4    	*scaffold        	LoopBack 4 API Framework for Node.js
+REPO        ID                  VERSION     TEMPLATES           DESCRIPTION
+kabanero    java-microprofile   0.2.11      *default            Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
+kabanero    java-spring-boot2   0.3.9       *default, kotlin    Spring Boot using OpenJ9 and Maven
+kabanero    nodejs              0.2.5       *simple             Runtime for Node.js applications
+kabanero    nodejs-express      0.2.5       *simple, skaffold   Express web framework for Node.js
+kabanero    nodejs-loopback     0.1.4       *scaffold           LoopBack 4 API Framework for Node.js
 ```
 
 Given that we'll exclusively be using the kabanero stacks in this workshop, for each of use we can set the kabanero repository to be the default for the CLI:
