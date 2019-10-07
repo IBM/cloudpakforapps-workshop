@@ -33,7 +33,7 @@ You should have already carried out the prerequisites defined in [Exercise 0](/w
 Clone the `appsody-sample-quote-app` repo locally. In a terminal, run:
 
 ```bash
-git clone https://github.com/IBM/appsody-sample-quote-app
+git clone https://github.com/IBM/appsody-sample-quote-app ~/appsody-sample-quote-app
 ```
 
 ### 2. Create the frontend application and run it locally
@@ -49,11 +49,12 @@ appsody init nodejs-express
 After `appsody init` completes, list the content of the directory. You'll see that Appsody has created a starter application for you.
 
 ```bash
-$ ls -l
--rwxrwxrwx 1 gregd gregd   130 Sep 10 13:48 app.js
--rwxrwxrwx 1 gregd gregd 51421 Sep 10 13:48 package-lock.json
--rwxrwxrwx 1 gregd gregd   455 Sep 10 13:48 package.json
-drwxrwxrwx 1 gregd gregd  4096 Sep 10 13:48 test
+.
+├── app.js
+├── package-lock.json
+├── package.json
+└── test
+    └── test.js
 ```
 
 It's possible to run this application on your workstation immediately.
@@ -95,7 +96,30 @@ We're going to replace the starter code with the insurance quote frontend applic
 
 The Node.js Express stack installs the package dependencies into the containerized application. However it won't do this when the containerized application is already running. You must stop the current application by pressing `Ctrl-C` and then re-run `appsody run` to start it back up.
 
-Now copy the files from the `quote-frontend` directory in the cloned git repo to your Appsody project. Watch for the container to restart and then refresh your browser again. You will see a form appear.
+Now copy the files from the `quote-frontend` directory in the cloned git repo to your Appsody project, for example:
+
+```bash
+cp -R ~/appsody-sample-quote-app/quote-frontend/* .
+```
+
+The resulting directory structure of your Appsody project should look like this:
+
+```bash
+.
+└── config
+    ├── custom-environment-variables.json
+    └── development.json
+└── test
+    └── test.js
+└── views
+    └── quote.pug
+├── app.js
+├── package-lock.json
+├── package.json
+└── quote.js
+```
+
+Watch for the container to restart and then refresh your browser again. You will see a form appear.
 
 ![quoteform](doc/source/images/screenshot.png)
 
@@ -130,7 +154,7 @@ Appsody provides a way to run automated tests against the containerized applicat
 appsody test
 ```
 
-This runs tests that come packaged with the stack (such as tests of the health and metrics endpoints), and of course you can add your own tests of your application as well. Look at [quote-frontend/test/test.js](quote-frontend/test/test.js) to see the tests for the frontend application.
+This runs tests that come packaged with the stack (such as tests of the health and metrics endpoints), and of course you can add your own tests of your application as well. Look at tests that call `GET /quote` and `POST /quote` in `test/test.js` to how the frontend application is tested.
 
 ### 3. Create the backend application and run it locally
 
@@ -142,7 +166,22 @@ cd quote-backend
 appsody init java-spring-boot2
 ```
 
-Again you'll see that Appsody has created a starter application for you. It's possible to run this application on your workstation immediately.
+After `appsody init` completes, list the content of the directory. You'll see that Appsody has created a starter application for you.
+
+```bash
+.
+├── src/main/java/application/LivenessEndpoint.java
+├──                          /Main.java
+├── src/main/resources/public/index.html
+├──                   /application.properties
+├── test/java/application/MainTests.java
+├── target/* (compiled code)
+├── .appsody-config.yaml
+├── .gitignore
+└── pom.xml
+```
+
+It's possible to run this application on your workstation immediately.
 
 ```bash
 appsody run
@@ -157,7 +196,7 @@ The Spring Boot 2 stack also provides out-of-the-box health checking and applica
 * Metrics endpoint: <http://localhost:8080/actuator/metrics>
 * Prometheus endpoint: <http://localhost:8080/actuator/prometheus>
 
-We're going to replace the starter code with the insurance quote backend application. Edit the pom.xml file and add the following dependency to the dependencies section.
+We're going to replace the starter code with the insurance quote backend application. Edit the `pom.xml` file and add the following dependency to the dependencies section.
 
 ```xml
   <dependencies>
@@ -172,12 +211,35 @@ We're going to replace the starter code with the insurance quote backend applica
   </dependencies>
 ```
 
-Now copy the files from the `quote-backend` directory in this git repo to your Appsody project. Watch for the container to restart.
-
-You can test the backend API using [curl](https://curl.haxx.se/download.html). The file [quote-backend/backend-input.json](quote-backend/backend-input.json) contains sample input for the API. Issue the `curl` command from the `quote-backend` directory.
+Now copy the files from the `quote-backend` directory in the cloned git repo to your Appsody project, for example:
 
 ```bash
-curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
+cp -R ~/appsody-sample-quote-app/quote-backend/* .
+```
+
+The resulting directory structure of your Appsody project should look like this:
+
+```bash
+.
+├── src/main/java/application/LivenessEndpoint.java
+├──                          /Main.java
+├── src/main/resources/public/index.html
+├──                   /application.properties
+├──                   /application.yaml
+├── test/java/application/MainTests.java
+├── test/java/application/QuoteTests.java
+├── target/* (compiled code)
+├── .appsody-config.yaml
+├── .gitignore
+├── backend-input.json
+└── pom.xml
+```
+
+You can test the backend API using [curl](https://curl.haxx.se/download.html). The file `backend-input.json` contains sample input for the API. Issue the `curl` command from the project directory.
+
+```bash
+$ curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
+
 {"quotedAmount":30,"basis":"mocked backend computation"}
 ```
 
@@ -186,10 +248,10 @@ In this case the backend application is not sending a request to the Dacadoo hea
 * `src/main/java/application/Quote.java` uses `@Value("${DACADOO_URL}")` and `@Value("${DACADOO_APIKEY}")` to get the values of the Dacadoo Health Score API endpoint URL and the API key.
 * `src/main/resources/application.yaml` defines mock values for the URL and API key.
 
-    ```yaml
-    DACADOO_URL: http://localhost:8080/mockscore
-    DACADOO_APIKEY: TEST
-    ```
+  ```yaml
+  DACADOO_URL: http://localhost:8080/mockscore
+  DACADOO_APIKEY: TEST
+  ```
 
 * When the application runs in production mode (which we'll see later), environment variables can be used to set the URL and API key. Environment variables override the values in the `application.yaml` file.
 
