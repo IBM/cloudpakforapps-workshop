@@ -86,10 +86,7 @@ spec:
   expose: true
 ```
 
-By default, the application is deployed in the `kabanero` namespace. If
-you want to deploy the application in a different namespace, you need to
-specify it in this yaml file. In this lab, let’s use a namespace called
-`kabanero-samples` and we can specify it under the metadata as below.
+By default, the application is deployed in the `kabanero` namespace. If you want to deploy the application in a different namespace, you need to specify it in this yaml file. In this lab, let’s use a namespace called `kabanero-samples` and we can specify it under the metadata as below.
 
 ``` yaml
 apiVersion: appsody.dev/v1beta1
@@ -110,35 +107,30 @@ We will use the `appsody deploy` command for the deployments.  This command:
 * builds a deployment yaml file
 * applies the yaml file to your Kubernetes cluster
 
-In order to have the backend application sends requests to the Dacadoo Health Score API,
-we need to create a secret that contains the configuration for making requests to the Dacadoo server.
-(Note: If you do not want to use the Dacadoo Health Score API, you can skip this setup and continue to use the mock endpoint.)
+In order to have the backend application sends requests to the Dacadoo Health Score API, we need to create a secret that contains the configuration for making requests to the Dacadoo server. (Note: If you do not want to use the Dacadoo Health Score API, you can skip this setup and continue to use the mock endpoint.)
 
 ```bash
 kubectl create secret generic dacadoo-secret --from-literal=url=<url> --from-literal=apikey=<apikey>
 ```
 
-where
+where:
 
 * `<url>` is the URL of the Dacadoo server (e.g. `https://models.dacadoo.com/score/2`)
 * `<apikey>` is the API key that you obtained when you registered to use the API.
 
-We need to modify the deployment yaml to pass the secret's values to the application.
-The initial deployment yaml can be generated as follows.
+We need to modify the deployment yaml to pass the secret's values to the application. The initial deployment yaml can be generated as follows.
 
 ```bash
 appsody deploy --generate-only
 ```
 
 This creates a file named `app-deploy.yaml` in your project.  Edit the file.
-You will notice that this yaml file contains an `AppsodyApplication` custom resource.
-This resource is handled by an Appsody operator that is installed into your cluster the first time you deploy an Appsody application.
-The operator handles creating the standard Kubernetes resources (such as Deployment) from the `AppsodyApplication` resource.
-It is beyond the scope of this code pattern to go into the details of this resource or the operator.
-If you would like to know more about it, take a look at the [user guide](https://github.com/appsody/appsody-operator/blob/master/doc/user-guide.md).
 
-Add the following bold lines to the yaml file.  These lines instruct Kubernetes how to set environment variables from the secret we just created.
-Be careful to match the indentation (`env:` is indented the same number of spaces as `applicationImage:`).
+You will notice that this yaml file contains an `AppsodyApplication` custom resource. This resource is handled by an Appsody operator that is installed into your cluster the first time you deploy an Appsody application. The operator handles creating the standard Kubernetes resources (such as Deployment) from the `AppsodyApplication` resource.
+
+> It is beyond the scope of this code pattern to go into the details of this resource or the operator. If you would like to know more about it, take a look at the [user guide](https://github.com/appsody/appsody-operator/blob/master/doc/user-guide.md).
+
+Add the following bold lines to the yaml file.  These lines instruct Kubernetes how to set environment variables from the secret we just created. Be careful to match the indentation (`env:` is indented the same number of spaces as `applicationImage:`).
 
 ```yaml
 apiVersion: appsody.dev/v1beta1
@@ -166,8 +158,8 @@ spec:
 ```
 
 You do not need to update `applicationImage` with your image registry because the `appsody deploy` command will take care of that.
-However, because we're going to push the image to a private registry, we need to update the yaml with the pull secret which is needed to authenticate to the registry.
-Your cluster is prepopulated with secrets to access each regional registry.
+
+However, because we're going to push the image to a private registry, we need to update the yaml with the pull secret which is needed to authenticate to the registry. Your cluster is prepopulated with secrets to access each regional registry.
 
 ```bash
 $ kubectl get secrets --field-selector type=kubernetes.io/dockerconfigjson
@@ -187,8 +179,7 @@ $ ibmcloud cr region
 You are targeting region 'us-south', the registry is 'us.icr.io'.
 ```
 
-In this example the registry is `us.icr.io` so the corresponding secret to use is `default-us-icr-io`.
-Add the following bold line to the yaml file (but use the correct secret for your region):
+In this example the registry is `us.icr.io` so the corresponding secret to use is `default-us-icr-io`. Add the following bold line to the yaml file (but use the correct secret for your region):
 
 ```yaml
 apiVersion: appsody.dev/v1beta1
@@ -218,8 +209,7 @@ spec:
 
 This completes the editing of the yaml file so save it.
 
-At this point we're almost ready to push the image to the registry and deploy it to the cluster.
-In order to push the image we need to login to the image registry first.
+At this point we're almost ready to push the image to the registry and deploy it to the cluster. In order to push the image we need to login to the image registry first.
 
 ```bash
 ibmcloud cr login
@@ -231,7 +221,7 @@ Now use `appsody deploy` to push the image and deploy it.
 appsody deploy -t <your image registry>/<your namespace>/quote-backend:1 --push
 ```
 
-where
+where:
 
 * `<your image registry>` is the host name of your regional registry, for example `us.icr.io`
 * `<your namespace>` is a namespace you created in your registry
@@ -243,35 +233,30 @@ $ curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  htt
 {"quotedAmount":70,"basis":"Dacadoo Health Score API"}
 ```
 
-where
+where:
 
 * `<node IP address>` is the external IP address of your node which you can obtain using the command `kubectl get node -o wide`
 * `<node port>` is the node port assigned to the service which you can obtain using the command `kubectl get svc quote-backend`
 
-Note: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis"
+> Note: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis"
 ("mocked backend computation" instead of "Dacadoo Health Score API").
 
-Note that because we are using a free Kubernetes cluster, the AppsodyApplication is limited to exposing the service via a node port.
-If you use a standard cluster with Knative installed, or a Red Hat OpenShift on IBM Cloud cluster, you have the option to expose the service via
-an ingress resource or a route resource.
+Note that because we are using a free Kubernetes cluster, the `AppsodyApplication` is limited to exposing the service via a node port.
+
+If you use a standard cluster with Knative installed, or a Red Hat OpenShift on IBM Cloud cluster, you have the option to expose the service via an ingress resource or a route resource.
 
 ### 3. Deploy the frontend application to OpenShift
 
-We are now going to deploy the frontend application to the IBM Cloud Kubernetes Service.
-The steps are similar to what we did for the backend application.
+We are now going to deploy the frontend application to the IBM Cloud Kubernetes Service. The steps are similar to what we did for the backend application.
 
-First we need to generate the deployment yaml so that we can edit it.
-Change the current directory back to the frontend application and generate the deployment yaml.
+First we need to generate the deployment yaml so that we can edit it. Change the current directory back to the frontend application and generate the deployment yaml.
 
 ```bash
 cd ../quote-frontend
 appsody deploy --generate-only
 ```
 
-Edit the file that was created, `app-deploy.yaml`, and add the following bold lines to the yaml file.
-The `pullSecret` should be the same value you used in the backend application.
-The `env` section defines an environment variable with the URL of the backend application within the cluster.
-Be careful to match the indentation (`pullSecret:` and `env:` are indented the same number of spaces as `applicationImage:`).
+Edit the file that was created, `app-deploy.yaml`, and add the following bold lines to the yaml file. The `pullSecret` should be the same value you used in the backend application. The `env` section defines an environment variable with the URL of the backend application within the cluster. Be careful to match the indentation (`pullSecret:` and `env:` are indented the same number of spaces as `applicationImage:`).
 
 ```yaml
 apiVersion: appsody.dev/v1beta1
@@ -297,21 +282,19 @@ Save the yaml file and do the deployment.
 appsody deploy -t <your image registry>/<your namespace>/quote-frontend:1 --push
 ```
 
-where
+where:
 
 * `<your image registry>` is the host name of your regional registry, for example `us.icr.io`
 * `<your namespace>` is a namespace you created in your registry
 
-After the deployment completes, use a browser to open the frontend application.
-Use `http://<node IP address>:<nodeport>` where
+After the deployment completes, use a browser to open the frontend application. Use `http://<node IP address>:<nodeport>` where:
 
 * `<node IP address>` is the external IP address of your node which you can obtain using the command `kubectl get node -o wide`
 * `<node port>` is the node port assigned to the service which you can obtain using the command `kubectl get svc quote-frontend`
 
-Fill in the form and click the button to submit it.
-You should get a quote from the backend application.
+Fill in the form and click the button to submit it. You should get a quote from the backend application.
 
-![quoteform2](doc/source/images/screenshot2.png)
+![Sample web form](images/screenshot.png)
 
-Note: If you are not using the Dacadoo Health Score API, you may see different text after the quote
+> Note: If you are not using the Dacadoo Health Score API, you may see different text after the quote
 ("determined using mocked backend computation" instead of "determined using Dacadoo Health Score API").
