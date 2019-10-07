@@ -12,7 +12,7 @@ When you have completed this exercise, you will understand how to
 
 ## Flow
 
-![architecture](doc/source/images/architecture.png)
+![architecture](images/architecture.png)
 
 1. The user enters the URL of the frontend application into a browser. The frontend application displays an insurance quote form in response.
 2. The user fills in the form and clicks a button to submit it. The frontend application validates the form data and sends a REST request to the backend application.
@@ -121,7 +121,7 @@ The resulting directory structure of your Appsody project should look like this:
 
 Watch for the container to restart and then refresh your browser again. You will see a form appear.
 
-![quoteform](doc/source/images/screenshot.png)
+![Sample web form](images/screenshot.png)
 
 You can fill in the form and hit the button to submit it and a response will appear. In this case the frontend application is not sending a request to the backend application. Instead it is configured to use a mock endpoint for testing purposes in development mode. This works as follows.
 
