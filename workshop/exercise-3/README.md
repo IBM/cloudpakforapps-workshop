@@ -1,32 +1,105 @@
 # Exercise 3: Deploying to OpenShift with Appsody
 
-(Rewrite this to use OpenShift not IKS)
-
 In this exercise, we will show how to deploy the sample insurance quote application built in [Exercise 2](/workshop/exercise-2/README.md) to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
 
 When you have completed this exercise, you will understand how to
 
-* use appsody to build and package an application with the stack contents ready for deployment
-* deploy the applications to the IBM Cloud Kubernetes Service
+* deploy the applications to OpenShift using the appsody CLI
+
+In later exercises we will learn how to use appsody with a Tekton pipeline, hooked to git, to trigger an automated deployment.
 
 ## Prerequisites
 
-In order to deploy the applications to the IBM Cloud Kubernetes Service, complete the following steps.
-
-* [Install the CLIs to manage a cluster](https://cloud.ibm.com/docs/containers?topic=containers-cs_cli_install#cs_cli_install_steps)
-
-* [Create a free Kubernetes cluster in IBM Kubernetes Service](https://cloud.ibm.com/docs/containers?topic=containers-getting-started#classic-cluster-create)
-
-* [Create a private container registry in IBM Cloud Container Registry](https://cloud.ibm.com/docs/services/Registry?topic=registry-registry_setup_cli_namespace#registry_setup_cli_namespace)
+You should have already carried out the prerequisites defined in [Exercise 0](/workshop/exercise-0/README.md), and in addition:
 
 * In order for the backend application to access the Dacadoo Health Score API, visit <https://models.dacadoo.com/doc/> to request an API key for evaluation purposes. Access to this API is granted individually to insurance professionals. There is a mock implementation of the API in the code that you can use if you do not want to register.
 
 ## Steps
 
-1. [Deploy the backend application to the IBM Cloud](#4-deploy-the-backend-application-to-the-IBM-Cloud)
-1. [Deploy the frontend application to the IBM Cloud](#5-deploy-the-frontend-application-to-the-IBM-Cloud)
+1. [Set up a project namespace](#1-Set-up-a-project-namespace)
+1. [Deploy the backend application to OpenShift](#2-deploy-the-backend-application-to-OpenShift)
+1. [Deploy the frontend application to OpenShift](#3-deploy-the-frontend-application-to-OpenShift)
 
-### 1. Deploy the backend application to the IBM Cloud
+## 1. Set up a project namespace
+
+OpenShift applications are deployed within a project. So the first step is to create a new project:
+
+``` bash
+$ oc new-project insurance-quote
+Now using project "insurance-quote" on server "https://c100-e.us-east.containers.cloud.ibm.com:31718".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app centos/ruby-25-centos7~https://github.com/sclorg/ruby-ex.git
+
+to build a new example application in Ruby.
+```
+
+Check that the current context is your team’s project space.
+
+``` bash
+$ oc project -q
+insurance-quote
+```
+
+## Create application deployment manifest
+
+Appsody has the ability to deploy directly to a kubernetes cluster using default deployment manifest. This will work if the cluster does not require any specific credentials. In this case, we will need to provide these, so appsody will allow you to generate the deployment manifest is would have used, but without doing the actual deployment. We can then modify this, and then ask appsody to use it for the deployment of our applications.
+
+``` bash
+appsody deploy --generate-only
+```
+
+This will generate the file `app-deploy.yaml` with the following
+content:
+
+``` yaml
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  name: quote-frontend
+spec:
+  # Add fields here
+  version: 1.0.0
+  applicationImage: quote-frontend
+  stack: nodejs-express
+  service:
+    type: NodePort
+    port: 3000
+    annotations:
+      prometheus.io/scrape: 'true'
+  readinessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /ready
+      port: 3000
+    initialDelaySeconds: 5
+    periodSeconds: 2
+    timeoutSeconds: 1
+  livenessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /live
+      port: 3000
+    initialDelaySeconds: 5
+    periodSeconds: 2
+  expose: true
+```
+
+By default, the application is deployed in the `kabanero` namespace. If
+you want to deploy the application in a different namespace, you need to
+specify it in this yaml file. In this lab, let’s use a namespace called
+`kabanero-samples` and we can specify it under the metadata as below.
+
+``` yaml
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  name: appsody-sample-nodejs-express
+  namespace: kabanero-samples
+```
+
+### 2. Deploy the backend application to OpenShift
 
 We are now going to deploy both applications to the IBM Cloud Kubernetes Service starting with the backend application.
 
@@ -182,7 +255,7 @@ Note that because we are using a free Kubernetes cluster, the AppsodyApplication
 If you use a standard cluster with Knative installed, or a Red Hat OpenShift on IBM Cloud cluster, you have the option to expose the service via
 an ingress resource or a route resource.
 
-### 2. Deploy the frontend application to the IBM Cloud
+### 3. Deploy the frontend application to OpenShift
 
 We are now going to deploy the frontend application to the IBM Cloud Kubernetes Service.
 The steps are similar to what we did for the backend application.
