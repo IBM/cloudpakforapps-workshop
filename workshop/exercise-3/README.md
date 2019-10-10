@@ -2,7 +2,7 @@
 
 In this exercise, we will show how to deploy the sample insurance quote application built in [Exercise 2](/workshop/exercise-2/README.md) to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
 
-When you have completed this exercise, you will understand how to
+When you have completed this exercise, you will understand how to:
 
 * deploy the applications to OpenShift using the appsody CLI
 
@@ -56,7 +56,8 @@ Appsody has the ability to deploy directly to a kubernetes cluster using a defau
 In order to have the backend application sends requests to the Dacadoo Health Score API, we need to create a secret that contains the configuration for making requests to the Dacadoo server. (Note: If you do not want to use the Dacadoo Health Score API, you can skip this setup and continue to use the mock endpoint.)
 
 ```bash
-kubectl create secret generic dacadoo-secret --from-literal=url=<url> --from-literal=apikey=<apikey>
+$ oc create configmap dacadoo-secret --from-literal=url=<url> --from-literal=apikey=<apikey>
+configmap/dacadoo-secret created
 ```
 
 where:
@@ -64,19 +65,13 @@ where:
 * `<url>` is the URL of the Dacadoo server (usually `https://models.dacadoo.com/score/2`)
 * `<apikey>` is the API key that you obtained when you registered to use the API.
 
-We need to modify the deployment yaml to pass the secret's values to the application. The initial deployment yaml can be generated as follows.
+Navigate to your `quote-backend` directory. We need to modify the deployment yaml to pass the secret's values to the application. The initial deployment yaml can be generated as follows.
 
 ```bash
 appsody deploy --generate-only
 ```
 
-This creates a file named `app-deploy.yaml` in your project, which we can now edit.
-
-You will notice that this yaml file contains an `AppsodyApplication` custom resource. This resource is handled by an Appsody operator that is installed into your cluster the first time you deploy an Appsody application. The operator handles creating the standard Kubernetes resources (such as Deployment) from the `AppsodyApplication` resource.
-
-> It is beyond the scope of this code pattern to go into the details of this resource or the operator. If you would like to know more about it, take a look at the [user guide](https://github.com/appsody/appsody-operator/blob/master/doc/user-guide.md).
-
-Add the env section lines, as shown below, to the yaml deployment file.  These lines instruct Kubernetes how to set environment variables from the secret we just created. Be careful to match the indentation (`env:` is indented the same number of spaces as `applicationImage:`).
+This creates a file named `app-deploy.yaml` in your project.
 
 ```yaml
 apiVersion: appsody.dev/v1beta1
@@ -86,24 +81,55 @@ metadata:
 spec:
   # Add fields here
   version: 1.0.0
-  applicationImage: quote-backend
-  env:
-    - name: DACADOO_URL
-      valueFrom:
-        secretKeyRef:
-          name: dacadoo-secret
-          key: url
-    - name: DACADOO_APIKEY
-      valueFrom:
-        secretKeyRef:
-          name: dacadoo-secret
-          key: apikey
-  .
-  .
-  .
+  applicationImage: dev.local/quote-backend
+  stack: java-spring-boot2
+  service:
+    type: NodePort
+    port: 8080
+    annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/path: '/actuator/prometheus'
+  readinessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /actuator/health
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 2
+  livenessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /actuator/liveness
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 2
+  expose: true
+  createKnativeService: false
 ```
 
-You do not need to update `applicationImage` with your image registry because the final `appsody deploy` command will take care of that.
+We need to add two sections to the generated file:
+
+1. Under the `metadata` key, add a `namespace` key that has the value of your OpenShift project. `insurance-quote` was used as the name in this workshop.
+
+2. Under the `spec` key, create a new `envFrom` key that has the value of your OpenShift config map. `dacadoo-secret` was used as the name in this workshop.
+
+```yaml
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  name: quote-backend
+  namespace: insurance-quote
+spec:
+  # Add fields here
+  version: 1.0.0
+  applicationImage: quote-backend
+  .
+  .
+  .
+  envFrom:
+    - configMapRef:
+      name: dacadoo-secret
+```
 
 At this point we're almost ready to push the image to the registry and deploy it to the cluster. In order to push the image we need make sure we are logged in to the image registry first.
 
@@ -125,10 +151,10 @@ where:
 For example, your deploy command might look something like this:
 
 ```bash
-appsody deploy -t docker.io/henrynash/quote-backend --push  --namespace insurance-quote
+appsody deploy -t docker.io/henrynash/quote-backend --push --namespace insurance-quote
 ```
 
-After the deployment completes, you can test the service using curl. The deployment should complete with something like:
+> **NOTE**: Running `appsody deploy` will install the [appsody operator](https://github.com/appsody/appsody-operator) on the *Default* namespace of the cluster.
 
 ```bash
 .
@@ -136,17 +162,18 @@ After the deployment completes, you can test the service using curl. The deploym
 [Info] Deployed project running at quote-backend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud
 ```
 
+After the deployment completes, you can test the service using curl. The deployment should complete with something like:
+
 ```bash
-$ curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://<url-to-backend>/quote
+$ curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://<url-to-backend>/quote
 {"quotedAmount":70,"basis":"Dacadoo Health Score API"}
 ```
 
 where:
 
-`<url-to-backend>` is the endpoint given above at the end of running appsody deploy (i.e. quote-backend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud in the example above)
+* `<url-to-backend>` is the endpoint given above at the end of running appsody deploy (i.e. *quote-backend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud* in the example above)
 
-> Note: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis"
-("mocked backend computation" instead of "Dacadoo Health Score API").
+> **NOTE**: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis" -- ("mocked backend computation" instead of "Dacadoo Health Score API").
 
 ### 3. Deploy the frontend application to OpenShift
 
