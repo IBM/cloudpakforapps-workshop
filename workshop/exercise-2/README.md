@@ -43,7 +43,7 @@ The frontend application is written in Node.js Express. First let's initialize a
 ```bash
 mkdir quote-frontend
 cd quote-frontend
-appsody init nodejs-express
+appsody init kabanero/nodejs-express
 ```
 
 After `appsody init` completes, list the content of the directory. You'll see that Appsody has created a starter application for you.
@@ -163,7 +163,7 @@ The backend application is written in Spring Boot. Let's initialize an Appsody p
 ```bash
 mkdir quote-backend
 cd quote-backend
-appsody init java-spring-boot2
+appsody init kabanero/java-spring-boot2
 ```
 
 After `appsody init` completes, list the content of the directory. You'll see that Appsody has created a starter application for you.
