@@ -103,7 +103,7 @@ spec:
   .
 ```
 
-You do not need to update `applicationImage` with your image registry because the final `appsody deploy` command will take care of that. 
+You do not need to update `applicationImage` with your image registry because the final `appsody deploy` command will take care of that.
 
 At this point we're almost ready to push the image to the registry and deploy it to the cluster. In order to push the image we need make sure we are logged in to the image registry first.
 
@@ -136,7 +136,6 @@ After the deployment completes, you can test the service using curl. The deploym
 [Info] Deployed project running at quote-backend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud
 ```
 
-
 ```bash
 $ curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://<url-to-backend>/quote
 {"quotedAmount":70,"basis":"Dacadoo Health Score API"}
@@ -144,7 +143,7 @@ $ curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  htt
 
 where:
 
-<url-to-backend>` is the endpoint given above at the end of running appsody deploy (i.e. quote-backend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud in the example above)
+`<url-to-backend>` is the endpoint given above at the end of running appsody deploy (i.e. quote-backend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud in the example above)
 
 > Note: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis"
 ("mocked backend computation" instead of "Dacadoo Health Score API").
