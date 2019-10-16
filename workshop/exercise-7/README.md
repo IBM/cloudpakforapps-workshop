@@ -1,4 +1,4 @@
-# Exercise 7: Building a simple Tekton pipeline
+# Exercise 7: Create a Tekton pipleline for a custom collection
 
 This section is broken up into the following steps:
 

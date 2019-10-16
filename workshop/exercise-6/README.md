@@ -1,4 +1,4 @@
-# Exercise 6: Building your own Appsody Stack
+# Exercise 6: Building a simple Tekton pipeline
 
 This section is broken up into the following steps:
 
