@@ -67,7 +67,7 @@ where:
 for example:
 
 ```bash
-$ oc create configmap dacadoo-secret --from-literal=url=https://models.dacadoo.com/score/2 --from-literal=apikey=Y3VB...RMGG
+$ oc create configmap dacadoo-secret --from-literal=DACADOO_URL=https://models.dacadoo.com/score/2 --from-literal=DACADOO_APIKEY=Y3VB...RMGG
 configmap/dacadoo-secret created
 ```
 
@@ -113,11 +113,7 @@ spec:
   createKnativeService: false
 ```
 
-We need to add two sections to the generated file:
-
-1. Under the `metadata` key, add a `namespace` key that has the value of your OpenShift project. `insurance-quote` was used as the name in this workshop.
-
-2. Under the `spec` key, create a new `envFrom` key that has the value of your OpenShift config map. `dacadoo-secret` was used as the name in this workshop.
+We need to add a section to the generated file. Under the `spec` key, create a new `envFrom` key that has the value of your OpenShift config map. `dacadoo-secret` was used as the name in this workshop.
 
 > **TIP**: Ensure there are two spaces before `name`, see <https://github.com/kubernetes/kubernetes/issues/46826#issuecomment-305728020>
 
@@ -126,7 +122,6 @@ apiVersion: appsody.dev/v1beta1
 kind: AppsodyApplication
 metadata:
   name: quote-backend
-  namespace: insurance-quote
 spec:
   # Add fields here
   version: 1.0.0
