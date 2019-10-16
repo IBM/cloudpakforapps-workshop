@@ -56,14 +56,20 @@ Appsody has the ability to deploy directly to a kubernetes cluster using a defau
 In order to have the backend application sends requests to the Dacadoo Health Score API, we need to create a secret that contains the configuration for making requests to the Dacadoo server. (Note: If you do not want to use the Dacadoo Health Score API, you can skip this setup and continue to use the mock endpoint.)
 
 ```bash
-$ oc create configmap dacadoo-secret --from-literal=url=<url> --from-literal=apikey=<apikey>
-configmap/dacadoo-secret created
+oc create configmap dacadoo-secret --from-literal=url=<url> --from-literal=apikey=<apikey>
 ```
 
 where:
 
 * `<url>` is the URL of the Dacadoo server (usually `https://models.dacadoo.com/score/2`)
 * `<apikey>` is the API key that you obtained when you registered to use the API.
+
+for example:
+
+```bash
+$ oc create configmap dacadoo-secret --from-literal=url=https://models.dacadoo.com/score/2 --from-literal=apikey=Y3VB...RMGG
+configmap/dacadoo-secret created
+```
 
 Navigate to your `quote-backend` directory. We need to modify the deployment yaml to pass the secret's values to the application. The initial deployment yaml can be generated as follows.
 
@@ -113,6 +119,8 @@ We need to add two sections to the generated file:
 
 2. Under the `spec` key, create a new `envFrom` key that has the value of your OpenShift config map. `dacadoo-secret` was used as the name in this workshop.
 
+> **TIP**: Ensure there are two spaces before `name`, see <https://github.com/kubernetes/kubernetes/issues/46826#issuecomment-305728020>
+
 ```yaml
 apiVersion: appsody.dev/v1beta1
 kind: AppsodyApplication
@@ -122,13 +130,13 @@ metadata:
 spec:
   # Add fields here
   version: 1.0.0
-  applicationImage: quote-backend
-  .
   .
   .
   envFrom:
     - configMapRef:
-      name: dacadoo-secret
+        name: dacadoo-secret
+  expose: true
+  createKnativeService: false
 ```
 
 At this point we're almost ready to push the image to the registry and deploy it to the cluster. In order to push the image we need make sure we are logged in to the image registry first.
@@ -166,6 +174,7 @@ After the deployment completes, you can test the service using curl. The deploym
 
 ```bash
 $ curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://<url-to-backend>/quote
+
 {"quotedAmount":70,"basis":"Dacadoo Health Score API"}
 ```
 
