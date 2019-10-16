@@ -40,3 +40,11 @@ When clicked, the *Cloud Pak for Applications* landing page should appear:
 Clicking on the *Kabanero Enterprise instance* link will show you information about your Kabanero Enterprise service.
 
 ![Kabanero Enterprise](images/kabanero-console.png)
+
+## 5. IDs
+
+Need IDs for the following:
+
+* Github
+* Docker Hub (trying to remove this)
+* IBM Cloud (maybe?)
