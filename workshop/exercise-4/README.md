@@ -14,7 +14,7 @@ Collections are categorized as either `stable`, `incubator` or `experimental` de
 
 - `experimental/`: Experimental collections are not being actively been worked on and may not fulfill the requirements of a stable collection. These can be used for trying out specific capabilities or proof of concept work.
 
-# Kabanero Collections
+## Kabanero Collections
 
 Kabanero provides pre-configured collections that enable rapid development and deployment of quality microservice-based applications. Collections include an Appsody stack (base container image and project templates) and pipelines which act as a starting point for your application development.
 
@@ -23,9 +23,9 @@ Click here to find out more about [Appsody stacks](https://github.com/appsody/we
 
 **Template:** A template utilizes the base image and provides a starter application that is ready to use. It leverages existing capabilities provided by that image and can extend functionality to meet your application requirements.
 
-**Pipeline:** A pipeline consists of k8s-style resources for declaring CI/CD-style pipelines (Tekton pipelines). 
+**Pipeline:** A pipeline consists of k8s-style resources for declaring CI/CD-style pipelines (Tekton pipelines).
 
-**NOTE: Kabanero only builds and publishes collections that are categorized as 'incubator' or 'stable'**
+> **NOTE: Kabanero only builds and publishes collections that are categorized as 'incubator' or 'stable'**
 
 ## Kabanero Collections structure
 
@@ -73,7 +73,7 @@ experimental
 
 There is a standard structure that all collections follow. The structure below represents the source structure of a collection:
 
-```
+```ini
 my-collection
 ├── README.md
 ├── stack.yaml
