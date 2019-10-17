@@ -190,7 +190,7 @@ cd ../quote-frontend
 appsody deploy --generate-only
 ```
 
-Edit the file that was created, `app-deploy.yaml`, and add the `env` section as shown below (which defines an environment variable with the URL of the backend application within the cluster). Be careful to match the indentation (`env:` is indented the same number of spaces as `applicationImage:`). `url-to-backend` is the same as the one we tested about against the backend.
+Edit the file that was created, `app-deploy.yaml`, and add the `env` section as shown below (which defines an environment variable with the URL of the backend application within the cluster, be sure to include `/quote` at the end). Be careful to match the indentation (`env:` is indented the same number of spaces as `applicationImage:`). `url-to-backend` is the same as the one we tested about against the backend.
 
 ```yaml
 apiVersion: appsody.dev/v1beta1
