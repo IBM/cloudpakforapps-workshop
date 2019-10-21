@@ -182,7 +182,9 @@ To create a new stack, you must first construct a scaffold of the above structur
 
     It is worth taking some time checking out the files given above to get a feel of the stack.
 
-    Having done so, you might have already spotted what we need to do to incorporate helmet into the new stack - namely to modify `server.js` to enable it. The current code in `server.js` looks something like this:
+    For some stack modifications, you can actually use a form of stack inheritance - i.e. by using the existing stack images as the `FROM` image in `Dockerfile-stack`. An example of this might be where you just want to change one of the Dockerfile variables. In general, however, most modified stacks are effectively copies of an existing stack, with the additional changes added to gain the new, required functionality.
+
+    Having examined the files above, you might have already spotted what we need to do to incorporate helmet into the new stack - namely to modify `server.js` to enable it. The current code in `server.js` looks something like this:
 
     ```java
     // Requires statements and code for non-production mode usage
@@ -248,7 +250,7 @@ To create a new stack, you must first construct a scaffold of the above structur
     require('appmetrics-prometheus').attach();
 
     const app = express();
-    app.use(helmet())
+    app.use(helmet());
 
     const basePath = __dirname + '/user-app/';
     .
@@ -306,19 +308,26 @@ To create a new stack, you must first construct a scaffold of the above structur
     > User-Agent: curl/7.54.0
     > Accept: */*
     > 
-    < HTTP/1.1 200 OK
+    < HTTP/1.1 302 Found
+    < X-DNS-Prefetch-Control: off
+    < X-Frame-Options: SAMEORIGIN
+    < Strict-Transport-Security: max-age=15552000; includeSubDomains
+    < X-Download-Options: noopen
+    < X-Content-Type-Options: nosniff
+    < X-XSS-Protection: 1; mode=block
     < X-Powered-By: Express
-    < Content-Type: text/html; charset=utf-8
-    < Content-Length: 19
-    < ETag: W/"13-0ErcqB22cNteJ3vXrBgUhlCj8os"
-    < Date: Mon, 21 Oct 2019 12:09:49 GMT
+    < Location: /quote
+    < Vary: Accept
+    < Content-Type: text/plain; charset=utf-8
+    < Content-Length: 28
+    < Date: Mon, 21 Oct 2019 18:30:20 GMT
     < Connection: keep-alive
     < 
     * Connection #0 to host localhost left intact
     Hello from Appsody!
     ```
 
-    As you should see, because the stack now incorporates helmet, our application also runs with this protection.
+    As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
 
     A final step is to switch the actual quote-frontend application we built in [Exercise 2](/workshop/exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
 
@@ -358,9 +367,50 @@ To create a new stack, you must first construct a scaffold of the above structur
     ```bash
     $ cat .appsody-config.yaml
     project-name: quote-frontend
-    stack: dev-local/my-nodejs-express:0.2
+    stack: dev.local/my-nodejs-express:SNAPSHOT
     ```
 
     If now re-run the front end, it will use our new stack:
 
-    WIP - to be continued....
+    ```bash
+    $ appsody run
+    Running development environment...
+    Using local cache for image dev.local/my-nodejs-express:SNAPSHOT
+    .
+    .
+    .
+    [Container] App started on PORT 3000
+    ```
+
+    We can confirm that our new HTTP protection is being used by, instead of using a browser, again using curl in verbose mode to hit the published endpoint:
+
+    ```bash
+    $ curl -v http://localhost:3000
+    *   Trying ::1...
+    * TCP_NODELAY set
+    * Connected to localhost (::1) port 3000 (#0)
+    > GET / HTTP/1.1
+    > Host: localhost:3000
+    > User-Agent: curl/7.54.0
+    > Accept: */*
+    > 
+    < HTTP/1.1 302 Found
+    < X-DNS-Prefetch-Control: off
+    < X-Frame-Options: SAMEORIGIN
+    < Strict-Transport-Security: max-age=15552000; includeSubDomains
+    < X-Download-Options: noopen
+    < X-Content-Type-Options: nosniff
+    < X-XSS-Protection: 1; mode=block
+    < X-Powered-By: Express
+    < Location: /quote
+    < Vary: Accept
+    < Content-Type: text/plain; charset=utf-8
+    < Content-Length: 28
+    < Date: Mon, 21 Oct 2019 18:30:20 GMT
+    < Connection: keep-alive
+    < 
+    * Connection #0 to host localhost left intact
+    Found. Redirecting to /quote
+    ```
+
+    So we have successfully build and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.
