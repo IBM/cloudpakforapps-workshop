@@ -1,83 +1,45 @@
-# Exercise 4: Building a custom Appsody Stack repository
+# Exercise 4: Customizing an existing Appsody Stack
+
+> **NOTE**: To make your own stack, instead of extending one, follow this tutorial: <https://developer.ibm.com/tutorials/create-appsody-stack/>.
 
 This section is broken up into the following steps:
 
-1. [TBA](#1-TBA)
+1. [The role of a stack in the development process](#1-The-role-of-a-stack-in-the-development-process)
+1. [Stack structure](#2-Stack-structure)
+1. [Create a new stack, based on an existing one](#3-Create-a-new-stack,-based-on-an-existing-one)
 
-## 1. Review
+## 1. The role of a stack in the development process
 
-Collections are categorized as either `stable`, `incubator` or `experimental` depending on the content of the collection.
+Developers use stacks to simplify building applications that require a specific set of technologies or development patterns. While there are numerous publicly available stacks to choose from, many enterprises want to build their own set of stacks that uphold their specific requirements and standards for how they want to their developers to build cloud native applications.
 
-- `stable/`: Stable collection meet a set of technical requirements.
+In this exercise, you will learn how to modify an existing stack to more closely match your requirements. Before starting this, let's do a quick review of the design requirements for stacks. A stack is designed to support the developer in either a rapid, local development mode or a build-and-deploy mode.
 
-- `incubator/`: The collection in the incubator folder are actively being worked on to satisfy the stable criteria.
+### Rapid, local development mode
 
-- `experimental/`: Experimental collections are not being actively been worked on and may not fulfill the requirements of a stable collection. These can be used for trying out specific capabilities or proof of concept work.
+In this mode, the stack contains everything a developer needs to build a new application on a local machine, with the application always running in a local containerized Docker environment. Introducing containerization from the start of the application development process (as opposed to development solely in the user space of the local machine) decreases the introduction of subtle errors in the containerization process and removes the need for a developer to install the core technology components of their application.
 
-## Kabanero Collections
+In this mode, the stack is required to have all the dependencies for the specific technologies pre-built into the Docker image, and also to dynamically compliment these with whatever dependencies the developer adds explicitly for his or her code.
 
-Kabanero provides pre-configured collections that enable rapid development and deployment of quality microservice-based applications. Collections include an Appsody stack (base container image and project templates) and pipelines which act as a starting point for your application development.
+Rapid local development mode in Appsody consists of the Appsody CLI (hooked into a local IDE if required) communicating with a local Docker container that is running the application under development. With this mode, application code can be held on the local file system, while being mounted in the Docker container, so that a local change can automatically trigger a restart of the application.
 
-**Appsody stacks:** Stacks include language runtimes, frameworks and any additional libraries and tools that are required to simplify your local application development. Stacks are an easy way to manage consistency and adopt best practices across many applications.
-Click here to find out more about [Appsody stacks](https://github.com/appsody/website/blob/master/content/docs/stacks/stacks-overview.md).
+### Build-and-deploy mode
 
-**Template:** A template utilizes the base image and provides a starter application that is ready to use. It leverages existing capabilities provided by that image and can extend functionality to meet your application requirements.
+In this mode, the stack enables the Appsody CLI to build a self-contained Docker image that includes both the core technologies in the stack plus the application code, along with the combined dependencies of both. You can deploy the resulting image manually or programmatically to any platform that supports Docker images (such as a local or public Kubernetes cluster).
 
-**Pipeline:** A pipeline consists of k8s-style resources for declaring CI/CD-style pipelines (Tekton pipelines).
+A pictorial view of how an application developer uses a stack, looks like this:
 
-> **NOTE: Kabanero only builds and publishes collections that are categorized as 'incubator' or 'stable'**
+![Appsody Flow](images/appsody.png)
 
-## Kabanero Collections structure
+The above development flow shows the manual deployment to a Kubernetes cluster. In more production-orientated environments, GitOps might trigger the build and deploy steps and Tekton Pipelines would drive the deployment. [Kabanero Collections](https://github.com/kabanero-io/collections/), which is part of [Cloud Pak for Applications](https://www.ibm.com/cloud/cloud-pak-for-applications), brings together Appsody stacks, GitOps, and Tekton Pipelines to provide an enterprise-ready solution for cloud-native application development and deployment. We'll look at this in later exercises.
 
-This is a simplified view of the Kabanero Collections github repository structure.
+## 2. Stack structure
 
-```ini
-ci
-├── [ files used for CI/CD of the Kabanero collections ]
-incubator
-├── common/
-|   ├── pipelines/
-|   |   ├── common-pipeline-1/
-|   |   |       └── [pipeline files that make up a full tekton pipeline used with all collections in incubator category]
-|   |   └── common-pipeline-n/
-|   |           └── [pipeline files that make up a full tekton pipeline used with all collections in incubator category]
-├── collection-1/
-|   ├── [collection files - see collection structure below]
-├── collection-2/
-|   └── [collection files - see collection structure below]
-stable
-├── common/
-|   ├── pipelines/
-|   |   ├── common-pipeline-1/
-|   |   |       └── [pipeline files that make up a full tekton pipeline used with all collections in stable category]
-|   |   └── common-pipeline-n/
-|   |           └── [pipeline files that make up a full tekton pipeline used with all collections in stable category]
-├── collection-1/
-|   ├── [collection files - see collection structure below]
-├── collection-n/
-|   └── [collection files - see collection structure below]
-experimental
-├── common/
-|   ├── pipelines/
-|   |   ├── common-pipeline-1/
-|   |   |       └── [pipeline files that make up a full tekton pipeline used with all collections in experimental category]
-|   |   └── common-pipeline-n/
-|   |           └── [pipeline files that make up a full tekton pipeline used with all collections in experimental category]
-├── collection-1/
-|   ├── [collection files - see collection structure below]
-└── collection-n/
-    └── [collection files - see collection structure below]
-```
-
-## Collection structure
-
-There is a standard structure that all collections follow. The structure below represents the source structure of a collection:
+Because a single Appsody stack can enable both rapid, local development and build-and-deploy modes, all stacks follow a standard structure. The structure below represents the source structure of a stack:
 
 ```ini
-my-collection
+my-stack
 ├── README.md
 ├── stack.yaml
-├── collection.yaml
 ├── image/
 |   ├── config/
 |   |   └── app-deploy.yaml
@@ -86,9 +48,6 @@ my-collection
 |   |   └── Dockerfile
 │   ├── Dockerfile-stack
 |   └── LICENSE
-├── pipelines/
-|   ├── my-pipeline-1/
-|   |       └── [pipeline files that make up the full tekton pipeline]
 └── templates/
     ├── my-template-1/
     |       └── [example files as a starter for the application, e.g. "hello world"]
@@ -97,75 +56,361 @@ my-collection
 
 ```
 
-The structure above is then processed when you build the collection, to generate a Docker image for the stack, along with tar files of each of the templates and pipelines, which can then all be stored/referenced in a local or public appsody repo. Refer to the section on [Building and Testing Stacks](https://github.com/appsody/website/blob/master/content/docs/stacks/build-and-test.md) for more details. The appsody CLI can then access such a repo, to use the stack to initiate local development.
+As a *Stack Architect* you must create the above structure, build it into an actual stack image ready for use by an *Application Developer* who bases their new application on your stack. Part of your role as a stack architect is to include one of more sample applications (known as *templates*) to help the application developer get started.
 
-## Summary of files within the stack and collection source and user directory structure
+Hence, when you build a stack, the structure above is processed and generates a Docker image for the stack, along with tar files of each of the templates, which can then all be stored and referenced in a local or public Appsody repo. The Appsody CLI can access the repo to use the stack to initiate local development.
 
-### stack.yaml
+For this exercise we will modify the nodejs-express stack that we have been using for our quote-frontend, to add some additional security hardening (individual enterprises often has specific security standards that need to be met to allow deployment).
 
-The `stack.yaml` file in the top level directory defines the different attributes of the stack and which template the stack should use by default. See the example below:
+## 3. Create a new stack, based on an existing one
 
-```yaml
-name: Sample Application Stack   # concise one line name for the stack
-version: 0.1.0                   # version of the stack
-description: sample stack to help creation of more appsody stacks # free form text explaining more about the capabilities of this stack and various templates
-license: Apache-2.0              # license for the stack
-language: nodejs                 # programming language the stack uses
-maintainers:                     # list of maintainer(s) details
-  - name: John Smith
-    email: example@example.com
-    github-id: jsmith
-default-template: my-template-1  # name of default template
-```
+To create a new stack, you must first construct a scaffold of the above structure. Stacks are classified as being `stable`, `incubating` or `experimental`. You can read more about these classifications [here](https://appsody.dev/docs/stacks/stacks-overview). To make things easy, the Appsody CLI supports an `appsody stack create` command to create a new stack, by copying of an existing one.
 
-### Collection.yaml
+> **Note** In general, Appsody will always try and look in the existing repositories first for stacks, and then in the local cache. For normal stack usage this is exactly what you want - however, when in the process of creating new stacks, by definition, the existing repositories will not yet know about your new stack. Hence it is quicker in this situation to tell Appsody to look in the local cache first. You can do this by setting the following environment variable: `export APPSODY_PULL_POLICY=IFNOTPRESENT`.
 
-The `collection.yaml` file in the top level directory defines the different attributes of the collection and which container image and pipeline the collection should use by default. See the example below:
+1. Copy and rename the nodejs-express stack, by running the `appsody stack create` command, which will create a sub directory containing the new stack.
 
-```yaml
-default-image: java-microprofile # name of the default container image - reference into the images element below
-default-pipeline: default        # name of the default pipeline - reference to the pipeline in the directory structure
-images:                          # list of container images
-- id: java-microprofile
-  image: $IMAGE_REGISTRY_ORG/java-microprofile:0.2
-```
+    ```bash
+    cd ~
+    appsody stack create my-nodejs-express --copy incubator/nodejs-express
+    cd my-nodejs-express
+    ls - al
+    total 16
+    drwxr-xr-x  6 henrynash  staff  192 21 Oct 00:14 .
+    drwxr-xr-x  3 henrynash  staff   96 21 Oct 00:14 ..
+    -rw-r--r--  1 henrynash  staff  621 21 Oct 00:14 README.md
+    drwxr-xr-x  7 henrynash  staff  224 21 Oct 00:14 image
+    -rw-r--r--  1 henrynash  staff  297 21 Oct 00:14 stack.yaml
+    drwxr-xr-x  3 henrynash  staff   96 21 Oct 00:14 templates
+    ```
 
-### README
+    If you inspect the contents of the `image` directory, you will see how it matches the stack structure given earlier.
 
-The top level directory must contain a `README.md` markdown file that describes the contents of the collection and how it should be used.
+1. Build your new stack
 
-### LICENSE
+    Before we make any changes, let's go through the steps of building (or *packaging*) a stack, to create a stack image (which is a Docker image) that the Appsody CLI can use to initiate a project using that stack.
 
-The `image` directory must contain a `LICENSE` file.
+    There is a Docker file (`Dockerfile-stack`) within the sample stack structure you copied. The `appsody stack package` command will use this to build the image.
 
-### app-deploy.yaml
+    To build your new stack in this way, from the `my-nodejs-express` directory enter:
 
-The `app-deploy.yaml` is the configuration file for deploying an Appsody project using the Appsody Operator. For more information about specifics, see [Appsody Operator User Guide](https://github.com/appsody/appsody-operator/blob/master/doc/user-guide.md).
+    ```bash
+    appsody stack package
+    ```
 
-### Dockerfile-stack
+    This runs a Docker build, installs `my-nodejs-express` into a local Appsody repository (called `dev-local`), and runs some basic tests to make sure the file is well formed.
 
-The `Dockerfile-stack` file in the `image` directory defines the foundation stack image, and a set of environment variables that specify the desired behaviour during the rapid local development cycle. It also defines what is exposed from the host machine to the container during this mode.
+    Once the build is complete, check that it is now available in the local repo:
 
-Environment variables can be set to alter the behaviour of the CLI and controller (see [Appsody Environment Variables](https://github.com/appsody/website/blob/master/content/docs/stacks/environment-variables.md)).
+    ```bash
+    $ appsody list dev-local
+    REPO        ID                 VERSION     TEMPLATES           DESCRIPTION
+    dev-local   my-nodejs-express  0.2.7       scaffold, *simple   Express web framework for Node.js
+    ```
 
-### Dockerfile
+1. Get the new stack working
 
-The `Dockerfile` in the `image/project` directory defines the final image that will created by the `appsody build` command, which needs to contain the content from both the stack itself along with the user application (typically modified from one of the templates). This is used to run the application as a whole, outside of appsody CLI control.
+    So, at this point, you have been carrying out your role as a stack architect to build and install your new (albeit unchanged) stack. Now it's time to try it out as an application developer.
 
-### Templates
+    Create a new directory and initialize it with this new Appsody stack:
 
-A template is a pre-configured starter application that is ready to use with the particular stack image. It has access to all the dependencies supplied by that image and is able to include new functionality and extra dependencies to enhance the image. A stack can have multiple templates, perhaps representing different classes of starter applications using the stack technology components.
+    ```bash
+    mkdir ~/test
+    cd ~/test
+    appsody init dev-local/my-nodejs-express
+    ```
 
-### Pipelines
+    Now use `appsody run` to test running an application based on your copy of the stack:
 
-A pipeline is set of Tekton pipelines (k8s-style resources for declaring CI/CD-style pipelines) to use with the particular collection. A collection can have multiple pipelines.
+    ```bash
+    $ appsody run
+    Running development environment...
+    Using local cache for image dev.local/my-nodejs-express:SNAPSHOT
+    Running docker command: docker run --rm -p 3000:3000 -p 9229:9229 --name test73-dev -v /Users/henrynash/codewind-workspace/test73/:/project/user-app -v test73-deps:/project/user-app/node_modules -v /Users/henrynash/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller dev.local/my-nodejs-express:SNAPSHOT --mode=run
+    [Container] Running APPSODY_PREP command: npm install --prefix user-app && npm audit fix --prefix user-app
+    added 170 packages from 578 contributors and audited 295 packages in 3.5s
+    [Container] found 0 vulnerabilities
+    .
+    .
+    .
+    [Container] App started on PORT 3000
+    ```
 
-### .appsody-config.yaml
+    To check it is running, we can use curl to hit the endpoint:
 
-The `.appsody-config.yaml` is not part of the source structure, but will be generated as part of the stack building process, and will be placed in the user directory by the `appsody init`, command. This file specifies the stack image that will be used, and can be overridden for testing purposes to a locally built stack.
+    ```bash
+    curl -http://localhost:3000
+    Hello from Appsody!
+    ```
 
-For example, the following specifies that the template will use the python-flask image:
+    So now we are ready to make change to our new stack. For this exercise we will harden the HTTP headers that an application, built using this stack, responds with. We can look at the current headers returned, by using the curl verbose option:
 
-```yaml
-stack: python-flask:0.1
-```
+    ```bash
+    curl -v http://localhost:3000
+    * Rebuilt URL to: http://localhost:3000/
+    *   Trying ::1...
+    * TCP_NODELAY set
+    * Connected to localhost (::1) port 3000 (#0)
+    > GET / HTTP/1.1
+    > Host: localhost:3000
+    > User-Agent: curl/7.54.0
+    > Accept: */*
+    >
+    < HTTP/1.1 200 OK
+    < X-Powered-By: Express
+    < Content-Type: text/html; charset=utf-8
+    < Content-Length: 19
+    < ETag: W/"13-0ErcqB22cNteJ3vXrBgUhlCj8os"
+    < Date: Mon, 21 Oct 2019 12:09:49 GMT
+    < Connection: keep-alive
+    <
+    * Connection #0 to host localhost left intact
+    Hello from Appsody!
+    ```
+
+    For this exercise will modify the stack to include the popular HTTP header security module [helmet](https://helmetjs.github.io), and hence this should change the headers we see returned to us. Note we will do this as a *stack architect* since we don't want to rely on *application developers* remembering to do this. By doing this in the stack itself, all applications built using our modified stack will have helmet automatically enabled.
+
+1. Modify your custom stack
+
+    When creating a custom stack, based on an existing stack, the first thing to do is to take a look at what the existing stack has provided. A more detailed description of the stack components can be found [here](https://appsody.dev/docs/stacks/stack-structure), but the key ones are:
+
+    * A Dockerfile (`image/Dockerfile-stack`) that builds your stack image. This is what the `appsody stack package` command used above to build a Docker image of your stack - which is, if you like, the eventual artifact that you deliver as a stack architect to application developers.
+    * A Dockerfile (`image/project/Dockerfile`) that application developers will use to build their final image. This final image will contain both your stack and their application, and this Dockerfile is processed by the application developer running `appsody build/deploy`.
+    * Typically some kind of server side code that is enabling the application then developer will create and run. For this stack, this is `image/project/server.js`.
+    * Some kind of dependency management, ensuring both the correct inclusion of components defined by the stack,  as well as, potentially, any added by the application developer. For this stack, this is `image/project/package.json`.
+    * At least one sample application (or *template*), these are stored in the `templates` directory.
+
+    It is worth taking some time checking out the files given above to get a feel of the stack.
+
+    For some stack modifications, you can actually use a form of stack inheritance - i.e. by using the existing stack images as the `FROM` image in `Dockerfile-stack`. An example of this might be where you just want to change one of the Dockerfile variables. In general, however, most modified stacks are effectively copies of an existing stack, with the additional changes added to gain the new, required functionality.
+
+    Having examined the files above, you might have already spotted what we need to do to incorporate helmet into the new stack - namely to modify `server.js` to enable it. The current code in `server.js` looks something like this:
+
+    ```java
+    // Requires statements and code for non-production mode usage
+    if (!process.env.NODE_ENV || !process.env.NODE_ENV === 'production') {
+    require('appmetrics-dash').attach();
+    }
+    const express = require('express');
+    const health = require('@cloudnative/health-connect');
+    const fs = require('fs');
+
+    require('appmetrics-prometheus').attach();
+
+    const app = express();
+
+    const basePath = __dirname + '/user-app/';
+
+    function getEntryPoint() {
+        let rawPackage = fs.readFileSync(basePath + 'package.json');
+        let package = JSON.parse(rawPackage);
+        if (!package.main) {
+            console.error("Please define a primary entrypoint of your application by agdding 'main: <entrypoint>' to package.json.")
+            process.exit(1)
+        }
+        return package.main;
+    }
+
+    // Register the users app. As this is before the health/live/ready routes,
+    // those can be overridden by the user
+    const userApp = require(basePath + getEntryPoint()).app;
+    app.use('/', userApp);
+
+    const healthcheck = new health.HealthChecker();
+    app.use('/live', health.LivenessEndpoint(healthcheck));
+    app.use('/ready', health.ReadinessEndpoint(healthcheck));
+    app.use('/health', health.HealthEndpoint(healthcheck));
+
+    app.get('*', (req, res) => {
+    res.status(404).send("Not Found");
+    });
+
+    const PORT = process.env.PORT || 3000;
+    const server = app.listen(PORT, () => {
+    console.log(`App started on PORT ${PORT}`);
+    });
+
+    // Export server for testing purposes
+    module.exports.server = server;
+    module.exports.PORT = PORT;
+    ```
+
+    We will modify this file by adding two lines, to `require` the inclusion of helmet (just after express), as well as enable it with `app.use`:
+
+    ```java
+    // Requires statements and code for non-production mode usage
+    if (!process.env.NODE_ENV || !process.env.NODE_ENV === 'production') {
+    require('appmetrics-dash').attach();
+    }
+    const express = require('express');
+    const helmet = require('helmet');
+    const health = require('@cloudnative/health-connect');
+    const fs = require('fs');
+
+    require('appmetrics-prometheus').attach();
+
+    const app = express();
+    app.use(helmet());
+
+    const basePath = __dirname + '/user-app/';
+    .
+    .
+    .
+    ```
+
+    Since we have added a new module that is required, we must also update the dependency management (package.json), to ensure this is pulled in:
+
+    ```json
+    {
+    .
+    .
+    .
+    "dependencies": {
+        "@cloudnative/health-connect": "^2.0.0",
+        "appmetrics-prometheus": "^3.0.0",
+        "express": "~4.16.0",
+        "helmet": "^3.21.1"
+    },
+    .
+    .
+    .
+    }
+    ```
+
+    Now that we have modified our stack, we need to re-package it, using the same command as before:
+
+    ```bash
+    appsody stack package
+    ```
+
+    This will have updated the dev-local index, so we can again go and run our application:
+
+    ```bash
+    $ appsody run
+    Running development environment...
+    .
+    .
+    .
+    [Container] App started on PORT 3000
+    ```
+
+    If we now hit the endpoint as before with curl in verbose mode, we can see if the HTTP headers have changed:
+
+    ```bash
+    CHANGE THIS
+    curl -v http://localhost:3000
+    * Rebuilt URL to: http://localhost:3000/
+    *   Trying ::1...
+    * TCP_NODELAY set
+    * Connected to localhost (::1) port 3000 (#0)
+    > GET / HTTP/1.1
+    > Host: localhost:3000
+    > User-Agent: curl/7.54.0
+    > Accept: */*
+    >
+    < HTTP/1.1 302 Found
+    < X-DNS-Prefetch-Control: off
+    < X-Frame-Options: SAMEORIGIN
+    < Strict-Transport-Security: max-age=15552000; includeSubDomains
+    < X-Download-Options: noopen
+    < X-Content-Type-Options: nosniff
+    < X-XSS-Protection: 1; mode=block
+    < X-Powered-By: Express
+    < Location: /quote
+    < Vary: Accept
+    < Content-Type: text/plain; charset=utf-8
+    < Content-Length: 28
+    < Date: Mon, 21 Oct 2019 18:30:20 GMT
+    < Connection: keep-alive
+    <
+    * Connection #0 to host localhost left intact
+    Hello from Appsody!
+    ```
+
+    As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
+
+    A final step is to switch the actual quote-frontend application we built in [Exercise 2](/workshop/exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
+
+    The formal way of doing this is to repeat the steps from Exercise 2, where the new project in initialized, and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
+
+    ```bash
+    $ ls -al
+    total 192
+    drwxr-xr-x  16 henrynash  staff    512 15 Oct 12:42 .
+    drwxr-xr-x+ 85 henrynash  staff   2720 17 Oct 21:37 ..
+    -rw-r--r--   1 henrynash  staff     64 19 Oct 11:10 .appsody-config.yaml
+    -rw-r--r--   1 henrynash  staff   1316 15 Oct 11:12 .gitignore
+    drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:12 .vscode
+    -rw-rw-r--   1 henrynash  staff    806 15 Oct 12:50 app-deploy.yaml
+    -rw-r--r--   1 henrynash  staff    290 15 Oct 11:15 app.js
+    drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:15 config
+    drwxr-xr-x   2 henrynash  staff     64 15 Oct 11:16 node_modules
+    -rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_dc.log
+    -rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_restclient.log
+    -rw-r--r--@  1 henrynash  staff  73319 15 Oct 11:16 package-lock.json
+    -rw-r--r--   1 henrynash  staff    615 15 Oct 11:15 package.json
+    -rw-r--r--   1 henrynash  staff   2779 15 Oct 11:15 quote.js
+    drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:12 test
+    drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:15 views
+    ```
+
+    Inspecting that file, reveals that it contains a pointer to the stack:
+
+    ```bash
+    $ cat .appsody-config.yaml
+    project-name: quote-frontend
+    stack: kabanero/nodejs-express:0.2
+    ```
+
+    We can simply change the second line to, instead, point out our new stack, i.e.:
+
+    ```bash
+    $ cat .appsody-config.yaml
+    project-name: quote-frontend
+    stack: dev.local/my-nodejs-express:SNAPSHOT
+    ```
+
+    If now re-run the front end, it will use our new stack:
+
+    ```bash
+    $ appsody run
+    Running development environment...
+    Using local cache for image dev.local/my-nodejs-express:SNAPSHOT
+    .
+    .
+    .
+    [Container] App started on PORT 3000
+    ```
+
+    We can confirm that our new HTTP protection is being used by, instead of using a browser, again using curl in verbose mode to hit the published endpoint:
+
+    ```bash
+    $ curl -v http://localhost:3000
+    *   Trying ::1...
+    * TCP_NODELAY set
+    * Connected to localhost (::1) port 3000 (#0)
+    > GET / HTTP/1.1
+    > Host: localhost:3000
+    > User-Agent: curl/7.54.0
+    > Accept: */*
+    >
+    < HTTP/1.1 302 Found
+    < X-DNS-Prefetch-Control: off
+    < X-Frame-Options: SAMEORIGIN
+    < Strict-Transport-Security: max-age=15552000; includeSubDomains
+    < X-Download-Options: noopen
+    < X-Content-Type-Options: nosniff
+    < X-XSS-Protection: 1; mode=block
+    < X-Powered-By: Express
+    < Location: /quote
+    < Vary: Accept
+    < Content-Type: text/plain; charset=utf-8
+    < Content-Length: 28
+    < Date: Mon, 21 Oct 2019 18:30:20 GMT
+    < Connection: keep-alive
+    <
+    * Connection #0 to host localhost left intact
+    Found. Redirecting to /quote
+    ```
+
+    So we have successfully build and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.
