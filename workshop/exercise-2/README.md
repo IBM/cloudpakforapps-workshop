@@ -238,7 +238,7 @@ The resulting directory structure of your Appsody project should look like this:
 You can test the backend API using [curl](https://curl.haxx.se/download.html). The file `backend-input.json` contains sample input for the API. Issue the `curl` command from the project directory.
 
 ```bash
-$ curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
+curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
 
 {"quotedAmount":30,"basis":"mocked backend computation"}
 ```

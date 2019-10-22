@@ -20,7 +20,7 @@ appsody 0.4.6
 The Appsody CLI gives you access to stacks, which are stored in stack repositories. These can be local, private to the Enterprise or public. To get the list of available repos, run this command.
 
 ```bash
-$ appsody repo list
+appsody repo list
 
 NAME            URL
 *appsodyhub     https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
@@ -43,7 +43,7 @@ appsody repo add kabanero https://github.com/kabanero-io/collections/releases/do
 Now when we get our list of repos, we should see Kabanero listed:
 
 ```bash
-$ appsody repo list
+appsody repo list
 
 NAME            URL
 *appsodyhub     https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
@@ -53,7 +53,7 @@ kabanero        https://github.com/kabanero-io/collections/releases/download/v0.
 We can now list the appsody stacks available in the Kabanero collection:
 
 ```bash
-$ appsody list kabanero
+appsody list kabanero
 
 REPO        ID                  VERSION     TEMPLATES           DESCRIPTION
 kabanero    java-microprofile   0.2.11      *default            Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
@@ -72,7 +72,7 @@ appsody repo set-default kabanero
 Now is we get the list of repos, we should see kabanero is the default:
 
 ```bash
-$ appsody repo list
+appsody repo list
 
 NAME            URL
 *kabanero       https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
@@ -336,7 +336,7 @@ appsody-sample-nodejs-express               latest              0be125eee32c    
 We can run this with our local Docker environment in the normal way (making sure we map the exposed port):
 
 ```bash
-$ docker run -p 3000:3000 appsody-sample-nodejs-express
+docker run -p 3000:3000 appsody-sample-nodejs-express
 
 > nodejs-express@0.2.6 start /project
 > node server.js

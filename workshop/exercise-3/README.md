@@ -168,7 +168,7 @@ appsody deploy -t docker.io/henrynash/quote-backend --push --namespace insurance
 After the deployment completes, you can test the service using curl. The deployment should complete with something like:
 
 ```bash
-$ curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://<url-to-backend>/quote
+curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://<url-to-backend>/quote
 
 {"quotedAmount":70,"basis":"Dacadoo Health Score API"}
 ```
