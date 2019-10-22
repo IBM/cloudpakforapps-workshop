@@ -1,7 +1,5 @@
 # Exercise 4: Customizing an existing Appsody Stack
 
-> **NOTE**: To make your own stack, instead of extending one, follow this tutorial: <https://developer.ibm.com/tutorials/create-appsody-stack/>.
-
 This section is broken up into the following steps:
 
 1. [The role of a stack in the development process](#1-The-role-of-a-stack-in-the-development-process)
@@ -60,13 +58,13 @@ As a *Stack Architect* you must create the above structure, build it into an act
 
 Hence, when you build a stack, the structure above is processed and generates a Docker image for the stack, along with tar files of each of the templates, which can then all be stored and referenced in a local or public Appsody repo. The Appsody CLI can access the repo to use the stack to initiate local development.
 
-For this exercise we will modify the nodejs-express stack that we have been using for our quote-frontend, to add some additional security hardening (individual enterprises often has specific security standards that need to be met to allow deployment).
+For this exercise we will modify the nodejs-express stack that we have been using for our quote-frontend, to add some additional security hardening (individual enterprises often have specific security standards that need to be met to allow deployment).
+
+> **NOTE**: For future reference, to make your own stack from scratch, instead of extending an existing one, follow this tutorial: <https://developer.ibm.com/tutorials/create-appsody-stack/>.
 
 ## 3. Create a new stack, based on an existing one
 
-To create a new stack, you must first construct a scaffold of the above structure. Stacks are classified as being `stable`, `incubating` or `experimental`. You can read more about these classifications [here](https://appsody.dev/docs/stacks/stacks-overview). To make things easy, the Appsody CLI supports an `appsody stack create` command to create a new stack, by copying of an existing one.
-
-> **Note** In general, Appsody will always try and look in the existing repositories first for stacks, and then in the local cache. For normal stack usage this is exactly what you want - however, when in the process of creating new stacks, by definition, the existing repositories will not yet know about your new stack. Hence it is quicker in this situation to tell Appsody to look in the local cache first. You can do this by setting the following environment variable: `export APPSODY_PULL_POLICY=IFNOTPRESENT`.
+To create a new stack, you must first construct a scaffold of the above structure. Stacks are classified as being `stable`, `incubating` or `experimental`. You can read more about these classifications [here](https://appsody.dev/docs/stacks/stacks-overview). To make things easy, the Appsody CLI supports an `appsody stack create` command to create a new stack, by copying an existing one.
 
 1. Copy and rename the nodejs-express stack, by running the `appsody stack create` command, which will create a sub directory containing the new stack.
 
@@ -87,6 +85,8 @@ To create a new stack, you must first construct a scaffold of the above structur
     If you inspect the contents of the `image` directory, you will see how it matches the stack structure given earlier.
 
 1. Build your new stack
+
+    > **Note** In general, Appsody will always try and look in the existing repositories first for stacks, and then in the local cache. For normal stack usage this is exactly what you want - however, when in the process of creating new stacks, by definition, the existing repositories will not yet know about your new stack. Hence it is quicker in this situation to tell Appsody to look in the local cache first. You can do this by setting the following environment variable: `export APPSODY_PULL_POLICY=IFNOTPRESENT`.
 
     Before we make any changes, let's go through the steps of building (or *packaging*) a stack, to create a stack image (which is a Docker image) that the Appsody CLI can use to initiate a project using that stack.
 
@@ -176,15 +176,15 @@ To create a new stack, you must first construct a scaffold of the above structur
 
     * A Dockerfile (`image/Dockerfile-stack`) that builds your stack image. This is what the `appsody stack package` command used above to build a Docker image of your stack - which is, if you like, the eventual artifact that you deliver as a stack architect to application developers.
     * A Dockerfile (`image/project/Dockerfile`) that application developers will use to build their final image. This final image will contain both your stack and their application, and this Dockerfile is processed by the application developer running `appsody build/deploy`.
-    * Typically some kind of server side code that is enabling the application then developer will create and run. For this stack, this is `image/project/server.js`.
-    * Some kind of dependency management, ensuring both the correct inclusion of components defined by the stack,  as well as, potentially, any added by the application developer. For this stack, this is `image/project/package.json`.
-    * At least one sample application (or *template*), these are stored in the `templates` directory.
+    * Typically some kind of server side code that is enabling the application the developer will create and run. For this stack, this is `image/project/server.js`.
+    * Some kind of dependency management, ensuring both the correct inclusion of components defined by the stack, as well as, potentially, any added by the application developer. For this stack, this is `image/project/package.json`.
+    * At least one sample application (or *template*); these are stored in the `templates` directory.
 
     It is worth taking some time checking out the files given above to get a feel of the stack.
 
     For some stack modifications, you can actually use a form of stack inheritance - i.e. by using the existing stack images as the `FROM` image in `Dockerfile-stack`. An example of this might be where you just want to change one of the Dockerfile variables. In general, however, most modified stacks are effectively copies of an existing stack, with the additional changes added to gain the new, required functionality.
 
-    Having examined the files above, you might have already spotted what we need to do to incorporate helmet into the new stack - namely to modify `server.js` to enable it. The current code in `server.js` looks something like this:
+    Having examined the files above, you might have already spotted what we need to do to incorporate helmet into the new stack - namely to modify `image/project/server.js` to enable it. The current code in `server.js` looks something like this:
 
     ```java
     // Requires statements and code for non-production mode usage
@@ -331,7 +331,7 @@ To create a new stack, you must first construct a scaffold of the above structur
 
     A final step is to switch the actual quote-frontend application we built in [Exercise 2](/workshop/exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
 
-    The formal way of doing this is to repeat the steps from Exercise 2, where the new project in initialized, and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
+    The formal way of doing this is to repeat the steps from Exercise 2, where the new project is initialized (using our new stack), and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
 
     ```bash
     $ ls -al
@@ -413,4 +413,4 @@ To create a new stack, you must first construct a scaffold of the above structur
     Found. Redirecting to /quote
     ```
 
-    So we have successfully build and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.
+    So we have successfully built and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.
