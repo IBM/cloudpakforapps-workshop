@@ -20,8 +20,6 @@
     * [Exercise 7](workshop/exercise-7/README.md)
     * [Exercise 8](workshop/exercise-8/README.md)
 
-* [IBM Developer](https://developer.ibm.com)
-
 ### Resources
 
 * [Admin Guide](workshop/admin-guide/README.md)
