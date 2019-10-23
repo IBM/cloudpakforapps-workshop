@@ -53,7 +53,6 @@ kabanero-landing   kabanero-landing-kabanero.cpa-workshop-dev-5290c8c8e5797924dc
 tekton-dashboard   tekton-dashboard-kabanero.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud             tekton-dashboard   <all>     reencrypt/Redirect   None
 ```
 
-
 ## 1. Review pre-installed pipelines and tasks on Cloud Pak for Apps
 
 With kabanero, every collection comes with a default `build` task, `deploy` task and `build deploy` pipeline.
@@ -106,11 +105,11 @@ When using Tekton, building a pipeline will require code to be pulled from eithe
 
 To create an *Access Token*, from <github.com> click on your profile icon in the top left. Then go to `Settings` -> `Developer Settings` -> `Personal Access Tokens`. Or go directly to <https://github.com/settings/tokens>
 
-![](images/github_access_tokens.png)
+![Choose to create a new Access Token](images/github_access_tokens.png)
 
 Here we want to generate a token, so `Click` on the `Generate a Token`. The token permissions need to be the `repo` which gives read and write access to the repository.
 
-![](images/github_create_token.png)
+![Generate a new Access Token](images/github_create_token.png)
 
 Once the token is created, make sure to copy it down. We will need it later.
 
@@ -139,7 +138,7 @@ git push -u origin master
 
 Once on the dashboard, open up the `Secrets` tab that is found on the bottom left side of the screen.
 
-![](images/tekton_dashboard_secrets.png)
+![Choose to create a new Tekton Secret](images/tekton_dashboard_secrets.png)
 
 From there select the `Add Secret` button on the right side of the screen.
 
@@ -155,7 +154,7 @@ Service Account: kabanero-operator
 Server URL: tekton.dev/git-0:https://github.com
 ```
 
-![](images/tekton_create_secret.png)
+![Tekton secret option](images/tekton_create_secret.png)
 
 Then click on `Submit` and your token is registered.
 
