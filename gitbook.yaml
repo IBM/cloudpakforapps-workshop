@@ -1,5 +1,5 @@
 root: ./workshop
 
 structure:
-  readme: ./workshop/README.md
+  readme: README.md
   summary: SUMMARY.md
