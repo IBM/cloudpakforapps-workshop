@@ -1,167 +1,219 @@
-# Exercise 6: Building a simple Tekton pipeline
+# Exercise 6: Building a custom Appsody Stack repository
 
-In this exercise we're going to take our insurance quote application from exercise 3 and instead of deploying it as a stand alone app, we will push the code up to a github repo and use Tekton pipelines to constantly deploy the app to our openshift cluster and speed up your deployment process.
-
-Mention the insurance quote arch again?
-
-* The front-end is constructed with Node.js
-* The back-end is done in Java
+> ***WORK IN PROGRESS***
 
 This section is broken up into the following steps:
 
-1. Prereq: Clean up the deployed app
-1. Review pre-installed pipelines and tasks on Cloud Pak for Apps
-1. ?
-1. ?
+1. Review concepts
+2. Clone the appsody (or kabanero?) repo down locally
+3. Modify it to only reference new extended stack
+4. Create a new repo on personal github
+5. Upload changes
+6. Do a `appsody repo add` to get it locally
+7. Do a `blerg` to get kabanero on CPA to understand it
 
-## Prereq: Clean up the deployed app
+## 1. Review
 
-Run:
+Collections are categorized as either `stable`, `incubator` or `experimental` depending on the content of the collection.
 
-```bash
-$ oc get deployments
-NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-appsody-operator   1         1         1            1           7d
-quote-backend      1         1         1            1           6d
-quote-frontend     1         1         1            1           6d
+- `stable/`: Stable collection meet a set of technical requirements.
 
-$ oc delete deployment quote-backend
-deployment.extensions "quote-backend" deleted
+- `incubator/`: The collection in the incubator folder are actively being worked on to satisfy the stable criteria.
 
-$ oc delete deployment quote-frontend
-deployment.extensions "quote-frontend" deleted
+- `experimental/`: Experimental collections are not being actively been worked on and may not fulfill the requirements of a stable collection. These can be used for trying out specific capabilities or proof of concept work.
+
+## Kabanero Collections
+
+Kabanero provides pre-configured collections that enable rapid development and deployment of quality microservice-based applications. Collections include an Appsody stack (base container image and project templates) and pipelines which act as a starting point for your application development.
+
+**Appsody stacks:** Stacks include language runtimes, frameworks and any additional libraries and tools that are required to simplify your local application development. Stacks are an easy way to manage consistency and adopt best practices across many applications.
+Click here to find out more about [Appsody stacks](https://github.com/appsody/website/blob/master/content/docs/stacks/stacks-overview.md).
+
+**Template:** A template utilizes the base image and provides a starter application that is ready to use. It leverages existing capabilities provided by that image and can extend functionality to meet your application requirements.
+
+**Pipeline:** A pipeline consists of k8s-style resources for declaring CI/CD-style pipelines (Tekton pipelines).
+
+> **NOTE: Kabanero only builds and publishes collections that are categorized as 'incubator' or 'stable'**
+
+## Kabanero Collections structure
+
+This is a simplified view of the Kabanero Collections github repository structure.
+
+```ini
+ci
+├── [ files used for CI/CD of the Kabanero collections ]
+incubator
+├── common/
+|   ├── pipelines/
+|   |   ├── common-pipeline-1/
+|   |   |       └── [pipeline files that make up a full tekton pipeline used with all collections in incubator category]
+|   |   └── common-pipeline-n/
+|   |           └── [pipeline files that make up a full tekton pipeline used with all collections in incubator category]
+├── collection-1/
+|   ├── [collection files - see collection structure below]
+├── collection-2/
+|   └── [collection files - see collection structure below]
+stable
+├── common/
+|   ├── pipelines/
+|   |   ├── common-pipeline-1/
+|   |   |       └── [pipeline files that make up a full tekton pipeline used with all collections in stable category]
+|   |   └── common-pipeline-n/
+|   |           └── [pipeline files that make up a full tekton pipeline used with all collections in stable category]
+├── collection-1/
+|   ├── [collection files - see collection structure below]
+├── collection-n/
+|   └── [collection files - see collection structure below]
+experimental
+├── common/
+|   ├── pipelines/
+|   |   ├── common-pipeline-1/
+|   |   |       └── [pipeline files that make up a full tekton pipeline used with all collections in experimental category]
+|   |   └── common-pipeline-n/
+|   |           └── [pipeline files that make up a full tekton pipeline used with all collections in experimental category]
+├── collection-1/
+|   ├── [collection files - see collection structure below]
+└── collection-n/
+    └── [collection files - see collection structure below]
 ```
 
-> TODO: see if `appsody deploy delete` also works
+## Collection structure
 
-Note, we still have the `insurance-quote` namespace, the `dacadoo-secret` config map, and the `appsody-operator` deployment.
+There is a standard structure that all collections follow. The structure below represents the source structure of a collection:
 
-## Go to the Tekton dashboard
+```ini
+my-collection
+├── README.md
+├── stack.yaml
+├── collection.yaml
+├── image/
+|   ├── config/
+|   |   └── app-deploy.yaml
+|   ├── project/
+|   |   ├── [files that provide the technology components of the stack]
+|   |   └── Dockerfile
+│   ├── Dockerfile-stack
+|   └── LICENSE
+├── pipelines/
+|   ├── my-pipeline-1/
+|   |       └── [pipeline files that make up the full tekton pipeline]
+└── templates/
+    ├── my-template-1/
+    |       └── [example files as a starter for the application, e.g. "hello world"]
+    └── my-template-2/
+            └── [example files as a starter for a more complex application]
 
-You can also access them on the tekton dashboard from Cloud Pak for Apps.
-
-![Launch Tekton](images/launch_tekton.png)
-
-We should already be logged into the Tekton Dashboard, but you can also view the URL by using `oc get routes`. We want to use the address that looks like `tekton-dashboard-kabanero.xyz.domain.containers.appdomain.cloud`.
-
-```bash
-$ oc get routes --namespace kabanero
-NAME               HOST/PORT                                                                                                             PATH      SERVICES           PORT      TERMINATION          WILDCARD
-icpa-landing       ibm-cp-applications.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                   icpa-landing       <all>     reencrypt/Redirect   None
-kabanero-cli       kabanero-cli-kabanero.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                 kabanero-cli       <all>     passthrough          None
-kabanero-landing   kabanero-landing-kabanero.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud             kabanero-landing   <all>     passthrough          None
-tekton-dashboard   tekton-dashboard-kabanero.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud             tekton-dashboard   <all>     reencrypt/Redirect   None
 ```
 
-## 1. Review pre-installed pipelines and tasks on Cloud Pak for Apps
+The structure above is then processed when you build the collection, to generate a Docker image for the stack, along with tar files of each of the templates and pipelines, which can then all be stored/referenced in a local or public appsody repo. Refer to the section on [Building and Testing Stacks](https://github.com/appsody/website/blob/master/content/docs/stacks/build-and-test.md) for more details. The appsody CLI can then access such a repo, to use the stack to initiate local development.
 
-With kabanero, every collection comes with a default `build` task, `deploy` task and `build deploy` pipeline.
+## Summary of files within the stack and collection source and user directory structure
 
-Run this command to see the available pipelines.
+### stack.yaml
 
-```bash
-oc get pipeline -n kabanero
+The `stack.yaml` file in the top level directory defines the different attributes of the stack and which template the stack should use by default. See the example below:
+
+```yaml
+name: Sample Application Stack   # concise one line name for the stack
+version: 0.1.0                   # version of the stack
+description: sample stack to help creation of more appsody stacks # free form text explaining more about the capabilities of this stack and various templates
+license: Apache-2.0              # license for the stack
+language: nodejs                 # programming language the stack uses
+maintainers:                     # list of maintainer(s) details
+  - name: John Smith
+    email: example@example.com
+    github-id: jsmith
+default-template: my-template-1  # name of default template
 ```
 
-You will see something similar to this.
+real one:
 
-```bash
-$ oc get pipeline -n kabanero
-NAME                                           AGE
-java-microprofile-build-deploy-pipeline        15d
-java-spring-boot2-build-deploy-pipeline        15d
-nodejs-build-deploy-pipeline                   15d
-nodejs-express-build-deploy-pipeline           15d
-nodejs-loopback-build-deploy-pipeline          15d
-pipeline0                                      15d
+```yaml
+---
+stacks:
+  - default-template: default
+    description: "Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven"
+    id: java-microprofile
+    language: java
+    license: Apache-2.0
+    maintainers:
+      - email: emily@exmple.com
+        github-id: emily
+        name: "emily"
+    name: "Eclipse MicroProfile®"
+    templates:
+      - id: default
+        url: "https://github.com/appsody/stacks/releases/download/java-microprofile-v0.2.18/incubator.java-microprofile.v0.2.18.templates.default.tar.gz"
+    version: "0.2.18"
 ```
 
-And tasks
+### Collection.yaml
 
-```bash
-stevemar@quote-frontend $ oc get tasks -n kabanero
-NAME                            AGE
-java-microprofile-build-task    27d
-java-microprofile-deploy-task   27d
-java-spring-boot2-build-task    27d
-java-spring-boot2-deploy-task   27d
-monitor-result-task             27d
-nodejs-build-task               27d
-nodejs-deploy-task              27d
-nodejs-express-build-task       27d
-nodejs-express-deploy-task      27d
-nodejs-loopback-build-task      27d
-nodejs-loopback-deploy-task     27d
-pipeline0-task                  27d
+The `collection.yaml` file in the top level directory defines the different attributes of the collection and which container image and pipeline the collection should use by default. See the example below:
+
+```yaml
+default-image: java-microprofile # name of the default container image - reference into the images element below
+default-pipeline: default        # name of the default pipeline - reference to the pipeline in the directory structure
+images:                          # list of container images
+- id: java-microprofile
+  image: $IMAGE_REGISTRY_ORG/java-microprofile:0.2
 ```
 
-![Pre-Existing Pipelines](images/tekton_pipelines.png)
+Real example:
 
-![Pre-Existing Tasks](images/tekton_tasks.png)
-
-## Get a GitHub Access Token
-
-When using Tekton, building a pipeline will require code to be pulled from either a public or private repository. When configuring Tekton, for security reasons, we will create an *Access Token* instead of using a password.
-
-To create an *Access Token*, from <github.com> click on your profile icon in the top left. Then go to `Settings` -> `Developer Settings` -> `Personal Access Tokens`. Or go directly to <https://github.com/settings/tokens>
-
-![Choose to create a new Access Token](images/github_access_tokens.png)
-
-Here we want to generate a token, so `Click` on the `Generate a Token`. The token permissions need to be the `repo` which gives read and write access to the repository.
-
-![Generate a new Access Token](images/github_create_token.png)
-
-Once the token is created, make sure to copy it down. We will need it later.
-
-## Upload insurance quote frontend, and backend to GitHub
-
-Open Github.com and `login` with your username and password.
-
-Go to <https://github.com/new> and create two new repositories, `quote-frontend`, and `quote-backend`. Do not initiatize the repos with a License or README.
-
-![New repo](images/new_repo.png)
-
-From your `quote-backend` directory, run the commands below, replacing `<username>` with your own.
-
-```bash
-git init
-git add -A
-git commit -m "first commit"
-git remote add origin git@github.com:<username>/quote-backend.git
-git push -u origin master
+```yaml
+stacks:
+  - default-image: java-microprofile
+    default-pipeline: default
+    images:
+      - id: java-microprofile
+        image: "kabanero/java-microprofile:0.2"
+    pipelines:
+      - id: default
+        sha256: a59a779825c543e829d7a51e383f26c2089b4399cf39a89c10b563597d286991
+        url: "https://github.com/kabanero-io/collections/releases/download/v0.1.2/incubator.common.pipeline.default.tar.gz"
 ```
 
-![Repo for frontend](images/repo_frontend.png)
-![Repo for backend](images/repo_backend.png)
+### README
 
-## Configure Tekton with Github Access Token
+The top level directory must contain a `README.md` markdown file that describes the contents of the collection and how it should be used.
 
-Once on the dashboard, open up the `Secrets` tab that is found on the bottom left side of the screen.
+### LICENSE
 
-![Choose to create a new Tekton Secret](images/tekton_dashboard_secrets.png)
+The `image` directory must contain a `LICENSE` file.
 
-From there select the `Add Secret` button on the right side of the screen.
+### app-deploy.yaml
 
-Next, we want to fill in the form with the following information:
+The `app-deploy.yaml` is the configuration file for deploying an Appsody project using the Appsody Operator. For more information about specifics, see [Appsody Operator User Guide](https://github.com/appsody/appsody-operator/blob/master/doc/user-guide.md).
 
-```bash
-Name: tekton-github
-Namespace: kabanero
-Access To: Git Server
-Username: <yourusername>
-Password: <Generated Token>
-Service Account: kabanero-operator
-Server URL: tekton.dev/git-0:https://github.com
+### Dockerfile-stack
+
+The `Dockerfile-stack` file in the `image` directory defines the foundation stack image, and a set of environment variables that specify the desired behaviour during the rapid local development cycle. It also defines what is exposed from the host machine to the container during this mode.
+
+Environment variables can be set to alter the behaviour of the CLI and controller (see [Appsody Environment Variables](https://github.com/appsody/website/blob/master/content/docs/stacks/environment-variables.md)).
+
+### Dockerfile
+
+The `Dockerfile` in the `image/project` directory defines the final image that will created by the `appsody build` command, which needs to contain the content from both the stack itself along with the user application (typically modified from one of the templates). This is used to run the application as a whole, outside of appsody CLI control.
+
+### Templates
+
+A template is a pre-configured starter application that is ready to use with the particular stack image. It has access to all the dependencies supplied by that image and is able to include new functionality and extra dependencies to enhance the image. A stack can have multiple templates, perhaps representing different classes of starter applications using the stack technology components.
+
+### Pipelines
+
+A pipeline is set of Tekton pipelines (k8s-style resources for declaring CI/CD-style pipelines) to use with the particular collection. A collection can have multiple pipelines.
+
+### .appsody-config.yaml
+
+The `.appsody-config.yaml` is not part of the source structure, but will be generated as part of the stack building process, and will be placed in the user directory by the `appsody init`, command. This file specifies the stack image that will be used, and can be overridden for testing purposes to a locally built stack.
+
+For example, the following specifies that the template will use the python-flask image:
+
+```yaml
+stack: python-flask:0.1
 ```
 
-![Tekton secret option](images/tekton_create_secret.png)
+1. Foo
 
-Then click on `Submit` and your token is registered.
-
-## Configure Tekton to point to repos
-
-Configure webhooks
-
-Make a change to a file
-
-Test it out
+1. Bar
