@@ -7,10 +7,10 @@
 ### Day 1
 
 * [About Day 1](workshop/day-1/README.md)
-* [Exercise 1](workshop/exercise-1/README.md)
-* [Exercise 2](workshop/exercise-2/README.md)
-* [Exercise 3](workshop/exercise-3/README.md)
-* [Exercise 4](workshop/exercise-4/README.md)
+    * [Exercise 1](workshop/exercise-1/README.md)
+    * [Exercise 2](workshop/exercise-2/README.md)
+    * [Exercise 3](workshop/exercise-3/README.md)
+    * [Exercise 4](workshop/exercise-4/README.md)
 
 ### Day 2
 
