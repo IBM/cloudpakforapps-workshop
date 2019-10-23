@@ -1,4 +1,4 @@
-root: ./workshop
+root: ./workshop/
 
 structure:
   readme: README.md
