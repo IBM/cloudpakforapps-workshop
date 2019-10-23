@@ -4,8 +4,6 @@
 
 * [Pre-work](workshop/exercise-0/README.md)
 
---
-
 ### Day 1
 
 * [About Day 1](workshop/day-1/README.md)
@@ -21,7 +19,5 @@
     * [Exercise 6](workshop/exercise-6/README.md)
     * [Exercise 7](workshop/exercise-7/README.md)
     * [Exercise 8](workshop/exercise-8/README.md)
-
---
 
 * [IBM Developer](https://developer.ibm.com)
