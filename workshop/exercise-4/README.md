@@ -4,15 +4,18 @@ In this exercise we're going to take our insurance quote application from exerci
 
 Mention the insurance quote arch again?
 
-* The front-end is constructed with Node.js
-* The back-end is done in Java
+* The front-end is constructed with Node.js (we used the `nodejs-express` collection)
+* The back-end is done in Java (we used the `java-spring-boot2` collection)
 
 This section is broken up into the following steps:
 
 1. Prereq: Clean up the deployed app
+1. Launch the Tekton dashboard
 1. Review pre-installed pipelines and tasks on Cloud Pak for Apps
-1. ?
-1. ?
+1. Get a GitHub Access Token
+1. Upload insurance quote frontend, and backend to GitHub
+1. Configure Tekton with Github Access Token
+1. Configure Tekton to point to repos
 
 ## Prereq: Clean up the deployed app
 
@@ -99,6 +102,12 @@ pipeline0-task                  27d
 
 ![Pre-Existing Tasks](images/tekton_tasks.png)
 
+A quick note about all of the items you see above...
+
+There are 5 **Pipelines**, one for each collection kabanero comes with (java microprofile, spring, nodejs, express, and loopback). **Pipelines** are a first class structure in Tekton. **Pipelines** are a series of **Tasks**.
+
+There are 10 **Tasks**, two for each collection kabanero comes with. Each collection has 2 **Tasks**, a *Build Task* and a *Deploy Task*.
+
 ## Get a GitHub Access Token
 
 When using Tekton, building a pipeline will require code to be pulled from either a public or private repository. When configuring Tekton, for security reasons, we will create an *Access Token* instead of using a password.
@@ -131,37 +140,55 @@ git remote add origin git@github.com:<username>/quote-backend.git
 git push -u origin master
 ```
 
+The repo for your frontend code should look like this:
+
 ![Repo for frontend](images/repo_frontend.png)
+
+The repo for your backend code should look like this:
+
 ![Repo for backend](images/repo_backend.png)
 
 ## Configure Tekton with Github Access Token
 
-Once on the dashboard, open up the `Secrets` tab that is found on the bottom left side of the screen.
+Once in the Tekton dashboard, open up the `Secrets` tab that is found on the bottom left side of the screen. From there select the `Add Secret` button on the right side of the screen.
 
 ![Choose to create a new Tekton Secret](images/tekton_dashboard_secrets.png)
 
-From there select the `Add Secret` button on the right side of the screen.
-
 Next, we want to fill in the form with the following information:
 
-```bash
-Name: tekton-github
-Namespace: kabanero
-Access To: Git Server
-Username: <yourusername>
-Password: <Generated Token>
-Service Account: kabanero-operator
-Server URL: tekton.dev/git-0:https://github.com
-```
+* Name: `tekton-github`
+* Namespace: `kabanero`
+* Access To: `Git Server`
+* Username: `<yourusername>`
+* Password: `<Generated Token>`
+* Service Account: `kabanero-operator`
+* Server URL: `tekton.dev/git-0:https://github.com`
 
-![Tekton secret option](images/tekton_create_secret.png)
+![Tekton secret option](images/tekton_new_secret.png)
 
 Then click on `Submit` and your token is registered.
 
 ## Configure Tekton to point to repos
 
-Configure webhooks
+> TODO: do these instructions twice, once per repo
+> TODO: add explicit instructions for which file to modify
 
-Make a change to a file
+Configure the github webhook to your repo. Go to `Webhooks` > `Add Webhook` and then create the webhook.
 
-Test it out
+![new webhook options](images/new_webhook.png)
+
+Verify if it is created successfully.
+
+![the new webhook exists](images/webhook_listed.png)
+
+Make any changes to your app and push it to github. This will trigger the tekton pipleine. Go to the tekton dashboard and access the new pipeline we created.
+
+![verify the pipeline works](images/verify_pipeline.png)
+
+Wait till the task is completed and then click on the Pipeline Run.
+
+![click on pipeline run](images/pipeline_run_listed.png)
+
+Once the tasks are all completed, you will see something like below.
+
+![see pipeline run](images/pipeline_run.png)
