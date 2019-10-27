@@ -1,4 +1,4 @@
-# Exercise 8: Deploy Application from Custom Stack & Repository
+# Exercise 9: Deploy an application from Custom Stack & Repository
 
 > ***WORK IN PROGRESS***
 

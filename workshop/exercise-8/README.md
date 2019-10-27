@@ -1,4 +1,4 @@
-# Exercise 7: Create a Tekton pipleline for a custom collection
+# Exercise 8: Create a Tekton pipleline for a custom collection
 
 > ***WORK IN PROGRESS***
 

@@ -1,4 +1,4 @@
-# Exercise 6: Building a custom Appsody Stack repository
+# Exercise 6: Building a custom Kabanero Collection repository
 
 > ***WORK IN PROGRESS***
 
