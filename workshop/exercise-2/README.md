@@ -24,19 +24,10 @@ You should have already carried out the prerequisites defined in [Exercise 0](/w
 
 ## Steps
 
-1. [Clone the repo](#1-clone-the-repo).
-2. [Create the frontend application and run it locally](#2-create-the-frontend-application-and-run-it-locally)
-3. [Create the backend application and run it locally](#3-create-the-backend-application-and-run-it-locally)
+1. [Create the frontend application and run it locally](#2-create-the-frontend-application-and-run-it-locally)
+1. [Create the backend application and run it locally](#3-create-the-backend-application-and-run-it-locally)
 
-### 1. Clone the repo
-
-Clone the `appsody-sample-quote-app` repo locally. In a terminal, run:
-
-```bash
-git clone https://github.com/IBM/appsody-sample-quote-app ~/appsody-sample-quote-app
-```
-
-### 2. Create the frontend application and run it locally
+### 1. Create the frontend application and run it locally
 
 The frontend application is written in Node.js Express. First let's initialize an Appsody project that uses the Node.js Express stack. Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 
@@ -99,7 +90,7 @@ The Node.js Express stack installs the package dependencies into the containeriz
 Now copy the files from the `quote-frontend` directory in the cloned git repo to your Appsody project, for example:
 
 ```bash
-cp -R ~/appsody-sample-quote-app/quote-frontend/* .
+cp -R exercise-frontend/* .
 ```
 
 The resulting directory structure of your Appsody project should look like this:
@@ -156,7 +147,7 @@ appsody test
 
 This runs tests that come packaged with the stack (such as tests of the health and metrics endpoints), and of course you can add your own tests of your application as well. Look at tests that call `GET /quote` and `POST /quote` in `test/test.js` to how the frontend application is tested.
 
-### 3. Create the backend application and run it locally
+### 1. Create the backend application and run it locally
 
 The backend application is written in Spring Boot. Let's initialize an Appsody project that uses the Spring Boot 2 stack. Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 
@@ -214,7 +205,7 @@ We're going to replace the starter code with the insurance quote backend applica
 Now copy the files from the `quote-backend` directory in the cloned git repo to your Appsody project, for example:
 
 ```bash
-cp -R ~/appsody-sample-quote-app/quote-backend/* .
+cp -R exercise-backend/* .
 ```
 
 The resulting directory structure of your Appsody project should look like this:
