@@ -1,41 +1,144 @@
-# Exercise 6: Building a custom Appsody Stack repository
+# Exercise 6: Building a custom Kabanero Collection repository
 
 > ***WORK IN PROGRESS***
 
 This section is broken up into the following steps:
 
 1. Review concepts
-2. Clone the appsody (or kabanero?) repo down locally
-3. Modify it to only reference new extended stack
-4. Create a new repo on personal github
-5. Upload changes
-6. Do a `appsody repo add` to get it locally
-7. Do a `blerg` to get kabanero on CPA to understand it
+1. Create a new repo
+1. Set up a local build environment
+1. Build collections
+1. Test the collections locally using Appsody
+1. Push changes back to your repository
+1. Release the final version of the collections
 
 ## 1. Review
 
 Collections are categorized as either `stable`, `incubator` or `experimental` depending on the content of the collection.
 
-- `stable/`: Stable collection meet a set of technical requirements.
+* `stable/`: Stable collection meet a set of technical requirements.
+* `incubator/`: The collection in the incubator folder are actively being worked on to satisfy the stable criteria.
+* `experimental/`: Experimental collections are not being actively been worked on and may not fulfill the requirements of a stable collection. These can be used for trying out specific capabilities or proof of concept work.
 
-- `incubator/`: The collection in the incubator folder are actively being worked on to satisfy the stable criteria.
-
-- `experimental/`: Experimental collections are not being actively been worked on and may not fulfill the requirements of a stable collection. These can be used for trying out specific capabilities or proof of concept work.
-
-## Kabanero Collections
+### Kabanero Collections
 
 Kabanero provides pre-configured collections that enable rapid development and deployment of quality microservice-based applications. Collections include an Appsody stack (base container image and project templates) and pipelines which act as a starting point for your application development.
 
-**Appsody stacks:** Stacks include language runtimes, frameworks and any additional libraries and tools that are required to simplify your local application development. Stacks are an easy way to manage consistency and adopt best practices across many applications.
+### Appsody Stacks
+
+Stacks include language runtimes, frameworks and any additional libraries and tools that are required to simplify your local application development. Stacks are an easy way to manage consistency and adopt best practices across many applications.
 Click here to find out more about [Appsody stacks](https://github.com/appsody/website/blob/master/content/docs/stacks/stacks-overview.md).
-
-**Template:** A template utilizes the base image and provides a starter application that is ready to use. It leverages existing capabilities provided by that image and can extend functionality to meet your application requirements.
-
-**Pipeline:** A pipeline consists of k8s-style resources for declaring CI/CD-style pipelines (Tekton pipelines).
 
 > **NOTE: Kabanero only builds and publishes collections that are categorized as 'incubator' or 'stable'**
 
-## Kabanero Collections structure
+## Create a new repo
+
+The default collections can be modified to suit the needs of your organization.  Use the following steps to customize the default collections and store them in a new Github repository:
+
+1. Clone the default collections repository and create a new copy of it in your Github organization.  In this example, we are referring to `github.example.com` as the remote Github repository, and we refer to it locally as `private-org`.
+
+```bash
+git clone https://github.com/kabanero-io/collections.git
+cd collections
+git remote add private-org https://github.example.com/my_org/collections.git
+git push -u private-org
+```
+
+Once this has been done, you will have your own copy of the collections repository in your own Github org/repo. Follow any normal development processes you have for using git (i.e., creating branches, etc.).
+
+## Set up a local build environment
+
+There are several tools that are used to build:
+
+* yq: Command-line YAML processor  (sudo snap install yq)
+* docker: A tool to help you build and run apps within containers
+
+These are only required if you are also building the Codewind Index (export CODEWIND_INDEX=true):::
+
+* python3: Python is a general-purpose interpreted, interactive, object-oriented, and high-level programming language
+* pyyaml: YAML parser and emitter for python (pip3 install pyyaml)
+
+There are several environment variables that need to be set up. These are required in order to correctly build the collections.
+
+```bash
+# Organization for images
+export IMAGE_REGISTRY_ORG=kabanero
+
+# Whether to build the Codewind Index file
+export CODEWIND_INDEX=false
+```
+
+These settings are also required to correctly release the collections (if done manually):
+
+```bash
+# Publish images to image registry
+export IMAGE_REGISTRY_PUBLISH=false
+
+# Credentials for publishing images:
+export IMAGE_REGISTRY=<registry>
+export IMAGE_REGISTRY_USERNAME=<registry_username>
+export IMAGE_REGISTRY_PASSWORD=<registry_password>
+```
+
+## Build collections
+
+From the base directory, run the build script.  For example:
+
+```bash
+. ./ci/build.sh
+```
+
+Note that this will build all the collections in the incubator directory.
+
+Following the build, you can find the generated collection assets in the `file://$PWD/ci/assets/` directory and all the docker images in your local docker registry.
+
+## Test the collections locally using Appsody
+
+To test the collections, add the `kabanero-index.yaml` to Appsody using the Appsody CLI:
+
+```bash
+appsody repo add kabanero file://$PWD/ci/assets/kabanero-index-local.yaml
+```
+
+This will enable you to do an `appsody init` for a collection that is in the newly built kabanero collections.  For example:
+
+```bash
+appsody init kabanero/java-microprofile
+```
+
+## Push changes back to your repository
+
+Once you have made all the changes to the collection and you are ready to push the changes back to your git repository then
+
+```bash
+# Commit your changes back to git
+git commit -a -m "Updates to the collections"
+
+# Push the changes to your repository.   For example:
+git push -u private-org
+```
+
+If Travis CI has been setup in your git organization, the push to git should trigger the Travis build to run, which will ensure that the changes build OK.
+
+## Release the final version of the collections
+
+Once all changes have been made to the Collections and they are ready to be released, if a full release of the collections is required, create a git tag:
+
+```bash
+git tag "v0.1.1 -m "Collections v0.1.1"
+# push the tags to git:
+git push --tags
+```
+
+This will trigger another Travis build that will also generate a Git Release and push the images to the image repository.
+
+Test the pipelines and other components that have been included in the collection link:collection-install.html[within the Kabanero/OpenShift environment].
+
+Declare the release final.  If you need to make additional changes, repeat the process using the same repository you created in the first step, and create a new tag to represent a new release.
+
+## References
+
+### Kabanero Repo structure
 
 This is a simplified view of the Kabanero Collections github repository structure.
 
@@ -77,7 +180,7 @@ experimental
     └── [collection files - see collection structure below]
 ```
 
-## Collection structure
+### Kabanero Collection structure
 
 There is a standard structure that all collections follow. The structure below represents the source structure of a collection:
 
@@ -106,8 +209,6 @@ my-collection
 ```
 
 The structure above is then processed when you build the collection, to generate a Docker image for the stack, along with tar files of each of the templates and pipelines, which can then all be stored/referenced in a local or public appsody repo. Refer to the section on [Building and Testing Stacks](https://github.com/appsody/website/blob/master/content/docs/stacks/build-and-test.md) for more details. The appsody CLI can then access such a repo, to use the stack to initiate local development.
-
-## Summary of files within the stack and collection source and user directory structure
 
 ### stack.yaml
 
@@ -213,7 +314,3 @@ For example, the following specifies that the template will use the python-flask
 ```yaml
 stack: python-flask:0.1
 ```
-
-1. Foo
-
-1. Bar

@@ -1,4 +1,4 @@
-# Exercise 8: Create a Tekton pipleline for a custom collection
+# Exercise 9: Deploy an application from Custom Stack & Repository
 
 > ***WORK IN PROGRESS***
 

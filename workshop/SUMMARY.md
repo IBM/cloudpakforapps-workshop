@@ -16,9 +16,10 @@
 
 * [About Day 2](day-2/README.md)
     * [Exercise 5: Customizing an existing Appsody Stack](exercise-5/README.md)
-    * [Exercise 6: Building a custom Appsody Stack repository](exercise-6/README.md)
-    * [Exercise 7: Create a Tekton pipleline for a custom collection](exercise-7/README.md)
-    * [Exercise 8: Deploy an application with a custom Stack & Repository](exercise-8/README.md)
+    * [Exercise 6: Building a custom Kabanero Collection repository](exercise-6/README.md)
+    * [Exercise 7: Configuring Kabanero to use an Alternate Collection Repository](exercise-7/README.md)
+    * [Exercise 8: Create a Tekton pipleline for a custom collection](exercise-8/README.md)
+    * [Exercise 9: Deploy an application from Custom Stack & Repository](exercise-9/README.md)
 
 ### Workshop Resources
 
