@@ -252,7 +252,7 @@ curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://<
 
 where:
 
-* `<url-to-backend>` is the endpoint given above at the end of running appsody deploy (i.e. *quote-backend-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud* in the example above)
+* `<url-to-backend>` is the endpoint given above at the end of running appsody deploy (i.e. *quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud* in the example above)
 
 > **NOTE**: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis" -- ("mocked backend computation" instead of "Dacadoo Health Score API").
 
@@ -293,23 +293,36 @@ spec:
 Save the yaml file and do the deployment.
 
 ```bash
-appsody deploy -t <your image registry>/<your namespace>/quote-frontend --push  --namespace insurance-quote
+$ appsody deploy --tag $DOCKER_REGISTRY/insurance-quote/quote-frontend:v1 --push --namespace insurance-quote
+...
+[Docker] Successfully built ba7451568a04
+[Docker] Successfully tagged docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
+Built docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
+Using applicationImage of: docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
+Pushing docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
+Attempting to apply resource in Kubernetes ...
+Running command: kubectl apply -f app-deploy.yaml --namespace insurance-quote
+Deployment succeeded.
+Appsody Deployment name is: quote-frontend
+Running command: kubectl get rt quote-frontend -o jsonpath="{.status.url}" --namespace insurance-quote
+Attempting to get resource from Kubernetes ...
+Running command: kubectl get route quote-frontend -o jsonpath={.status.ingress[0].host} --namespace insurance-quote
+Deployed project running at quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 ```
 
-where, as before:
-
-* `<your image registry>` is the host name of your regional registry, for example `docker.io`
-* `<your namespace>` is a namespace you created in your registry
-
-After the deployment completes, you can test the service using curl. The deployment should complete with something like:
+Run this command to point to the internal URL:
 
 ```bash
-.
-.
-[Info] Deployed project running at quote-frontend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud
+sed -i'.bak' -e 's#applicationImage: .*$#applicationImage: '"docker-registry.default.svc:5000/insurance-quote/quote-frontend:v1"'#g' app-deploy.yaml && rm app-deploy.yaml.bak
 ```
 
-You can then use a browser to open the frontend application, at the url given above. Fill in the form and click the button to submit it. You should get a quote from the backend application.
+And then re-apply it:
+
+```bash
+oc apply -f app-deploy.yaml -n insurance-quote
+```
+
+You can then use a browser to open the frontend application, at the url given above (in the example above the URL is `quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud`). Fill in the form and click the button to submit it. You should get a quote from the backend application.
 
 ![Sample web form](images/screenshot.png)
 
