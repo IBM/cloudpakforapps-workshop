@@ -67,21 +67,21 @@ Describing the route we can see it does not have the necessary `annotation`:
 
 ```bash
 $ oc describe route docker-registry -n default
-Name:			docker-registry
-Namespace:		default
-Created:		20 seconds ago
-Labels:			docker-registry=default
-Annotations:		openshift.io/host.generated=true
-Requested Host:		docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
-			  exposed on router router 20 seconds ago
-Path:			<none>
-TLS Termination:	reencrypt
-Insecure Policy:	<none>
-Endpoint Port:		5000-tcp
+Name:    docker-registry
+Namespace:    default
+Created:    20 seconds ago
+Labels:    docker-registry=default
+Annotations:    openshift.io/host.generated=true
+Requested Host:    docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
+      exposed on router router 20 seconds ago
+Path:    <none>
+TLS Termination:    reencrypt
+Insecure Policy:    <none>
+Endpoint Port:    5000-tcp
 
-Service:	docker-registry
-Weight:		100 (100%)
-Endpoints:	172.30.112.3:5000, 172.30.112.4:5000
+Service:    docker-registry
+Weight:    100 (100%)
+Endpoints:    172.30.112.3:5000, 172.30.112.4:5000
 ```
 
 Give the route a `path`:
@@ -207,13 +207,14 @@ spec:
 Now use `appsody deploy` to push the image and deploy it.
 
 ```bash
-appsody deploy --namespace insurance-quote
+$ appsody deploy --tag $DOCKER_REGISTRY/insurance-quote/quote-backend:v1 --push --namespace insurance-quote
 .
 .
-[Docker] Successfully built 3f6c2387a945
-[Docker] Successfully tagged dev.local/quote-backend:latest
-Built docker image dev.local/quote-backend
-Using applicationImage of: dev.local/quote-backend
+[Docker] Successfully built 4294712e0f9e
+[Docker] Successfully tagged docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-backend:v1
+Built docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-backend:v1
+Using applicationImage of: docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-backend:v1
+Pushing docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-backend:v1
 Attempting to apply resource in Kubernetes ...
 Running command: kubectl apply -f app-deploy.yaml --namespace insurance-quote
 Deployment succeeded.
@@ -224,6 +225,7 @@ Running command: kubectl get route quote-backend -o jsonpath={.status.ingress[0]
 Deployed project running at quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 ```
 
+> **NOTE**: If the deployment times out, see the section [Pushing to the OpenShift registry times out](../admin-guide/README.md#pushing-to-the-openshift-registry-times-out) in the Admin Guide.
 > **NOTE**: Running `appsody deploy` will install the [appsody operator](https://github.com/appsody/appsody-operator) on the *Default* namespace of the cluster.
 
 After the deployment completes, you can test the service using curl. The deployment should complete with something like:
