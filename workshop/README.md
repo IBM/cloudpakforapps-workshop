@@ -1,4 +1,4 @@
-# Cloud Native Applications Workshop
+# Workshop: Creating Cloud Native Applications with Cloud Pak for Applications on OpenShift
 
 ## Agenda
 
@@ -54,3 +54,14 @@ Cloud Pak for Applications:
   * Transformation Advisory
   * ...and more
 * ... can be deployed on any major cloud provider supporting OpenShift (IBM Cloud, AWS, Azure, GCP)
+
+## About this Workshop
+
+This workshop was created by Henry Nash and Steve Martinelli. Content was leveraged content from other IBM'ers such as:
+
+* [Appsody Code Pattern - Greg Dritschler](https://github.com/IBM/appsody-sample-quote-app)
+* [Learning Kabanero 101 - Cloud Garage / Carlos Santana](https://ibm-cloud-architecture.github.io/Learning-Kabanero-101)
+
+This workshop has been tested on the following platforms:
+
+* MacOS

@@ -331,7 +331,7 @@ To create a new stack, you must first construct a scaffold of the above structur
 
     As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
 
-    A final step is to switch the actual quote-frontend application we built in [Exercise 2](/workshop/exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
+    A final step is to switch the actual quote-frontend application we built in [Exercise 2](workshop/exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
 
     The formal way of doing this is to repeat the steps from Exercise 2, where the new project is initialized (using our new stack), and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
 

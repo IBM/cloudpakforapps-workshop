@@ -33,9 +33,9 @@ Click here to find out more about [Appsody stacks](https://github.com/appsody/we
 
 ## Create a new repo
 
-The default collections can be modified to suit the needs of your organization.  Use the following steps to customize the default collections and store them in a new Github repository:
+The default collections can be modified to suit the needs of your organization. Use the following steps to customize the default collections and store them in a new Github repository:
 
-1. Clone the default collections repository and create a new copy of it in your Github organization.  In this example, we are referring to `github.example.com` as the remote Github repository, and we refer to it locally as `private-org`.
+1. Clone the default collections repository and create a new copy of it in your Github organization. In this example, we are referring to `github.example.com` as the remote Github repository, and we refer to it locally as `private-org`.
 
 ```bash
 git clone https://github.com/kabanero-io/collections.git
@@ -82,7 +82,7 @@ export IMAGE_REGISTRY_PASSWORD=<registry_password>
 
 ## Build collections
 
-From the base directory, run the build script.  For example:
+From the base directory, run the build script. For example:
 
 ```bash
 . ./ci/build.sh
@@ -100,7 +100,7 @@ To test the collections, add the `kabanero-index.yaml` to Appsody using the Apps
 appsody repo add kabanero file://$PWD/ci/assets/kabanero-index-local.yaml
 ```
 
-This will enable you to do an `appsody init` for a collection that is in the newly built kabanero collections.  For example:
+This will enable you to do an `appsody init` for a collection that is in the newly built kabanero collections. For example:
 
 ```bash
 appsody init kabanero/java-microprofile
@@ -114,7 +114,7 @@ Once you have made all the changes to the collection and you are ready to push t
 # Commit your changes back to git
 git commit -a -m "Updates to the collections"
 
-# Push the changes to your repository.   For example:
+# Push the changes to your repository.  For example:
 git push -u private-org
 ```
 
@@ -134,7 +134,7 @@ This will trigger another Travis build that will also generate a Git Release and
 
 Test the pipelines and other components that have been included in the collection link:collection-install.html[within the Kabanero/OpenShift environment].
 
-Declare the release final.  If you need to make additional changes, repeat the process using the same repository you created in the first step, and create a new tag to represent a new release.
+Declare the release final. If you need to make additional changes, repeat the process using the same repository you created in the first step, and create a new tag to represent a new release.
 
 ## References
 

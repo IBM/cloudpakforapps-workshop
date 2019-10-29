@@ -20,7 +20,16 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 0](/workshop/exercise-0/README.md).
+You should have already carried out the prerequisites defined in [Exercise 0](workshop/exercise-0/README.md).
+
+In addition to the pre-reqs above, we need to clone the repo: <https://github.com/IBM/cloudpakforapps-workshop>
+
+We recommend putting this repo in your user home, i.e.:
+
+```bash
+cd ~
+git clone https://github.com/IBM/cloudpakforapps-workshop
+```
 
 ## Steps
 
@@ -32,6 +41,7 @@ You should have already carried out the prerequisites defined in [Exercise 0](/w
 The frontend application is written in Node.js Express. First let's initialize an Appsody project that uses the Node.js Express stack. Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 
 ```bash
+cd ~/appsody-apps
 mkdir quote-frontend
 cd quote-frontend
 appsody init kabanero/nodejs-express
@@ -90,7 +100,7 @@ The Node.js Express stack installs the package dependencies into the containeriz
 Now copy the files from the `quote-frontend` directory in the cloned git repo to your Appsody project, for example:
 
 ```bash
-cp -R exercise-frontend/* .
+cp -R ~/cloudpakforapps-workshop/exercise-frontend/* .
 ```
 
 The resulting directory structure of your Appsody project should look like this:
@@ -152,6 +162,7 @@ This runs tests that come packaged with the stack (such as tests of the health a
 The backend application is written in Spring Boot. Let's initialize an Appsody project that uses the Spring Boot 2 stack. Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 
 ```bash
+cd ~/appsody-apps
 mkdir quote-backend
 cd quote-backend
 appsody init kabanero/java-spring-boot2
@@ -205,7 +216,7 @@ We're going to replace the starter code with the insurance quote backend applica
 Now copy the files from the `quote-backend` directory in the cloned git repo to your Appsody project, for example:
 
 ```bash
-cp -R exercise-backend/* .
+cp -R ~/cloudpakforapps-workshop/exercise-backend/* .
 ```
 
 The resulting directory structure of your Appsody project should look like this:
@@ -229,7 +240,7 @@ The resulting directory structure of your Appsody project should look like this:
 You can test the backend API using [curl](https://curl.haxx.se/download.html). The file `backend-input.json` contains sample input for the API. Issue the `curl` command from the project directory.
 
 ```bash
-curl -X POST  -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
+curl -X POST -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
 
 {"quotedAmount":30,"basis":"mocked backend computation"}
 ```
@@ -256,4 +267,4 @@ appsody test
 
 Look at [quote-backend/src/test/java/application/QuoteTests.java](quote-backend/src/test/java/application/QuoteTests.java) to see the tests for the backend application.
 
-(As long as the communication between the two apps is not too hard to set up, it might be good to do a build and manual deploy to local docker here....showing that you now have a regular Docker image. Then the next exercises can concentrate on the specifics about deploying to OCP)
+> TODO: Look into using docker compose to show communication between the two apps is not too hard to set up. It might be good to do a build and manual deploy to local docker here, showing that you now have a regular Docker image. Then the next exercises can concentrate on the specifics about deploying to OpenShift)

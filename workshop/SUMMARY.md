@@ -28,3 +28,7 @@
 ### Resources
 
 * [IBM Developer](https://developer.ibm.com)
+* [Appsody Documentation](https://appsody.dev)
+* [Kabanero Documentation](https://kabanero.io)
+* [Codewind Documentation](https://www.eclipse.org/codewind/)
+* [Cloud Pak for Applications](https://www.ibm.com/cloud/cloud-pak-for-applications)
