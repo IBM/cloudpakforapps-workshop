@@ -242,6 +242,10 @@ where:
 
 > **NOTE**: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis" -- ("mocked backend computation" instead of "Dacadoo Health Score API").
 
+Navigating back to the registry dashboard should show the new image.
+
+![The apps backend in the registry](images/backend-in-registry.png)
+
 ### 4. Deploy the frontend application to OpenShift
 
 We are now going to deploy the frontend application to OpenShift. The steps are similar to what we did for the backend application.
