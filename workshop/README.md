@@ -4,7 +4,7 @@
 
 We'll be using the Cloud Pak for Applications platform to perform the following tasks:
 
-### Kabanero/Appsody for Developers and Operators (Day 1 - Common Track)
+### Kabanero/Appsody for Developers and Operators (Day 1)
 
 In this frist day we'll learn how to use Appsody to run the *inner loop* of the development and test cycle for a developer, and how these tools can be integrated into your favorite IDE. We'll also explore how to deploy an application to OpenShift first manually with Appsody and then using the standard Kabanero Tekton piplines with GitOps.
 
@@ -21,23 +21,27 @@ In this frist day we'll learn how to use Appsody to run the *inner loop* of the 
 * **Production Deployment to OpenShift with the standard Tekton pipelines**
   * Deploy the built applications to IBM Managed OpenShift using GitOps to trigger a Tekton pipeline
 
-### Customizing stacks and Kabanero Collections for Solution Architects (Day 2 - Track 1)
+### Customizing Stacks, Pipelines in Kabanero Collections (Day 2)
+
+* **Building a custom Kabanero Collection**
+  * Create a collection that will contain custom appsody stacks and pipelines
+
+#### Customizing Stacks for Solution Architects (Track 1)
 
 * **Customizing an existing Appsody Stack**
   * Create a custom stack, to be hosted in our custom repository
-* **Building a custom Appsody Stack repository**
-  * Create a repository that will contain custom appsody stacks
+* **Managing custom stacks in a custom Kabanero Collection**
   * Learn how to manage these custom stacks and how to make them available to developers.
 
-### Customizing Kabanero Collections for Operators  (Day 2 - Track 2)
+#### Customizing Kabanero Collections for Operators (Track 2)
 
-* **Create a custom Tekton pipleline for a custom collection**
+* **Create a custom Tekton pipleline for a custom Collection**
   * Build a pipeline that will fit into a custom Kabanero collection
 
-### Using your custom collections in Kabanero (Day 2 - Common Track)
+#### Using your custom collections in Kabanero (Final Common Track)
 
 * **Deploy Application with Custom Stack & Pipeline**
-  * Build and deploy an application using the custom stack, repository and pipelines built by the Architects' and Operators' tracks
+  * Build and deploy an application using the custom stack, collection and pipelines built by the Architects' and Operators' tracks
 
 ## About Cloud Pak for Applications
 
