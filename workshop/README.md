@@ -4,21 +4,24 @@
 
 We'll be using the Cloud Pak for Applications platform to perform the following tasks:
 
-### Kabanero for Developers (Common Track)
+### Kabanero/Appsody for Developers and Operators (Day 1 - Common Track)
+
+In this frist day we'll learn how to use Appsody to run the *inner loop* of the development and test cycle for a developer, and how these tools can be integrated into your favorite IDE. We'll also explore how to deploy an application to OpenShift first manually with Appsody and then using the standard Kabanero Tekton piplines with GitOps.
 
 * **Pre-work**
-  * Configuring your envionment with Docker, git, (a local kubernetes cluster ?) and access to IBM Managed OpenShift
+  * Configuring your envionment with Docker, git and access to IBM Managed OpenShift
 * **Appsody with Codewind**
   * Install Appsody into the IDE with Codewind
   * Learn about the developer flow, building your first application with Appsody
 * **Using Appsody CLI to develop/test/debug applications**
   * Use the Appsody CLI to quickly create frontend and backend applications for a sample application using two different technologies (Spring and nodejs express)
   * Run locally in Rapid Local Devlopement Mode
-  * Deploy to your local kubernetes (?)
 * **Deploying to OpenShift with Appsody**
   * Deploy the built applications to IBM Managed OpenShift
+* **Production Deployment to OpenShift with the standard Tekton pipelines**
+  * Deploy the built applications to IBM Managed OpenShift using GitOps to trigger a Tekton pipeline
 
-### Kabanero for Solution Architects (Track 1)
+### Customizing stacks and Kabanero Collections for Solution Architects (Day 2 - Track 1)
 
 * **Customizing an existing Appsody Stack**
   * Create a custom stack, to be hosted in our custom repository
@@ -26,16 +29,14 @@ We'll be using the Cloud Pak for Applications platform to perform the following 
   * Create a repository that will contain custom appsody stacks
   * Learn how to manage these custom stacks and how to make them available to developers.
 
-### Kabanero for Operators  (Track 2)
+### Customizing Kabanero Collections for Operators  (Day 2 - Track 2)
 
-* **Building a simple Tekton pipeline**
-  * ?
-* **Create a Tekton pipleline for a custom collection**
+* **Create a custom Tekton pipleline for a custom collection**
   * Build a pipeline that will fit into a custom Kabanero collection
 
-### Kabanero for All  (Common Track)
+### Using your custom collections in Kabanero (Day 2 - Common Track)
 
-* **Deploy Application from Custom Stack & Repository**
+* **Deploy Application with Custom Stack & Pipeline**
   * Build and deploy an application using the custom stack, repository and pipelines built by the Architects' and Operators' tracks
 
 ## About Cloud Pak for Applications
