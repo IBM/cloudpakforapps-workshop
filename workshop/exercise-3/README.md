@@ -1,6 +1,6 @@
 # Exercise 3: Deploying to OpenShift with Appsody
 
-In this exercise, we will show how to deploy the sample insurance quote application built in [Exercise 2](/workshop/exercise-2/README.md) to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
+In this exercise, we will show how to deploy the sample insurance quote application built in [Exercise 2](workshop/exercise-2/README.md) to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
 
 When you have completed this exercise, you will understand how to:
 
@@ -10,7 +10,7 @@ In later exercises we will learn how to use appsody with a Tekton pipeline, hook
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 0](/workshop/exercise-0/README.md), and in addition:
+You should have already carried out the prerequisites defined in [Exercise 0](workshop/exercise-0/README.md), and in addition:
 
 * In order for the backend application to access the Dacadoo Health Score API, visit <https://models.dacadoo.com/doc/> to request an API key for evaluation purposes. Access to this API is granted individually to insurance professionals. There is a mock implementation of the API in the code that you can use if you do not want to register.
 
@@ -20,7 +20,7 @@ You should have already carried out the prerequisites defined in [Exercise 0](/w
 1. [Deploy the backend application to OpenShift](#2-deploy-the-backend-application-to-OpenShift)
 1. [Deploy the frontend application to OpenShift](#3-deploy-the-frontend-application-to-OpenShift)
 
-## 1. Set up a project namespace
+### 1. Set up a project namespace
 
 OpenShift applications are deployed within a project. So the first step is to create a new project:
 
@@ -42,9 +42,74 @@ $ oc project -q
 insurance-quote
 ```
 
-### 2. Deploy the backend application to OpenShift
+### 2. Access the internal Docker Registry
 
-We will use the `appsody deploy` command for the deployments.  This command:
+We need a spot to push our newly built Docker images that Appsody created for us. Luckily, OpenShift comes with an internal Docker registry we can use. However, this registry is not enabled for public access by default.
+
+Running the `oc get route --all-namespaces` command below shows us that only a dashboard for the registry is available. Not quite what we need.
+
+```bash
+oc get route --all-namespaces | grep registry
+default                            registry-console                                   registry-console-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                                     registry-console                            registry-console                      passthrough          None
+```
+
+> ![Docker Registry GUI](images/docker-registry.png)
+
+To access the internal registry we need to create a route and expose it. See the [IBM Cloud documentation](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift-images#openshift_internal_registry) for the complete steps, but here is the short version.
+
+Run the following to create a new route.
+
+```bash
+oc create route reencrypt docker-registry --service=docker-registry -n default
+```
+
+Describing the route we can see it does not have the necessary `annotation`:
+
+```bash
+$ oc describe route docker-registry -n default
+Name:    docker-registry
+Namespace:    default
+Created:    20 seconds ago
+Labels:    docker-registry=default
+Annotations:    openshift.io/host.generated=true
+Requested Host:    docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
+      exposed on router router 20 seconds ago
+Path:    <none>
+TLS Termination:    reencrypt
+Insecure Policy:    <none>
+Endpoint Port:    5000-tcp
+
+Service:    docker-registry
+Weight:    100 (100%)
+Endpoints:    172.30.112.3:5000, 172.30.112.4:5000
+```
+
+Give the route a `path`:
+
+```bash
+oc patch route docker-registry -n default --type='json' -p='[{"op": "add", "path": "/metadata/annotations/haproxy.router.openshift.io~1balance", "value":"source"}]'
+```
+
+Get the Docker registry URL:
+
+```bash
+$ oc get route --all-namespaces | grep registry
+default                            docker-registry                                    docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                                      docker-registry                             5000-tcp                              reencrypt            None
+default                            registry-console                                   registry-console-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                                     registry-console                            registry-console                      passthrough          None
+```
+
+The URL we want to use is the `docker-registry` one, it'll look like `docker-registry-default.*.containers.appdomain.cloud`.
+
+Once we have the URL, set it as a variable, and set our local `docker` command to use that registry, so we use `docker login`.
+
+```bash
+DOCKER_REGISTRY=<docker_url>
+docker login -u $(oc whoami) -p $(oc whoami -t) $DOCKER_REGISTRY
+```
+
+### 3. Deploy the backend application to OpenShift
+
+We will use the `appsody deploy` command for the deployments. This command:
 
 * builds a deployment image for production usage (i.e. it does not include development-mode tools)
 * pushes the image to your designated image registry
@@ -53,10 +118,12 @@ We will use the `appsody deploy` command for the deployments.  This command:
 
 Appsody has the ability to deploy directly to a kubernetes cluster using a default deployment manifest. This will work if the cluster does not require any specific credentials. In this case, we will need to provide these, so appsody allows you to generate the deployment manifest it would have used, but without doing the actual deployment. We can then modify this, and then ask appsody to use it for the deployment of our applications.
 
+#### 3.1 Create a config map for the Dacadoo API key
+
 In order to have the backend application sends requests to the Dacadoo Health Score API, we need to create a secret that contains the configuration for making requests to the Dacadoo server. (Note: If you do not want to use the Dacadoo Health Score API, you can skip this setup and continue to use the mock endpoint.)
 
 ```bash
-oc create configmap dacadoo-secret --from-literal=url=<url> --from-literal=apikey=<apikey>
+oc create configmap dacadoo-config --from-literal=url=<url> --from-literal=apikey=<apikey>
 ```
 
 where:
@@ -67,13 +134,16 @@ where:
 for example:
 
 ```bash
-$ oc create configmap dacadoo-secret --from-literal=DACADOO_URL=https://models.dacadoo.com/score/2 --from-literal=DACADOO_APIKEY=Y3VB...RMGG
-configmap/dacadoo-secret created
+$ oc create configmap dacadoo-config --from-literal=DACADOO_URL=https://models.dacadoo.com/score/2 --from-literal=DACADOO_APIKEY=Y3VB...RMGG
+configmap/dacadoo-config created
 ```
+
+#### 3.2 Deploy the backend application
 
 Navigate to your `quote-backend` directory. We need to modify the deployment yaml to pass the secret's values to the application. The initial deployment yaml can be generated as follows.
 
 ```bash
+cd ~/appsody-apps/quote-backend
 appsody deploy --generate-only
 ```
 
@@ -113,7 +183,7 @@ spec:
   createKnativeService: false
 ```
 
-We need to add a section to the generated file. Under the `spec` key, create a new `envFrom` key that has the value of your OpenShift config map. `dacadoo-secret` was used as the name in this workshop.
+We need to add a section to the generated file. Under the `spec` key, create a new `envFrom` key that has the value of your OpenShift config map. `dacadoo-config` was used as the name in this workshop.
 
 > **TIP**: Ensure there are two spaces before `name`, see <https://github.com/kubernetes/kubernetes/issues/46826#issuecomment-305728020>
 
@@ -129,40 +199,47 @@ spec:
   .
   envFrom:
     - configMapRef:
-        name: dacadoo-secret
+        name: dacadoo-config
   expose: true
   createKnativeService: false
-```
-
-At this point we're almost ready to push the image to the registry and deploy it to the cluster. In order to push the image we need make sure we are logged in to the image registry first.
-
-```bash
-docker login
 ```
 
 Now use `appsody deploy` to push the image and deploy it.
 
 ```bash
-appsody deploy -t <your image registry>/<your namespace>/quote-backend --push --namespace insurance-quote
+$ appsody deploy --tag $DOCKER_REGISTRY/insurance-quote/quote-backend:v1 --push --namespace insurance-quote
+.
+.
+[Docker] Successfully built 4294712e0f9e
+[Docker] Successfully tagged docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-backend:v1
+Built docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-backend:v1
+Using applicationImage of: docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-backend:v1
+Pushing docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-backend:v1
+Attempting to apply resource in Kubernetes ...
+Running command: kubectl apply -f app-deploy.yaml --namespace insurance-quote
+Deployment succeeded.
+Appsody Deployment name is: quote-backend
+Running command: kubectl get rt quote-backend -o jsonpath="{.status.url}" --namespace insurance-quote
+Attempting to get resource from Kubernetes ...
+Running command: kubectl get route quote-backend -o jsonpath={.status.ingress[0].host} --namespace insurance-quote
+Deployed project running at quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 ```
 
-where:
-
-* `<your image registry>` is the host name of your regional registry, for example `docker.io`
-* `<your namespace>` is a namespace you created in your registry
-
-For example, your deploy command might look something like this:
-
-```bash
-appsody deploy -t docker.io/henrynash/quote-backend --push --namespace insurance-quote
-```
-
+> **NOTE**: If the deployment times out, see the section [Pushing to the OpenShift registry times out](../admin-guide/README.md#pushing-to-the-openshift-registry-times-out) in the Admin Guide.
 > **NOTE**: Running `appsody deploy` will install the [appsody operator](https://github.com/appsody/appsody-operator) on the *Default* namespace of the cluster.
 
+The `appsody deploy` command pushed the image, but pulling is failing because it's using an external registry. (See [Bug 451](https://github.com/appsody/appsody/issues/451))
+
+Run this command to point to the internal URL:
+
 ```bash
-.
-.
-[Info] Deployed project running at quote-backend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud
+sed -i'.bak' -e 's#applicationImage: .*$#applicationImage: '"docker-registry.default.svc:5000/insurance-quote/quote-backend:v1"'#g' app-deploy.yaml && rm app-deploy.yaml.bak
+```
+
+And then re-apply it:
+
+```bash
+oc apply -f app-deploy.yaml -n insurance-quote
 ```
 
 After the deployment completes, you can test the service using curl. The deployment should complete with something like:
@@ -175,11 +252,15 @@ curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://<
 
 where:
 
-* `<url-to-backend>` is the endpoint given above at the end of running appsody deploy (i.e. *quote-backend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud* in the example above)
+* `<url-to-backend>` is the endpoint given above at the end of running appsody deploy (i.e. *quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud* in the example above)
 
 > **NOTE**: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis" -- ("mocked backend computation" instead of "Dacadoo Health Score API").
 
-### 3. Deploy the frontend application to OpenShift
+Navigating back to the registry dashboard should show the new image.
+
+![The apps backend in the registry](images/backend-in-registry.png)
+
+### 4. Deploy the frontend application to OpenShift
 
 We are now going to deploy the frontend application to OpenShift. The steps are similar to what we did for the backend application.
 
@@ -212,23 +293,36 @@ spec:
 Save the yaml file and do the deployment.
 
 ```bash
-appsody deploy -t <your image registry>/<your namespace>/quote-frontend --push  --namespace insurance-quote
+$ appsody deploy --tag $DOCKER_REGISTRY/insurance-quote/quote-frontend:v1 --push --namespace insurance-quote
+...
+[Docker] Successfully built ba7451568a04
+[Docker] Successfully tagged docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
+Built docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
+Using applicationImage of: docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
+Pushing docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
+Attempting to apply resource in Kubernetes ...
+Running command: kubectl apply -f app-deploy.yaml --namespace insurance-quote
+Deployment succeeded.
+Appsody Deployment name is: quote-frontend
+Running command: kubectl get rt quote-frontend -o jsonpath="{.status.url}" --namespace insurance-quote
+Attempting to get resource from Kubernetes ...
+Running command: kubectl get route quote-frontend -o jsonpath={.status.ingress[0].host} --namespace insurance-quote
+Deployed project running at quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 ```
 
-where, as before:
-
-* `<your image registry>` is the host name of your regional registry, for example `docker.io`
-* `<your namespace>` is a namespace you created in your registry
-
-After the deployment completes, you can test the service using curl. The deployment should complete with something like:
+Run this command to point to the internal URL:
 
 ```bash
-.
-.
-[Info] Deployed project running at quote-frontend-i2.henrycluster3-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-de.containers.appdomain.cloud
+sed -i'.bak' -e 's#applicationImage: .*$#applicationImage: '"docker-registry.default.svc:5000/insurance-quote/quote-frontend:v1"'#g' app-deploy.yaml && rm app-deploy.yaml.bak
 ```
 
-You can then use a browser to open the frontend application, at the url given above. Fill in the form and click the button to submit it. You should get a quote from the backend application.
+And then re-apply it:
+
+```bash
+oc apply -f app-deploy.yaml -n insurance-quote
+```
+
+You can then use a browser to open the frontend application, at the url given above (in the example above the URL is `quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud`). Fill in the form and click the button to submit it. You should get a quote from the backend application.
 
 ![Sample web form](images/screenshot.png)
 

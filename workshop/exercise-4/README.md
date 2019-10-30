@@ -19,25 +19,24 @@ This section is broken up into the following steps:
 
 ## Prereq: Clean up the deployed app
 
-Run:
+First we delete the deployments, run the `appsody deploy delete` command to remove them.
 
 ```bash
-$ oc get deployments
-NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-appsody-operator   1         1         1            1           7d
-quote-backend      1         1         1            1           6d
-quote-frontend     1         1         1            1           6d
-
-$ oc delete deployment quote-backend
-deployment.extensions "quote-backend" deleted
-
-$ oc delete deployment quote-frontend
-deployment.extensions "quote-frontend" deleted
+cd ~/appsody-apps/quote-frontend
+appsody deploy delete --namespace insurance-quote
+cd ~/appsody-apps/quote-backend
+appsody deploy delete --namespace insurance-quote
 ```
 
-> TODO: see if `appsody deploy delete` also works
+```bash
+$ appsody deploy delete --namespace insurance-quote
+Deleting deployment using deployment manifest app-deploy.yaml
+Attempting to delete resource from Kubernetes...
+Running command: kubectl delete -f app-deploy.yaml --namespace insurance-quote
+Deployment deleted
+```
 
-Note, we still have the `insurance-quote` namespace, the `dacadoo-secret` config map, and the `appsody-operator` deployment.
+Note, we still have the `insurance-quote` namespace, the `dacadoo-config` config map, the `appsody-operator` deployment, and the images in our registry.
 
 ## Go to the Tekton dashboard
 
@@ -58,7 +57,7 @@ tekton-dashboard   tekton-dashboard-kabanero.cpa-workshop-dev-5290c8c8e5797924dc
 
 ## 1. Review pre-installed pipelines and tasks on Cloud Pak for Apps
 
-With kabanero, every collection comes with a default `build` task, `deploy` task and `build deploy` pipeline.
+There are 5 **Pipelines**, one for each collection kabanero comes with (java microprofile, spring, nodejs, express, and loopback). **Pipelines** are a first class structure in Tekton. **Pipelines** are a series of **Tasks**.
 
 Run this command to see the available pipelines.
 
@@ -79,7 +78,17 @@ nodejs-loopback-build-deploy-pipeline          15d
 pipeline0                                      15d
 ```
 
-And tasks
+These are visible through the UI, too:
+
+![Pre-Existing Pipelines](images/tekton_pipelines.png)
+
+There are 10 **Tasks**, two for each collection kabanero comes with. Each collection has 2 **Tasks**, a *Build Task* and a *Deploy Task*.
+
+```bash
+oc get pipeline -n kabanero
+```
+
+You will see something similar to this.
 
 ```bash
 stevemar@quote-frontend $ oc get tasks -n kabanero
@@ -98,17 +107,11 @@ nodejs-loopback-deploy-task     27d
 pipeline0-task                  27d
 ```
 
-![Pre-Existing Pipelines](images/tekton_pipelines.png)
+These are visible through the UI, too:
 
 ![Pre-Existing Tasks](images/tekton_tasks.png)
 
-A quick note about all of the items you see above...
-
-There are 5 **Pipelines**, one for each collection kabanero comes with (java microprofile, spring, nodejs, express, and loopback). **Pipelines** are a first class structure in Tekton. **Pipelines** are a series of **Tasks**.
-
-There are 10 **Tasks**, two for each collection kabanero comes with. Each collection has 2 **Tasks**, a *Build Task* and a *Deploy Task*.
-
-## Get a GitHub Access Token
+### Get a GitHub Access Token
 
 When using Tekton, building a pipeline will require code to be pulled from either a public or private repository. When configuring Tekton, for security reasons, we will create an *Access Token* instead of using a password.
 
@@ -124,9 +127,9 @@ Once the token is created, make sure to copy it down. We will need it later.
 
 ## Upload insurance quote frontend, and backend to GitHub
 
-Open Github.com and `login` with your username and password.
+Open <Github.com> and `login` with your username and password.
 
-Go to <https://github.com/new> and create two new repositories, `quote-frontend`, and `quote-backend`. Do not initiatize the repos with a License or README.
+Go to <https://github.com/new> and create two new repositories, `quote-frontend`, and `quote-backend`. Do not initiatize the repos with a license file or README.
 
 ![New repo](images/new_repo.png)
 
@@ -148,47 +151,99 @@ The repo for your backend code should look like this:
 
 ![Repo for backend](images/repo_backend.png)
 
-## Configure Tekton with Github Access Token
+## Re-add config map because namespace limitation
 
-Once in the Tekton dashboard, open up the `Secrets` tab that is found on the bottom left side of the screen. From there select the `Add Secret` button on the right side of the screen.
+Do this again because I can't seem to deploy to any namespace aside from `kabanero`
 
-![Choose to create a new Tekton Secret](images/tekton_dashboard_secrets.png)
+```bash
+$ oc create configmap dacadoo-config --from-literal=DACADOO_URL=https://models.dacadoo.com/score/2 --from-literal=DACADOO_APIKEY=Y3VB...RMGG
+configmap/dacadoo-config created
+```
 
-Next, we want to fill in the form with the following information:
-
-* Name: `tekton-github`
-* Namespace: `kabanero`
-* Access To: `Git Server`
-* Username: `<yourusername>`
-* Password: `<Generated Token>`
-* Service Account: `kabanero-operator`
-* Server URL: `tekton.dev/git-0:https://github.com`
-
-![Tekton secret option](images/tekton_new_secret.png)
-
-Then click on `Submit` and your token is registered.
-
-## Configure Tekton to point to repos
-
-> TODO: do these instructions twice, once per repo
-> TODO: add explicit instructions for which file to modify
+## Add webhooks to Tekton to watch Github repo changes
 
 Configure the github webhook to your repo. Go to `Webhooks` > `Add Webhook` and then create the webhook.
 
-![new webhook options](images/new_webhook.png)
+![new webhook options](images/create-tekton-webhook.png)
 
-Verify if it is created successfully.
+Note that the first time creating a webhook a new access token must also be created, use the access token from the earlier step:
 
-![the new webhook exists](images/webhook_listed.png)
+![Create an access toekn](images/create-token.png)
 
-Make any changes to your app and push it to github. This will trigger the tekton pipleine. Go to the tekton dashboard and access the new pipeline we created.
+### Create a webhook for the backend
 
-![verify the pipeline works](images/verify_pipeline.png)
+```ini
+Name: backend-webhook
+Repository URL: http://github.com/{username}/quote-backend
+Access Token: github-tekton
 
-Wait till the task is completed and then click on the Pipeline Run.
+Namespace: kabanero
+Pipeline: java-spring-boot2-build-deploy-pipeline
+Service account: kabanero-operator
+Docker Registry: docker-registry.default.svc:5000/kabanero
+```
 
-![click on pipeline run](images/pipeline_run_listed.png)
+### Create a webhook for the frontend
 
-Once the tasks are all completed, you will see something like below.
+```ini
+Name: frontend-webhook
+Repository URL: http://github.com/{username}/quote-frontend
+Access Token: github-tekton
 
-![see pipeline run](images/pipeline_run.png)
+Namespace: kabanero
+Pipeline: nodejs-express-build-deploy-pipeline
+Service account: kabanero-operator
+Docker Registry: docker-registry.default.svc:5000/kabanero
+```
+
+Verify both are created successfully.
+
+![the webhooks exist](images/both-tekton-webhooks.png)
+
+### Check Github repo settings
+
+Go to the repo and check the settings tab to see the webhooks, Click the webhook
+
+![Webhook overview](images/github-webhook-overview.png)
+
+Scroll down to see any payloads being delivered. There is currently a bug where the first payload is not delivered. Not to worry, we'll be making changes to the code anyway, that will trigger a new payload.
+
+![Webhook payload](images/webhook-payload.png)
+
+## Test it all out
+
+In your `quote-backend` repo, change the file `quote-backend/src/main/java/application/Quote.java`. Change a value in a logger statement.
+
+This will trigger the tekton pipleine. Go to the tekton dashboard and access the new pipeline it created.
+
+![See the java deploy pipeline](images/view-tasks.png)
+
+Wait until the task is complete, then find the route using `oc get routes`:
+
+```bash
+$ oc get routes -n kabanero | grep backend
+quote-backend      quote-backend-kabanero.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                quote-backend      8080                           None
+```
+
+In your `quote-frontend` repo, change the file `app-deploy.yml` to update the `BACKEND_URL` value with the URL from the previous step.
+
+```yaml
+  env:
+  - name: BACKEND_URL
+    value: http://quote-backend-kabanero.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/quote
+```
+
+This should trigger another pipeline to be created, using the node-express pipeline.
+
+![Two PipelineRuns should appear](images/view-pipelines.png)
+
+Wait until the task is complete, then find the route using `oc get routes`:
+
+```bash
+$ oc get routes -n kabanero | grep frontend
+quote-frontend     quote-frontend-kabanero.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud               quote-frontend     3000                           None
+```
+
+The usual frontend should show.
+
+Congratulations, Day 1 of the workshop is now complete!
