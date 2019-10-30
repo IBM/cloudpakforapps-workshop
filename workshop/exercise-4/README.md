@@ -40,11 +40,11 @@ Note, we still have the `insurance-quote` namespace, the `dacadoo-config` config
 
 ## Go to the Tekton dashboard
 
-You can also access them on the tekton dashboard from Cloud Pak for Apps.
+You can the tekton dashboard from Cloud Pak for Apps.
 
 ![Launch Tekton](images/launch_tekton.png)
 
-We should already be logged into the Tekton Dashboard, but you can also view the URL by using `oc get routes`. We want to use the address that looks like `tekton-dashboard-kabanero.xyz.domain.containers.appdomain.cloud`.
+You can also obtain the URL for the tekton dashboard by using `oc get routes`. We want to use the address that looks like `tekton-dashboard-kabanero.xyz.domain.containers.appdomain.cloud`.
 
 ```bash
 $ oc get routes --namespace kabanero
