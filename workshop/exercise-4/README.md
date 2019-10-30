@@ -1,4 +1,4 @@
-# Exercise 4: Building a simple Tekton pipeline
+# Exercise 4: Production Deployment to OpenShift with the standard Tekton pipelines
 
 In this exercise we're going to take our insurance quote application from exercise 3 and instead of deploying it as a stand alone app, we will push the code up to a github repo and use Tekton pipelines to constantly deploy the app to our openshift cluster and speed up your deployment process.
 
