@@ -10,7 +10,7 @@
     * [Exercise 1: Introduction to Appsody and Codewind](exercise-1/README.md)
     * [Exercise 2: Using Appsody CLI to develop/test/debug applications](exercise-2/README.md)
     * [Exercise 3: Deploying to OpenShift with Appsody](exercise-3/README.md)
-    * [Exercise 4: Building a simple Tekton pipeline](exercise-4/README.md)
+    * [Exercise 4: Production Deployment to OpenShift with the standard Tekton pipelines](exercise-4/README.md)
 
 ### Day 2
 
