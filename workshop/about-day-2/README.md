@@ -4,7 +4,7 @@
 
 > ***WORK IN PROGRESS***
 
-In the second day we'll learn about Kabanero and how to productionize our applications with custom Appsody Stacks, custom Kabanero collections, and custom Tekton pipelines.
+In the second day we'll learn about Kabanero Enterprise and how to productionize our applications with custom Appsody Stacks, custom Kabanero collections, and custom Tekton pipelines.
 
 |   |   |
 | - | - |
