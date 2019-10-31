@@ -33,8 +33,8 @@ git clone https://github.com/IBM/cloudpakforapps-workshop
 
 ## Steps
 
-1. [Create the frontend application and run it locally](#2-create-the-frontend-application-and-run-it-locally)
-1. [Create the backend application and run it locally](#3-create-the-backend-application-and-run-it-locally)
+1. [Create the frontend application and run it locally](#1-create-the-frontend-application-and-run-it-locally)
+1. [Create the backend application and run it locally](#2-create-the-backend-application-and-run-it-locally)
 
 ### 1. Create the frontend application and run it locally
 
@@ -157,7 +157,7 @@ appsody test
 
 This runs tests that come packaged with the stack (such as tests of the health and metrics endpoints), and of course you can add your own tests of your application as well. Look at tests that call `GET /quote` and `POST /quote` in `test/test.js` to how the frontend application is tested.
 
-### 1. Create the backend application and run it locally
+### 2. Create the backend application and run it locally
 
 The backend application is written in Spring Boot. Let's initialize an Appsody project that uses the Spring Boot 2 stack. Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 

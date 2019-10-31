@@ -1,23 +1,19 @@
 # Exercise 4: Use Tekton and Kabanero Pipelines to continuously deploy
 
-In this exercise we're going to take our insurance quote application from exercise 3 and instead of deploying it as a stand alone app, we will push the code up to a github repo and use Tekton pipelines to constantly deploy the app to our openshift cluster and speed up your deployment process.
+In this exercise we're going to take our insurance quote application from exercise 3 and instead of deploying it as a stand alone app, we will push the code up to a GitHub repo and use Tekton pipelines to constantly deploy the app to our OpenShift cluster and speed up your deployment process.
 
-Mention the insurance quote arch again?
+Recall that the application from exercise 3 consists of:
 
-* The front-end is constructed with Node.js (we used the `nodejs-express` collection)
-* The back-end is done in Java (we used the `java-spring-boot2` collection)
+* a front-end constructed with Node.js (we used the `nodejs-express` collection)
+* a back-end constructed with Java (we used the `java-spring-boot2` collection)
 
-This section is broken up into the following steps:
+When you have completed this exercise, you will understand how to:
 
-1. Prereq: Clean up the deployed app
-1. Launch the Tekton dashboard
-1. Review pre-installed pipelines and tasks on Cloud Pak for Apps
-1. Get a GitHub Access Token
-1. Upload insurance quote frontend, and backend to GitHub
-1. Configure Tekton with Github Access Token
-1. Configure Tekton to point to repos
+* Leverage Tekton pipelines with Kabanero collections to deploy applications to OpenShift
 
-## Prereq: Clean up the deployed app
+## Prerequisites
+
+You should have already carried out the prerequisites defined in [Exercise 3](workshop/exercise-3/README.md), and in addition:
 
 First we delete the deployments, run the `appsody deploy delete` command to remove them.
 
@@ -38,7 +34,15 @@ Deployment deleted
 
 Note, we still have the `insurance-quote` namespace, the `dacadoo-config` config map, the `appsody-operator` deployment, and the images in our registry.
 
-## Go to the Tekton dashboard
+## Steps
+
+1. Launch the Tekton dashboard
+1. Get a GitHub Access Token
+1. Upload insurance quote frontend, and backend to GitHub
+1. Add webhooks to Tekton
+1. Test it all out
+
+### 1. Launch the Tekton dashboard
 
 You can the tekton dashboard from Cloud Pak for Apps.
 
@@ -55,7 +59,7 @@ kabanero-landing   kabanero-landing-kabanero.cpa-workshop-dev-5290c8c8e5797924dc
 tekton-dashboard   tekton-dashboard-kabanero.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud             tekton-dashboard   <all>     reencrypt/Redirect   None
 ```
 
-## 1. Review pre-installed pipelines and tasks on Cloud Pak for Apps
+#### Review pre-installed pipelines and tasks on Cloud Pak for Apps
 
 There are 5 **Pipelines**, one for each collection kabanero comes with (java microprofile, spring, nodejs, express, and loopback). **Pipelines** are a first class structure in Tekton. **Pipelines** are a series of **Tasks**.
 
@@ -111,11 +115,11 @@ These are visible through the UI, too:
 
 ![Pre-Existing Tasks](images/tekton_tasks.png)
 
-### Get a GitHub Access Token
+### 2. Get a GitHub Access Token
 
 When using Tekton, building a pipeline will require code to be pulled from either a public or private repository. When configuring Tekton, for security reasons, we will create an *Access Token* instead of using a password.
 
-To create an *Access Token*, from <github.com> click on your profile icon in the top left. Then go to `Settings` -> `Developer Settings` -> `Personal Access Tokens`. Or go directly to <https://github.com/settings/tokens>
+To create an *Access Token*, from [Github.com](Github.com) click on your profile icon in the top left. Then go to `Settings` -> `Developer Settings` -> `Personal Access Tokens`. Or go directly to <https://github.com/settings/tokens>
 
 ![Choose to create a new Access Token](images/github_access_tokens.png)
 
@@ -125,9 +129,9 @@ Here we want to generate a token, so `Click` on the `Generate a Token`. The toke
 
 Once the token is created, make sure to copy it down. We will need it later.
 
-## Upload insurance quote frontend, and backend to GitHub
+### 3. Upload insurance quote frontend, and backend to GitHub
 
-Open <Github.com> and `login` with your username and password.
+Open [Github.com](Github.com) and `login` with your username and password.
 
 Go to <https://github.com/new> and create two new repositories, `quote-frontend`, and `quote-backend`. Do not initiatize the repos with a license file or README.
 
@@ -151,7 +155,7 @@ The repo for your backend code should look like this:
 
 ![Repo for backend](images/repo_backend.png)
 
-## Re-add config map because namespace limitation
+#### Re-add config map because namespace limitation
 
 Do this again because I can't seem to deploy to any namespace aside from `kabanero`
 
@@ -160,7 +164,7 @@ $ oc create configmap dacadoo-config --from-literal=DACADOO_URL=https://models.d
 configmap/dacadoo-config created
 ```
 
-## Add webhooks to Tekton to watch Github repo changes
+### 4. Add webhooks to Tekton to watch Github repo changes
 
 Configure the github webhook to your repo. Go to `Webhooks` > `Add Webhook` and then create the webhook.
 
@@ -170,7 +174,7 @@ Note that the first time creating a webhook a new access token must also be crea
 
 ![Create an access toekn](images/create-token.png)
 
-### Create a webhook for the backend
+#### Create a webhook for the backend
 
 ```ini
 Name: backend-webhook
@@ -183,7 +187,7 @@ Service account: kabanero-operator
 Docker Registry: docker-registry.default.svc:5000/kabanero
 ```
 
-### Create a webhook for the frontend
+#### Create a webhook for the frontend
 
 ```ini
 Name: frontend-webhook
@@ -200,7 +204,7 @@ Verify both are created successfully.
 
 ![the webhooks exist](images/both-tekton-webhooks.png)
 
-### Check Github repo settings
+#### Check Github repo settings
 
 Go to the repo and check the settings tab to see the webhooks, Click the webhook
 
@@ -210,7 +214,7 @@ Scroll down to see any payloads being delivered. There is currently a bug where 
 
 ![Webhook payload](images/webhook-payload.png)
 
-## Test it all out
+### 5. Test it all out
 
 In your `quote-backend` repo, change the file `quote-backend/src/main/java/application/Quote.java`. Change a value in a logger statement.
 
