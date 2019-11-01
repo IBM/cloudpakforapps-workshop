@@ -6,7 +6,7 @@
 
 In the second day we'll learn about Kabanero Enterprise and how to productionize our applications with custom Appsody Stacks, custom Kabanero collections, and custom Tekton pipelines.
 
-|   |   |
+| Section | Description |
 | - | - |
 | **[Lecture 4: Intro to Appsody Stacks and Repo](https://ibm.box.com/s/kbuympaqftxswyi1aoswdlqussmqf1ba)** | Learn all about the stacks and repos |
 | **[Exercise 6: Building a custom Kabanero Collection](../exercise-6/README.md)** | Create a collection that will contain custom appsody stacks and pipelines |
