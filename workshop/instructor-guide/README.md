@@ -1,6 +1,6 @@
-# Admin guide
+# Instructor guide
 
-Add content here that is applicable to instructors of the workshop.
+The content in this section is specifically made for instructors hosting this workshop.
 
 ## Logging into Tekton UI
 
@@ -29,7 +29,13 @@ c7a362505ffd: Layer already exists
 
 To get around this issue, the IOPS (input/output operations per second) should be upgraded past the default (0.25). To do this, follow this guide (or see the [Official Documentation](https://cloud.ibm.com/docs/openshift?topic=openshift-file_storage#file_change_storage_configuration)).
 
-First, find the openshift volume claim ID for `registry-backing`. In this case it is `pvc-82769bfa-f694-11e9-bf77-faf40b1b6da7`.
+First, find the OpenShift volume claim ID for `registry-backing`. To do this run:
+
+```bash
+oc get pvc --all-namespaces
+```
+
+You should see output similar to the snippet below, in this case the volume claim ID is `pvc-82769bfa-f694-11e9-bf77-faf40b1b6da7`.
 
 ```bash
 $ oc get pvc --all-namespaces
@@ -81,4 +87,4 @@ This action will incur charges on your account. Continue?> y
 
 Alternatively, should the CLI fail, modifying the volume can be done be accomplished from the IBM Cloud Dashboard. Navigate to <https://cloud.ibm.com/classic/storage/file/{id}>, where {id} is the volume ID. Choose to modify the volume, and choose an IOPS of 10.
 
-![Modify the volume's IOPS](images/volume-ops.png)
+![Modify the volume's IOPS](images/volume-iops.png)
