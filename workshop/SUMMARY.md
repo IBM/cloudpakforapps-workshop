@@ -15,7 +15,7 @@
     * [Lecture 3: Adding value with IBM Cloud Pak for Applications](https://ibm.box.com/s/y4wh104vdos1vw5kdjwwuhebf8jgq580)
     * [Exercise 4: Use Tekton and Kabanero Pipelines to continuously deploy](exercise-4/README.md)
 
-### Day 2
+### Day 2 (In Progress)
 
 * [About Day 2](about-day-2/README.md)
     * [Lecture 4: Intro to Appsody Stacks and Repo](https://ibm.box.com/s/kbuympaqftxswyi1aoswdlqussmqf1ba)
