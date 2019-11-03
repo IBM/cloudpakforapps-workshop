@@ -205,10 +205,14 @@ spec:
   createKnativeService: false
 ```
 
-Now use `appsody deploy` to push the image and deploy it.
+Now use `appsody deploy` to push the image and deploy it. When using the OpenShift docker registry, the urls used to push and pull a given image are different. `appsody deploy` allows us to specify these on the command line:
 
 ```bash
-$ appsody deploy --tag $DOCKER_REGISTRY/insurance-quote/quote-backend:v1 --push --namespace insurance-quote
+appsody deploy --tag insurance-quote/quote-backend:v1 --push-url $DOCKER_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
+```
+
+```bash
+$ appsody deploy --tag insurance-quote/quote-backend:v1 --push-url $DOCKER_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
 .
 .
 [Docker] Successfully built 4294712e0f9e
@@ -228,20 +232,6 @@ Deployed project running at quote-backend-insurance-quote.cp4apps-workshop-prop-
 
 > **NOTE**: If the deployment times out, see the section [Pushing to the OpenShift registry times out](../admin-guide/README.md#pushing-to-the-openshift-registry-times-out) in the Admin Guide.
 > **NOTE**: Running `appsody deploy` will install the [appsody operator](https://github.com/appsody/appsody-operator) on the *Default* namespace of the cluster.
-
-The `appsody deploy` command pushed the image, but pulling is failing because it's using an external registry. (See [Bug 451](https://github.com/appsody/appsody/issues/451))
-
-Run this command to point to the internal URL:
-
-```bash
-sed -i'.bak' -e 's#applicationImage: .*$#applicationImage: '"docker-registry.default.svc:5000/insurance-quote/quote-backend:v1"'#g' app-deploy.yaml && rm app-deploy.yaml.bak
-```
-
-And then re-apply it:
-
-```bash
-oc apply -f app-deploy.yaml -n insurance-quote
-```
 
 After the deployment completes, you can test the service using curl. The deployment should complete with something like:
 
@@ -294,7 +284,11 @@ spec:
 Save the yaml file and do the deployment.
 
 ```bash
-$ appsody deploy --tag $DOCKER_REGISTRY/insurance-quote/quote-frontend:v1 --push --namespace insurance-quote
+appsody deploy --tag insurance-quote/quote-frontend:v1 ---push-url $DOCKER_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
+```
+
+```bash
+$ appsody deploy --tag insurance-quote/quote-frontend:v1 ---push-url $DOCKER_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
 ...
 [Docker] Successfully built ba7451568a04
 [Docker] Successfully tagged docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
@@ -309,18 +303,6 @@ Running command: kubectl get rt quote-frontend -o jsonpath="{.status.url}" --nam
 Attempting to get resource from Kubernetes ...
 Running command: kubectl get route quote-frontend -o jsonpath={.status.ingress[0].host} --namespace insurance-quote
 Deployed project running at quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
-```
-
-Run this command to point to the internal URL:
-
-```bash
-sed -i'.bak' -e 's#applicationImage: .*$#applicationImage: '"docker-registry.default.svc:5000/insurance-quote/quote-frontend:v1"'#g' app-deploy.yaml && rm app-deploy.yaml.bak
-```
-
-And then re-apply it:
-
-```bash
-oc apply -f app-deploy.yaml -n insurance-quote
 ```
 
 You can then use a browser to open the frontend application, at the url given above (in the example above the URL is `quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud`). Fill in the form and click the button to submit it. You should get a quote from the backend application.
