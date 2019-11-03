@@ -13,7 +13,13 @@ A key part of the Appsody development experience is Rapid Local Development Mode
 
 [Install Docker](https://docs.docker.com/get-started/)
 
-You can check that you have the corrct version insatlled by executing the command:
+## 2. Install the Appsody CLI
+
+Appsody includes a CLI which allows you to manage you stack based development (this workshop requries version 0.4.8 or later). This should be installed on your development machine:
+
+[Install the Appsody CLI](https://appsody.dev/docs/getting-started/installation)
+
+You can check that you have the correct version installed by executing the command:
 
 ```bash
 appsody version
@@ -23,12 +29,6 @@ appsody version
 $ appsody version
 appsody 0.4.8
 ```
-
-## 2. Install the Appsody CLI
-
-Appsody includes a CLI which allows you to manage you stack based development (this workshop requries version 0.4.8 or later). This should be installed on your development machine:
-
-[Install the Appsody CLI](https://appsody.dev/docs/getting-started/installation)
 
 ## 3. Check access to your Managed OpenShift Cluster
 
