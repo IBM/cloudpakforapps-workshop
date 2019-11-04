@@ -12,7 +12,7 @@ You should have already carried out the prerequisites defined in [Exercise 0](wo
 
 ```bash
 $ appsody version
-appsody 0.4.8
+appsody 0.4.9
 ```
 
 ## Configure your access to Appsody stacks
