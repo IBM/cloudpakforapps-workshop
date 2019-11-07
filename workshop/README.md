@@ -52,7 +52,7 @@ In the second day we'll learn about Kabanero Enterprise and how to productionize
 
 This workshop has been tested on the following platforms:
 
-* macOS [Mojave (10.14), Catalina (10.15)]
+* **macOS**: Mojave (10.14), Catalina (10.15)
 
 ## About Cloud Pak for Applications
 

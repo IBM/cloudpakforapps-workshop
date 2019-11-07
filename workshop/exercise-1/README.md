@@ -102,7 +102,6 @@ You should see output similar to the following:
 
 ```bash
 $ appsody repo list
-
 NAME            URL
 *kabanero       https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
 incubator       https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
@@ -496,25 +495,25 @@ You can open the CodeWind workspace, right click on `Projects`:
 
 Go to the application and `right click` on it to access the various options available:
 
-![js\_lab1\_codewind\_project\_options.png](images/js_lab1_codewind_project_options.png)
+![Access options](images/js_lab1_codewind_project_options.png)
 
 Click `Open App` to access the application:
 
-![js\_lab1\_codewind\_open\_app.png](images/js_lab1_codewind_open_app.png)
+![Open the application](images/js_lab1_codewind_open_app.png)
 
 > **NOTE** Codewind exposes your applications on different external ports. This will allow you to run multiple projects of same type.
 
 To get the overview of your project, click on `Open Project Overview`:
 
-![js\_lab1\_codewind\_project\_overview.png](images/js_lab1_codewind_project_overview.png)
+![Project overview](images/js_lab1_codewind_project_overview.png)
 
  You can access the container shell directly from the IDE by using `Open Container Shell`:
 
-![js\_lab1\_codewind\_container\_shell.png](images/js_lab1_codewind_container_shell.png)
+![Container shell](images/js_lab1_codewind_container_shell.png)
 
 To access the logs of the application, click on `Show all logs`:
 
-![js\_lab1\_codewind\_project\_logs.png](images/js_lab1_codewind_project_logs.png)
+![Application logs](images/js_lab1_codewind_project_logs.png)
 
 You can also hide the logs if you want to by using `Hide all logs` option:
 
@@ -522,11 +521,11 @@ If you have multiple applications and want to manage the logs for them, you can 
 
 You can also run the application by using `Restart in Run Mode`:
 
-![js\_lab1\_codewind\_project\_restart\_in\_run\_mode.png](images/js_lab1_codewind_project_restart_in_run_mode.png)
+![Run the application](images/js_lab1_codewind_project_restart_in_run_mode.png)
 
 Once it is restarted, you can access the application by clicking on the button as shown below:
 
-![js\_lab1\_restart\_in\_run\_mode\_app.png](images/js_lab1_restart_in_run_mode_app.png)
+![Open the application](images/js_lab1_restart_in_run_mode_app.png)
 
 Similarly, you can also do debugging by using `Restart in Debug Mode`.
 
@@ -534,22 +533,22 @@ Similarly, you can also do debugging by using `Restart in Debug Mode`.
 
 You can launch the app monitor by selecting `Open Appplication Monitor`:
 
-![js\_lab1\_codewind\_app\_monitor.png](images/js_lab1_codewind_app_monitor.png)
+![Open application monitor](images/js_lab1_codewind_app_monitor.png)
 
 The monitor dashboard will open in the browser:
 
-![js\_lab1\_app\_monitor\_dashboard.png](images/js_lab1_app_monitor_dashboard.png)
+![View the dashboard](images/js_lab1_app_monitor_dashboard.png)
 
 You can launch the app performance dashboard by selecting `Open Performance Dashboard`:
 
-![js\_lab1\_app\_performance.png](images/js_lab1_app_performance.png)
+![Open application performance](images/js_lab1_app_performance.png)
 
 The performance dashboard will open in the browser:
 
-![js\_lab1\_app\_performance\_dashboard.png](images/js_lab1_app_performance_dashboard.png)
+![View the performance dashboard](images/js_lab1_app_performance_dashboard.png)
 
 You can click Run Test and have Monitor and Performance dashboards side by side during the test:
 
-![js\_lab1\_app\_side\_by\_side\_perf\_test.png](images/js_lab1_app_side_by_side_perf_test.png)
+![Run test and monitor results](images/js_lab1_app_side_by_side_perf_test.png)
 
 > **NOTE:** Profiling the node.js code is currently not working an [issue](https://github.com/eclipse/codewind-node-profiler/issues/5) is opened on the github repo for the codewind node.js profiler extension.
