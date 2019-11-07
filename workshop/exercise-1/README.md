@@ -1,4 +1,4 @@
-# Exercise 1: Introduction to  Appsody and Codewind
+# Exercise 1: Introduction to Appsody and Codewind
 
 In this exercise, we will introduce Appsody, which is the underpinning development flow in Kabanero, along with its integration into IDEs using Codewind. In particular you will become experienced with:
 
@@ -23,7 +23,18 @@ $ appsody version
 appsody 0.4.10
 ```
 
-## Configure your access to Appsody stacks
+## Steps
+
+1. [Configure Appsody CLI](#1-configure-appsody-cli)
+1. [Use Appsody CLI to build, test, run, and debug](#2-use-appsody-cli-to-build-test-run-debug)
+1. [Appsody tasks on VS Code](#3-appsody-tasks-on-vs-code)
+1. [Codewind on VS Code](#4-codewind-on-vs-code)
+
+### 1. Configure Appsody CLI
+
+In this section we'll configure our Appsody CLI to pull in Kabanero collections.
+
+#### List existing Appsody stacks
 
 The Appsody CLI gives you access to stacks, which are stored in stack repositories. These can be local, private to the Enterprise or public. To get the list of available repos, run this command.
 
@@ -41,7 +52,7 @@ NAME            URL
 
 The exact repo list may be different to the above. `incubator` is one of the repos in the appsody project public hub (`appsodyhub`). For this workshop we are going to use the private enterprise-grade collection of stacks that come with Kabanero Enterprise (which is part of Cloud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
 
-## Add Kabanero Collection to appsody
+#### Add Kabanero Collection to Appsody
 
 From the Cloud Pak for Applications landing page get the `CollectionHub` URL, for example:
 
@@ -107,7 +118,7 @@ NAME            URL
 incubator       https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
 
-## Appsody CLI
+### 2. Use Appsody CLI to build, test, run, and debug
 
 In this section we'll be using the following appsody commands:
 
@@ -117,7 +128,7 @@ In this section we'll be using the following appsody commands:
 * `appsody debug`
 * `appsody build`
 
-### Create a new directory to work with new applications
+#### Create a new directory to work with new applications
 
 We recommend creating a new directory from your user home to work with new Appsody based applications, i.e.:
 
@@ -126,7 +137,7 @@ cd ~
 mkdir appsody-apps
 ```
 
-### Create a new Application
+#### Create a new application
 
 We will now use on of the stacks to create an application. First, create a new directory for the project and change directory into it.
 
@@ -168,7 +179,7 @@ The key artifacts are:
 * test.js
   A simple test module
 
-### Run the Application
+#### Run the application
 
 The sample application comes ready to run using appsody:
 
@@ -219,7 +230,7 @@ By default, the template sample application also provides the following endpoint
 For more details on this particular stack, refer to [Node.js Express
 Stack](https://github.com/appsody/stacks/blob/master/incubator/nodejs-express/README.md).
 
-### Stop the Application
+#### Stop the application
 
 To stop the application container, run this command from the same directory (e.g. in another terminal window):
 
@@ -229,7 +240,7 @@ appsody stop
 
 Alternatively, you can also press `Ctrl+C` in the first window that is running the application.
 
-### Test the Application
+#### Test the application
 
 A stack will typically come with a test framework - and this can be initiated by running:
 
@@ -273,7 +284,7 @@ added 170 packages from 578 contributors and audited 295 packages in 2.76s
 [Container] The file watcher is not running because no APPSODY_RUN/TEST/DEBUG_ON_CHANGE action was specified or it has been disabled using the --no-watcher flag.
 ```
 
-### Debug the Application
+#### Debug the application
 
 As well as supporting the running and testing of your application, an appsody stack enables the execution of your application in debug mode. Typically the stack will be configured to support whatever the appropriate debugger is for the language and technology components within it.
 
@@ -343,7 +354,7 @@ Refresh the browser and watch how the debugger stops at the breakpoint:
 
 ![The debugger in action](images/js_lab1_vscode_attach_break.png)
 
-### Build the application
+#### Build the application
 
 Up until now, we have been using appsody in what we call "Rapid Local Development Mode", where we can cycle round code changes, testing and debugging them - all within a local Docker environment. Appsody is making this environment possible, through a combination of the CLI, the stack and appsody code within that stack. Once you are ready to deploy the application outside of appsody control, there are two additional appsody commands to help you.
 
@@ -417,7 +428,7 @@ Again, hitting the endpoint of <http://localhost:3000/> should give us the hello
 
 You now have seen the basics of the appsody CLI in operation. We'll now take things up a level, and see how the CLI can be integrated into an IDE (VS Code in this case).
 
-## Appsody tasks on VS Code
+### 3. Appsody tasks on VS Code
 
 To access the build tasks on VS code, go to: `Terminal` > `Run Build Task`...
 
@@ -439,13 +450,13 @@ You can also run the `Appsody: stop` task:
 
 ![Choose `Appsody: stop`](images/js_lab1_build_task_stop.png)
 
-## Codewind on VS Code
+### 4. Codewind on VS Code
 
 Codewind simplifies and enhances development in containers by extending industry-standard IDEs with features to write, debug, and deploy cloud-native applications. It helps you to get started quickly with templates or samples, or you can also pull in your applications and let Codewind get them cloud-ready.
 
 Codewind supports VS Code, Eclipse Che, and Eclipse. In this lab, we are using VS Code as our IDE.
 
-### Getting the Codewind extension
+#### Getting the Codewind extension
 
 To get codewind extension you need [VS Code version 1.28 or later](https://code.visualstudio.com/download).
 
@@ -467,7 +478,7 @@ This opens `Codewind`:
 
 ![Codewind menu](images/sb_lab1_vscode_codewind_explorer.png)
 
-### Adding the application
+#### Adding the application
 
 You can create a new project or add an existing project to Codewind. Since, we already created one using appsody earlier, we can add the existing project.
 
@@ -491,7 +502,7 @@ You can open the CodeWind workspace, right click on `Projects`:
 
 ![Open the CodeWind workspace](images/js_lab1_codewind_open_workspace.png)
 
-### Project Options
+#### Project options
 
 Go to the application and `right click` on it to access the various options available:
 
@@ -529,7 +540,7 @@ Once it is restarted, you can access the application by clicking on the button a
 
 Similarly, you can also do debugging by using `Restart in Debug Mode`.
 
-### Application Performance, Monitor, Profiling with Codewind
+#### Application Performance, Monitor, Profiling with Codewind
 
 You can launch the app monitor by selecting `Open Appplication Monitor`:
 

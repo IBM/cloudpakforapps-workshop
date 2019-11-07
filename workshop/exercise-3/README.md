@@ -16,14 +16,20 @@ You should have already carried out the prerequisites defined in [Exercise 0](wo
 
 ## Steps
 
-1. [Set up a project namespace](#1-Set-up-a-project-namespace)
+1. [Set up a project namespace](#1-set-up-a-project-namespace)
 1. [Access the internal Docker Registry](#2-access-the-internal-docker-registry)
-1. [Deploy the backend application to OpenShift](#3-deploy-the-backend-application-to-OpenShift)
-1. [Deploy the frontend application to OpenShift](#4-deploy-the-frontend-application-to-OpenShift)
+1. [Deploy the backend application to OpenShift](#3-deploy-the-backend-application-to-openShift)
+1. [Deploy the frontend application to OpenShift](#4-deploy-the-frontend-application-to-openShift)
 
 ### 1. Set up a project namespace
 
 OpenShift applications are deployed within a project. So the first step is to create a new project:
+
+``` bash
+oc new-project insurance-quote
+```
+
+You should see output similar to the following:
 
 ``` bash
 $ oc new-project insurance-quote
@@ -39,8 +45,7 @@ to build a new example application in Ruby.
 Check that the current context is your team’s project space.
 
 ``` bash
-$ oc project -q
-insurance-quote
+oc project -q
 ```
 
 ### 2. Access the internal Docker Registry
@@ -51,7 +56,13 @@ Running the `oc get route --all-namespaces` command below shows us that only a d
 
 ```bash
 oc get route --all-namespaces | grep registry
-default                            registry-console                                   registry-console-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                                     registry-console                            registry-console                      passthrough          None
+```
+
+You should see output similar to the following:
+
+```bash
+$ oc get route --all-namespaces | grep registry
+default    registry-console    registry-console-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 ```
 
 ![Docker Registry GUI](images/docker-registry.png)
@@ -94,17 +105,28 @@ oc patch route docker-registry -n default --type='json' -p='[{"op": "add", "path
 Get the Docker registry URL:
 
 ```bash
+oc get route --all-namespaces | grep registry
+```
+
+You should see output similar to the following:
+
+```bash
 $ oc get route --all-namespaces | grep registry
-default                            docker-registry                                    docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                                      docker-registry                             5000-tcp                              reencrypt            None
-default                            registry-console                                   registry-console-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                                     registry-console                            registry-console                      passthrough          None
+default    docker-registry    docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
+default    registry-console    registry-console-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 ```
 
 The URL we want to use is the `docker-registry` one, it'll look like `docker-registry-default.*.containers.appdomain.cloud`.
 
-Once we have the URL, set it as a variable, and set our local `docker` command to use that registry, so we use `docker login`.
+Once we have the URL, set it as a variable:
 
 ```bash
-DOCKER_REGISTRY=<docker_url>
+export DOCKER_REGISTRY=<docker_url>
+```
+
+And set our local `docker` command to use that registry, use `docker login`:
+
+```bash
 docker login -u $(oc whoami) -p $(oc whoami -t) $DOCKER_REGISTRY
 ```
 
@@ -135,7 +157,7 @@ where:
 for example:
 
 ```bash
-$ oc create configmap dacadoo-config --from-literal=DACADOO_URL=https://models.dacadoo.com/score/2 --from-literal=DACADOO_APIKEY=Y3VB...RMGG
+oc create configmap dacadoo-config --from-literal=DACADOO_URL=https://models.dacadoo.com/score/2 --from-literal=DACADOO_APIKEY=Y3VB...RMGG
 configmap/dacadoo-config created
 ```
 
@@ -236,8 +258,13 @@ Deployed project running at quote-backend-insurance-quote.cp4apps-workshop-prop-
 After the deployment completes, you can test the service using curl. The deployment should complete with something like:
 
 ```bash
-curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://<url-to-backend>/quote
+curl -X POST -d @backend-input.json  -H "Content-Type: application/json"  http://<url-to-backend>/quote
+```
 
+You should see output similar to the following:
+
+```bash
+$ curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://<url-to-backend>/quote
 {"quotedAmount":70,"basis":"Dacadoo Health Score API"}
 ```
 

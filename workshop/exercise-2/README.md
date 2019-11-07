@@ -10,7 +10,9 @@ When you have completed this exercise, you will understand how to
 * create a frontend web application and a backend REST application using the Appsody Node.js Express and Spring Boot stacks
 * test the applications locally in a containerized environment
 
-## Flow
+> **IMPORTANT** This example is used as the basis for the rest of the day 1 workshop, it's crucial to ensure it is working properly before continuing to the next exercise.
+
+## Application architecture
 
 ![architecture](images/architecture.png)
 
@@ -241,7 +243,12 @@ You can test the backend API using [curl](https://curl.haxx.se/download.html). T
 
 ```bash
 curl -X POST -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
+```
 
+You should see output similar to the following:
+
+```bash
+$ curl -X POST -d @backend-input.json  -H "Content-Type: application/json"  http://localhost:8080/quote
 {"quotedAmount":30,"basis":"mocked backend computation"}
 ```
 
@@ -266,5 +273,3 @@ appsody test
 ```
 
 Look at [quote-backend/src/test/java/application/QuoteTests.java](quote-backend/src/test/java/application/QuoteTests.java) to see the tests for the backend application.
-
-> **TODO**: Look into using docker compose to show communication between the two apps is not too hard to set up. It might be good to do a build and manual deploy to local docker here, showing that you now have a regular Docker image. Then the next exercises can concentrate on the specifics about deploying to OpenShift)
