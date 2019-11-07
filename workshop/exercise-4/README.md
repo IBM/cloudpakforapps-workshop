@@ -115,6 +115,57 @@ These are visible through the UI, too:
 
 ![Pre-Existing Tasks](images/tekton_tasks.png)
 
+### 2. Update Kabanero to deploy to alternate namespaces with Tekton
+
+Find the kabanero custom resource
+
+```bash
+$ oc get kabaneros -n kabanero
+NAME       AGE       VERSION   READY
+kabanero   13d       0.1.0     True
+```
+
+Edit the kabanero custom resource
+
+```bash
+oc edit kabaneros kabanero -n kabanero
+```
+
+Add a `targetNamespaces` key to `spec` with value `insurance-quote`:
+
+```yaml
+spec:
+  collections:
+    repositories:
+    - activateDefaultCollections: true
+      name: incubator
+      url: https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
+  targetNamespaces:
+  - insurance-quote
+```
+
+#### Update `app-deploy.yml` to specify the namespace
+
+Go to your frontend code `cd ~/appsody-apps/quote-frontend` and update `app-deploy.yaml` to include the `namespace`
+
+```yaml
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  name: quote-frontend
+  namespace: insurance-quote
+```
+
+Go to your backend code `cd ~/appsody-apps/quote-backend` and update `app-deploy.yaml` to include the `namespace`
+
+```yaml
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  name: quote-backend
+  namespace: insurance-quote
+```
+
 ### 2. Get a GitHub Access Token
 
 When using Tekton, building a pipeline will require code to be pulled from either a public or private repository. When configuring Tekton, for security reasons, we will create an *Access Token* instead of using a password.
@@ -131,8 +182,6 @@ Once the token is created, make sure to copy it down. We will need it later.
 
 ### 3. Upload insurance quote frontend, and backend to GitHub
 
-Open [Github.com](Github.com) and `login` with your username and password.
-
 Go to <https://github.com/new> and create two new repositories, `quote-frontend`, and `quote-backend`. Do not initiatize the repos with a license file or README.
 
 ![New repo](images/new_repo.png)
@@ -147,32 +196,33 @@ git remote add origin git@github.com:<username>/quote-backend.git
 git push -u origin master
 ```
 
-The repo for your frontend code should look like this:
-
-![Repo for frontend](images/repo_frontend.png)
-
 The repo for your backend code should look like this:
 
 ![Repo for backend](images/repo_backend.png)
 
-#### Re-add config map because namespace limitation
-
-Do this again because I can't seem to deploy to any namespace aside from `kabanero`
+From your `quote-frontend` directory, run the commands below, replacing `<username>` with your own.
 
 ```bash
-$ oc create configmap dacadoo-config --from-literal=DACADOO_URL=https://models.dacadoo.com/score/2 --from-literal=DACADOO_APIKEY=Y3VB...RMGG
-configmap/dacadoo-config created
+git init
+git add -A
+git commit -m "first commit"
+git remote add origin git@github.com:<username>/quote-frontend.git
+git push -u origin master
 ```
+
+The repo for your frontend code should look like this:
+
+![Repo for frontend](images/repo_frontend.png)
 
 ### 4. Add webhooks to Tekton to watch Github repo changes
 
-Configure the github webhook to your repo. Go to `Webhooks` > `Add Webhook` and then create the webhook.
+Configure the GitHub webhook to your repo. Go to `Webhooks` > `Add Webhook` and then create the webhook.
 
 ![new webhook options](images/create-tekton-webhook.png)
 
 Note that the first time creating a webhook a new access token must also be created, use the access token from the earlier step:
 
-![Create an access toekn](images/create-token.png)
+![Create an access token](images/create-token.png)
 
 #### Create a webhook for the backend
 
@@ -184,7 +234,7 @@ Access Token: github-tekton
 Namespace: kabanero
 Pipeline: java-spring-boot2-build-deploy-pipeline
 Service account: kabanero-operator
-Docker Registry: docker-registry.default.svc:5000/kabanero
+Docker Registry: docker-registry.default.svc:5000/insurance-quote
 ```
 
 #### Create a webhook for the frontend
@@ -197,7 +247,7 @@ Access Token: github-tekton
 Namespace: kabanero
 Pipeline: nodejs-express-build-deploy-pipeline
 Service account: kabanero-operator
-Docker Registry: docker-registry.default.svc:5000/kabanero
+Docker Registry: docker-registry.default.svc:5000/insurance-quote
 ```
 
 Verify both are created successfully.
@@ -225,7 +275,7 @@ This will trigger the tekton pipleine. Go to the tekton dashboard and access the
 Wait until the task is complete, then find the route using `oc get routes`:
 
 ```bash
-$ oc get routes -n kabanero | grep backend
+$ oc get routes -n insurance-quote | grep backend
 quote-backend      quote-backend-kabanero.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                quote-backend      8080                           None
 ```
 
@@ -244,7 +294,7 @@ This should trigger another pipeline to be created, using the node-express pipel
 Wait until the task is complete, then find the route using `oc get routes`:
 
 ```bash
-$ oc get routes -n kabanero | grep frontend
+$ oc get routes -n insurance-quote | grep frontend
 quote-frontend     quote-frontend-kabanero.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud               quote-frontend     3000                           None
 ```
 
