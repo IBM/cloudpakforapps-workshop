@@ -46,7 +46,7 @@ In the second day we'll learn about Kabanero Enterprise and how to productionize
 | [Exercise 8: Create a Tekton pipleline for a custom collection](exercise-8/README.md) | Build a pipeline that will fit into a custom Kabanero collection |
 | [Exercise 9: Deploy an application from Custom Stack & Repository](exercise-9/README.md) | Build and deploy an application using the custom stack, collection and pipelines built by the Architects' and Operators' tracks |
 
-## Compability
+## Compatability
 
 This workshop has been tested on the following platforms:
 
@@ -57,7 +57,7 @@ This workshop has been tested on the following platforms:
 This workshop was created by Henry Nash and Steve Martinelli. Content was leveraged content from other IBM'ers such as:
 
 * [Appsody Code Pattern - Greg Dritschler](https://github.com/IBM/appsody-sample-quote-app)
-* [Learning Kabanero 101 - Cloud Garage / Carlos Santana](https://ibm-cloud-architecture.github.io/Learning-Kabanero-101)
+* [Learning Kabanero 101 - Carlos Santana](https://ibm-cloud-architecture.github.io/Learning-Kabanero-101)
 
 ## About Cloud Pak for Applications
 
