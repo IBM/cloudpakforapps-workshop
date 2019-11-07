@@ -10,6 +10,14 @@ In this exercise, we will introduce Appsody, which is the underpinning developme
 
 You should have already carried out the prerequisites defined in [Exercise 0](workshop/exercise-0/README.md). Check that you have access to the Appsody CLI by typing (the exact version number my be greater than shown below):
 
+> **NOTE:** In the exercises that follow you will see the actual command to run, followed by a separate example of running the command with the expected output. You only need to run the first example and never need to run a command you see preceded by a "$". You can even use the copy button on the right side of the command to make copying easier.
+
+```bash
+appsody version
+```
+
+You should see output similar to the following:
+
 ```bash
 $ appsody version
 appsody 0.4.10
@@ -21,7 +29,12 @@ The Appsody CLI gives you access to stacks, which are stored in stack repositori
 
 ```bash
 appsody repo list
+```
 
+You should see output similar to the following:
+
+```bash
+$ appsody repo list
 NAME            URL
 *incubator      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
@@ -44,7 +57,12 @@ Now when we get our list of repos, we should see Kabanero listed:
 
 ```bash
 appsody repo list
+```
 
+You should see output similar to the following:
+
+```bash
+$ appsody repo list
 NAME            URL
 *incubator      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 kabanero        https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
@@ -54,7 +72,12 @@ We can now list the appsody stacks available in the Kabanero collection:
 
 ```bash
 appsody list kabanero
+```
 
+You should see output similar to the following:
+
+```bash
+$ appsody list kabanero
 REPO        ID                  VERSION     TEMPLATES           DESCRIPTION
 kabanero    java-microprofile   0.2.11      *default            Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
 kabanero    java-spring-boot2   0.3.9       *default, kotlin    Spring Boot using OpenJ9 and Maven
@@ -73,6 +96,12 @@ Now is we get the list of repos, we should see kabanero is the default:
 
 ```bash
 appsody repo list
+```
+
+You should see output similar to the following:
+
+```bash
+$ appsody repo list
 
 NAME            URL
 *kabanero       https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
@@ -120,8 +149,8 @@ The directory has been initialized with a minimal set of artifacts (which is, in
 ├── .appsody-config.yaml
 ├── .gitignore
 ├── .vscode
-│   ├── launch.json
-│   └── tasks.json
+│  ├── launch.json
+│  └── tasks.json
 ├── app.js
 ├── package-lock.json
 ├── package.json
@@ -171,6 +200,12 @@ audited 295 packages in 1.546s
 We can now check that this is running by hitting the endpoint <http://localhost:3000>:
 
 ```bash
+curl http://localhost:3000
+```
+
+You should see output similar to the following:
+
+```bash
 $ curl http://localhost:3000
 Hello from Appsody!
 ```
@@ -198,6 +233,12 @@ Alternatively, you can also press `Ctrl+C` in the first window that is running t
 ### Test the Application
 
 A stack will typically come with a test framework - and this can be initiated by running:
+
+```bash
+appsody test
+```
+
+You should see output similar to the following:
 
 ```bash
 $ appsody test
@@ -315,6 +356,12 @@ These enable a couple of capabilities:
 In this section we will carry out the first of these - i.e. simply building a standalone image. Perhaps unsurprisingly, this is enacted by:
 
 ```bash
+appsody build
+```
+
+You should see output similar to the following:
+
+```bash
 $ appsody build
 .
 .
@@ -337,6 +384,12 @@ Built docker image appsody-sample-nodejs-express
 We now have a standalone image (independant of appsody), we can view the image using our local Docker environment:
 
 ```bash
+docker images
+```
+
+You should see output similar to the following:
+
+```bash
 $ docker images
 REPOSITORY                                  TAG                 IMAGE ID            CREATED             SIZE
 appsody-sample-nodejs-express               latest              0be125eee32c        3 minutes ago       945MB
@@ -346,10 +399,16 @@ We can run this with our local Docker environment in the normal way (making sure
 
 ```bash
 docker run -p 3000:3000 appsody-sample-nodejs-express
+```
 
+You should see output similar to the following:
+
+```bash
+$ docker run -p 3000:3000 appsody-sample-nodejs-express
+...
 > nodejs-express@0.2.6 start /project
 > node server.js
-
+...
 [Tue Oct  1 19:49:45 2019] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.0.5.201910011945 (Agent Core 4.0.5)
 [Tue Oct  1 19:49:46 2019] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
 App started on PORT 3000
@@ -417,7 +476,7 @@ Right click on `Projects` under Codewind. Select `Add Existing Project` in the m
 
 ![Choose to add an existing project](images/sb_lab1_codewind_add_existing_project.png)
 
-> **Note** Before doing this, copy your project to the codewind workspace, in the directory `codewind-workspaces/` in your HOME directory. At this point in time, codewind only accepts the projects that are available in the `codewind workspace`.
+> **NOTE** Before doing this, copy your project to the codewind workspace, in the directory `codewind-workspaces/` in your HOME directory. At this point in time, codewind only accepts the projects that are available in the `codewind workspace`.
 
 From the codewind workspace, select the project you created earlier:
 
@@ -443,7 +502,7 @@ Click `Open App` to access the application:
 
 ![js\_lab1\_codewind\_open\_app.png](images/js_lab1_codewind_open_app.png)
 
-> **Note** Codewind exposes your applications on different external ports. This will allow you to run multiple projects of same type.
+> **NOTE** Codewind exposes your applications on different external ports. This will allow you to run multiple projects of same type.
 
 To get the overview of your project, click on `Open Project Overview`:
 
@@ -493,4 +552,4 @@ You can click Run Test and have Monitor and Performance dashboards side by side 
 
 ![js\_lab1\_app\_side\_by\_side\_perf\_test.png](images/js_lab1_app_side_by_side_perf_test.png)
 
-> **Note** Profiling the node.js code is currently not working an [issue](https://github.com/eclipse/codewind-node-profiler/issues/5) is opened on the github repo for the codewind node.js profiler extension.
+> **NOTE:** Profiling the node.js code is currently not working an [issue](https://github.com/eclipse/codewind-node-profiler/issues/5) is opened on the github repo for the codewind node.js profiler extension.

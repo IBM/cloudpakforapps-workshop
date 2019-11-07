@@ -54,7 +54,7 @@ oc get route --all-namespaces | grep registry
 default                            registry-console                                   registry-console-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                                     registry-console                            registry-console                      passthrough          None
 ```
 
-> ![Docker Registry GUI](images/docker-registry.png)
+![Docker Registry GUI](images/docker-registry.png)
 
 To access the internal registry we need to create a route and expose it. See the [IBM Cloud documentation](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift-images#openshift_internal_registry) for the complete steps, but here is the short version.
 
@@ -309,7 +309,7 @@ You can then use a browser to open the frontend application, at the url given ab
 
 ![Sample web form](images/screenshot.png)
 
-> Note: If you are not using the Dacadoo Health Score API, you may see different text after the quote
+> **NOTE**: If you are not using the Dacadoo Health Score API, you may see different text after the quote
 ("determined using mocked backend computation" instead of "determined using Dacadoo Health Score API").
 
 Congratulations, you have now deployed both front and backend applications to OpenShift, hooked them together as well as enable outreach to an external service.

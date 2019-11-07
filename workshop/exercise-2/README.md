@@ -267,4 +267,4 @@ appsody test
 
 Look at [quote-backend/src/test/java/application/QuoteTests.java](quote-backend/src/test/java/application/QuoteTests.java) to see the tests for the backend application.
 
-> TODO: Look into using docker compose to show communication between the two apps is not too hard to set up. It might be good to do a build and manual deploy to local docker here, showing that you now have a regular Docker image. Then the next exercises can concentrate on the specifics about deploying to OpenShift)
+> **TODO**: Look into using docker compose to show communication between the two apps is not too hard to set up. It might be good to do a build and manual deploy to local docker here, showing that you now have a regular Docker image. Then the next exercises can concentrate on the specifics about deploying to OpenShift)

@@ -33,6 +33,8 @@ You can check that you have the correct version installed by executing the comma
 appsody version
 ```
 
+You should see output similar to the following:
+
 ```bash
 $ appsody version
 appsody 0.4.10
