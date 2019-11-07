@@ -14,9 +14,9 @@ Welcome to our workshop! In this workshop we'll be using the Cloud Pak for Appli
 The introductory page of the workshop is broken down into the following sections:
 
 * [Agenda](#agenda)
-* [Compability](#compability)
-* [Credits](#credits)
+* [Compatability](#compatability)
 * [About Cloud Pak for Applications](#about-cloud-pak-for-application)
+* [Credits](#credits)
 
 ## Agenda
 
@@ -54,13 +54,6 @@ This workshop has been tested on the following platforms:
 
 * macOS (Mojave)
 
-## Credits
-
-This workshop was created by Henry Nash and Steve Martinelli. Content was leveraged content from other IBM'ers such as:
-
-* [Appsody Code Pattern - Greg Dritschler](https://github.com/IBM/appsody-sample-quote-app)
-* [Learning Kabanero 101 - Carlos Santana](https://ibm-cloud-architecture.github.io/Learning-Kabanero-101)
-
 ## About Cloud Pak for Applications
 
 IBM Cloud Pak for Applications is an enterprise-ready, containerized software solution for modernizing existing applications and developing new cloud-native apps that run on Red Hat® OpenShift®. Built on IBM WebSphere offerings and Red Hat OpenShift Container Platform with IBM Kabanero Enterprise, Cloud Pak for Applications provides a long-term solution to help you transition between public, private, and hybrid clouds, and create new business applications.
@@ -79,3 +72,10 @@ Cloud Pak for Applications:
 * ... can be deployed on any major cloud provider supporting OpenShift (IBM Cloud, AWS, Azure, GCP)
 
 ![Cloud Pak for Application Stack](.gitbook/images/cp4apps.png)
+
+## Credits
+
+This workshop was created by Henry Nash and Steve Martinelli. Content was leveraged content from other IBM'ers such as:
+
+* [Appsody Code Pattern - Greg Dritschler](https://github.com/IBM/appsody-sample-quote-app)
+* [Learning Kabanero 101 - Carlos Santana](https://ibm-cloud-architecture.github.io/Learning-Kabanero-101)
