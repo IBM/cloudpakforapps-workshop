@@ -275,8 +275,8 @@ This will trigger the tekton pipleine. Go to the tekton dashboard and access the
 Wait until the task is complete, then find the route using `oc get routes`:
 
 ```bash
-$ oc get routes -n insurance-quote | grep backend
-quote-backend      quote-backend-kabanero.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                quote-backend      8080                           None
+stevemar@cloudpakforapps-workshop $ oc get routes -n insurance-quote | grep backend
+quote-backend   quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud             quote-backend   8080-tcp                 None
 ```
 
 In your `quote-frontend` repo, change the file `app-deploy.yml` to update the `BACKEND_URL` value with the URL from the previous step.
@@ -284,7 +284,7 @@ In your `quote-frontend` repo, change the file `app-deploy.yml` to update the `B
 ```yaml
   env:
   - name: BACKEND_URL
-    value: http://quote-backend-kabanero.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/quote
+    value: http://quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/quote
 ```
 
 This should trigger another pipeline to be created, using the node-express pipeline.
@@ -295,7 +295,7 @@ Wait until the task is complete, then find the route using `oc get routes`:
 
 ```bash
 $ oc get routes -n insurance-quote | grep frontend
-quote-frontend     quote-frontend-kabanero.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud               quote-frontend     3000                           None
+quote-frontend     quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud               quote-frontend     3000                           None
 ```
 
 The usual frontend should show.
