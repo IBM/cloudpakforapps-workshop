@@ -61,3 +61,9 @@ When clicked, the *Cloud Pak for Applications* landing page should appear:
 Clicking on the *Kabanero Enterprise instance* link will show you information about your Kabanero Enterprise service.
 
 ![Kabanero Enterprise](images/kabanero-console.png)
+
+## 6. Install VSCode
+
+In Exercise 1 of this workshop, Codewind is used to integrate rapid development with an IDE. Both VSCode and Eclipse are supported as extensions by Codewind. At the moment, this workshop has instructions for VSCode. If you don't already have VSCode installed on your machine, you should do so now:
+
+[Install VSCode](https://code.visualstudio.com/download)
