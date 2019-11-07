@@ -5,8 +5,10 @@ This section is broken up into the following steps:
 1. [IDs](#1-ids)
 1. [Install Docker](#2-install-docker)
 1. [Install Appsody CLI](#3-install-appsody-cli)
-1. [Check access to OpenShift cluster](#4-check-access-to-openshift-cluster)
-1. [Ensure Cloud Pak for Applications is installed](#5-ensure-cloud-pak-for-applications-is-installed)
+1. [Install OpenShift CLI](#4-install-appsody-cli)
+1. [Check access to OpenShift cluster](#5-check-access-to-openshift-cluster)
+1. [Ensure Cloud Pak for Applications is installed](#6-ensure-cloud-pak-for-applications-is-installed)
+1. [Install VS Code](#7-install-vs-code)
 
 ## 1. IDs
 
@@ -20,6 +22,19 @@ The following IDs are needed for this workshop:
 A key part of the Appsody development experience is Rapid Local Development Mode, where the code you develop is continuously being run in a local docker container. If you don't already have Docker installed on your machine, you should do so now:
 
 [Install Docker](https://docs.docker.com/get-started/)
+
+```bash
+docker version
+```
+
+You should see output similar to the following:
+
+```bash
+$ docker version
+Client: Docker Engine - Community
+ Version:           19.03.4
+...
+```
 
 ## 3. Install Appsody CLI
 
@@ -40,7 +55,27 @@ $ appsody version
 appsody 0.4.10
 ```
 
-## 4. Check access to OpenShift cluster
+## 4. Install OpenShift CLI
+
+The OpenShift CLI allows you to manage OpenShift resources from a terminal (this workshop requries version 3.11 (**not 4.x**)). This should be installed on your development machine:
+
+[Install the OpenShift CLI](https://www.okd.io/download.html)
+
+You can check that you have the correct version installed by executing the command:
+
+```bash
+oc version
+```
+
+You should see output similar to the following:
+
+```bash
+$ oc version
+oc v3.11.0+0cbc58b
+...
+```
+
+## 5. Check access to OpenShift cluster
 
 You should already have been provided with details of a managed OpenShift cluster that has been provisioned for you. Check you have access to this by using the `oc login` with the credentials the workshop administrator provides to you.
 
@@ -48,7 +83,7 @@ You should already have been provided with details of a managed OpenShift cluste
 oc login <url> --token=<token>
 ```
 
-## 5. Ensure Cloud Pak for Applications is installed
+## 6. Ensure Cloud Pak for Applications is installed
 
 Cloud Pak for Applications should already have been installed in your managed OpenShift cluster. Check you have access to this by ensuring that *Kabanero Enterprise* exists in the *Application Console* of your OpenShift cluster.
 
@@ -62,7 +97,7 @@ Clicking on the *Kabanero Enterprise instance* link will show you information ab
 
 ![Kabanero Enterprise](images/kabanero-console.png)
 
-## 6. Install VSCode
+## 7. Install VS Code
 
 In Exercise 1 of this workshop, Codewind is used to integrate rapid development with an IDE. Both VSCode and Eclipse are supported as extensions by Codewind. At the moment, this workshop has instructions for VSCode. If you don't already have VSCode installed on your machine, you should do so now:
 
