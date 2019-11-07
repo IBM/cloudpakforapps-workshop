@@ -298,6 +298,8 @@ $ oc get routes -n insurance-quote | grep frontend
 quote-frontend     quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud               quote-frontend     3000                           None
 ```
 
-The usual frontend should show.
+Open a browser to `http://<url-from-above>` and see the usual interface for the insurance quote app. Try entering information to ensure the frontend and backend are communicating.
 
-Congratulations, Day 1 of the workshop is now complete!
+![sample interface](images/example-interface.png)
+
+**Congratulations!!** Day 1 of the workshop is now complete!
