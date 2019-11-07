@@ -3,9 +3,11 @@
 
 Welcome to our workshop! In this workshop we'll be using the Cloud Pak for Applications platform to create Cloud Native Applications that run on OpenShift. The goals of this workshop are:
 
-* Get to know Kabanero Collections
-* Learn about OpenShift
-* Start using Tekton CI/CD
+* Use Appsody and Codewind to create a cloud native application
+* Create a custom Kabanero collection
+* Use Tekton CI to continuously deploy to OpenShift
+
+![Tools used in the workshop](.gitbook/images/tools-for-workshop.png)
 
 This introductory page is broken down into the following sections:
 
@@ -74,4 +76,4 @@ Cloud Pak for Applications:
   * ...and more
 * ... can be deployed on any major cloud provider supporting OpenShift (IBM Cloud, AWS, Azure, GCP)
 
-![Cloud Pak for Application Stack](.gitbook/assets/images/generic/cp4apps.png)
+![Cloud Pak for Application Stack](.gitbook/images/cp4apps.png)
