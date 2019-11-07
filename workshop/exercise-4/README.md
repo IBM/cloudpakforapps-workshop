@@ -24,6 +24,8 @@ cd ~/appsody-apps/quote-backend
 appsody deploy delete --namespace insurance-quote
 ```
 
+You should see output similar to the following:
+
 ```bash
 $ appsody deploy delete --namespace insurance-quote
 Deleting deployment using deployment manifest app-deploy.yaml
@@ -36,11 +38,11 @@ Note, we still have the `insurance-quote` namespace, the `dacadoo-config` config
 
 ## Steps
 
-1. Launch the Tekton dashboard
-1. Get a GitHub Access Token
-1. Upload insurance quote frontend, and backend to GitHub
-1. Add webhooks to Tekton
-1. Test it all out
+1. [Launch the Tekton dashboard](#1-launch-the-tekton-dashboard)
+1. [Get a GitHub Access Token](#2-get-a-github-access-token)
+1. [Upload insurance quote frontend, and backend to GitHub](#3-upload-insurance-quote-frontend-and-backend-to-gitHub)
+1. [Add webhooks to Tekton](#4-add-webhooks-to-tekton)
+1. [Test it all out](#5-test-it-all-out)
 
 ### 1. Launch the Tekton dashboard
 
@@ -95,7 +97,7 @@ oc get pipeline -n kabanero
 You will see something similar to this.
 
 ```bash
-stevemar@quote-frontend $ oc get tasks -n kabanero
+$ oc get tasks -n kabanero
 NAME                            AGE
 java-microprofile-build-task    27d
 java-microprofile-deploy-task   27d
@@ -275,8 +277,8 @@ This will trigger the tekton pipleine. Go to the tekton dashboard and access the
 Wait until the task is complete, then find the route using `oc get routes`:
 
 ```bash
-stevemar@cloudpakforapps-workshop $ oc get routes -n insurance-quote | grep backend
-quote-backend   quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud             quote-backend   8080-tcp                 None
+$ oc get routes -n insurance-quote | grep backend
+quote-backend   quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 ```
 
 In your `quote-frontend` repo, change the file `app-deploy.yml` to update the `BACKEND_URL` value with the URL from the previous step.
@@ -295,7 +297,7 @@ Wait until the task is complete, then find the route using `oc get routes`:
 
 ```bash
 $ oc get routes -n insurance-quote | grep frontend
-quote-frontend     quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud               quote-frontend     3000                           None
+quote-frontend     quote-frontend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 ```
 
 Open a browser to `http://<url-from-above>` and see the usual interface for the insurance quote app. Try entering information to ensure the frontend and backend are communicating.
