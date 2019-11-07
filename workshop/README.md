@@ -1,5 +1,5 @@
 
-## Workshop: Creating Cloud Native Applications with Cloud Pak for Applications on OpenShift
+## Creating Cloud Native Applications with Cloud Pak for Applications on OpenShift
 
 Welcome to our workshop! In this workshop we'll be using the Cloud Pak for Applications platform to create Cloud Native Applications that run on OpenShift. The goals of this workshop are:
 
