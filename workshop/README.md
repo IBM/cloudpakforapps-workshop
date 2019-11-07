@@ -9,7 +9,9 @@ Welcome to our workshop! In this workshop we'll be using the Cloud Pak for Appli
 
 ![Tools used in the workshop](.gitbook/images/tools-for-workshop.png)
 
-This introductory page is broken down into the following sections:
+### About this workshop
+
+The introductory page of the workshop is broken down into the following sections:
 
 * [Agenda](#agenda)
 * [Compability](#compability)
