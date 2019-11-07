@@ -26,7 +26,7 @@ appsody 0.4.10
 ## Steps
 
 1. [Configure Appsody CLI](#1-configure-appsody-cli)
-1. [Use Appsody CLI to build, test, run, and debug](#2-use-appsody-cli-to-build-test-run-debug)
+1. [Use Appsody CLI to build, test, run, and debug](#2-use-appsody-cli-to-build-test-run-and-debug)
 1. [Appsody tasks on VS Code](#3-appsody-tasks-on-vs-code)
 1. [Codewind on VS Code](#4-codewind-on-vs-code)
 

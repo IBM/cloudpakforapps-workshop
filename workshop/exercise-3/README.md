@@ -18,8 +18,8 @@ You should have already carried out the prerequisites defined in [Exercise 0](wo
 
 1. [Set up a project namespace](#1-set-up-a-project-namespace)
 1. [Access the internal Docker Registry](#2-access-the-internal-docker-registry)
-1. [Deploy the backend application to OpenShift](#3-deploy-the-backend-application-to-openShift)
-1. [Deploy the frontend application to OpenShift](#4-deploy-the-frontend-application-to-openShift)
+1. [Deploy the backend application to OpenShift](#3-deploy-the-backend-application-to-openshift)
+1. [Deploy the frontend application to OpenShift](#4-deploy-the-frontend-application-to-openshift)
 
 ### 1. Set up a project namespace
 

@@ -9,7 +9,7 @@ Recall that the application from exercise 3 consists of:
 
 When you have completed this exercise, you will understand how to:
 
-* Leverage Tekton pipelines with Kabanero collections to deploy applications to OpenShift
+* leverage Tekton pipelines with Kabanero collections to deploy applications to OpenShift
 
 ## Prerequisites
 
@@ -40,8 +40,8 @@ Note, we still have the `insurance-quote` namespace, the `dacadoo-config` config
 
 1. [Launch the Tekton dashboard](#1-launch-the-tekton-dashboard)
 1. [Get a GitHub Access Token](#2-get-a-github-access-token)
-1. [Upload insurance quote frontend, and backend to GitHub](#3-upload-insurance-quote-frontend-and-backend-to-gitHub)
-1. [Add webhooks to Tekton](#4-add-webhooks-to-tekton)
+1. [Upload insurance quote frontend, and backend to GitHub](#3-upload-insurance-quote-frontend-and-backend-to-github)
+1. [Add webhooks to Tekton to watch Github repo changes](#4-add-webhooks-to-tekton-to-watch-github-repo-changes)
 1. [Test it all out](#5-test-it-all-out)
 
 ### 1. Launch the Tekton dashboard
