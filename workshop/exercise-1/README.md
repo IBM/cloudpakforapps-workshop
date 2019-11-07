@@ -12,7 +12,7 @@ You should have already carried out the prerequisites defined in [Exercise 0](wo
 
 ```bash
 $ appsody version
-appsody 0.4.9
+appsody 0.4.10
 ```
 
 ## Configure your access to Appsody stacks
@@ -23,10 +23,10 @@ The Appsody CLI gives you access to stacks, which are stored in stack repositori
 appsody repo list
 
 NAME            URL
-*appsodyhub     https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+*incubator      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
 
-The exact repo list may be different to the above. `appsodyhub` is the hub for public repositories. For this workshop we are going to use the private enterprise-grade collection of stacks that come with Kabanero Enterprise (which is part of Cloud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
+The exact repo list may be different to the above. `incubator` is one of the repos in the appsody project public hub (`appsodyhub`). For this workshop we are going to use the private enterprise-grade collection of stacks that come with Kabanero Enterprise (which is part of Cloud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
 
 ## Add Kabanero Collection to appsody
 
@@ -46,7 +46,7 @@ Now when we get our list of repos, we should see Kabanero listed:
 appsody repo list
 
 NAME            URL
-*appsodyhub     https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+*incubator      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 kabanero        https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
 ```
 
@@ -76,7 +76,7 @@ appsody repo list
 
 NAME            URL
 *kabanero       https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
-appsodyhub      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+incubator       https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
 
 ## Appsody CLI
