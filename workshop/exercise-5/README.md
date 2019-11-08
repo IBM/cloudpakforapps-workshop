@@ -1,12 +1,40 @@
 # Exercise 5: Customizing an existing Appsody Stack
 
-> ***WORK IN PROGRESS***
+The goals for this day are to customize all each pre-configured asset from Day 1, meaning we will:
 
-This section is broken up into the following steps:
+* extend an Appsody Stacks
+* publish a new Kabanero collections
+* add a new Tekton task to our Tekton pipeline
 
-1. [The role of a stack in the development process](#1-The-role-of-a-stack-in-the-development-process)
-1. [Stack structure](#2-Stack-structure)
-1. [Create a new stack, based on an existing one](#3-Create-a-new-stack,-based-on-an-existing-one)
+Specifically, when you have completed this exercise, you will understand how to:
+
+* extend an Appsody stack to create a new asset to be used in our Kabanero collection
+
+![Tools used during Exercise 5](images/ex5.png)
+
+## Prerequisites
+
+You should have already carried out the prerequisites defined in the [Pre-work](workshop/pre-work/README.md). Check that you have access to the Appsody CLI by typing (the exact version number my be greater than shown below):
+
+> **NOTE:** In the exercises that follow you will see the actual command to run, followed by a separate example of running the command with the expected output. You only need to run the first example and never need to run a command you see preceded by a "$". You can even use the copy button on the right side of the command to make copying easier.
+
+```bash
+appsody version
+```
+
+You should see output similar to the following:
+
+```bash
+$ appsody version
+appsody 0.4.10
+```
+
+## Steps
+
+1. [The role of a stack in the development process](#1-the-role-of-a-stack-in-the-development-process)
+1. [Stack structure](#2-stack-structure)
+1. [Create a new stack, based on an existing one](#3-create-a-new-stack-based-on-an-existing-one)
+1. [Use the new stack in our example application](#4-use-the-new-stack-in-our-example-application)
 
 ## 1. The role of a stack in the development process
 
@@ -62,357 +90,418 @@ Hence, when you build a stack, the structure above is processed and generates a 
 
 For this exercise we will modify the nodejs-express stack that we have been using for our quote-frontend, to add some additional security hardening (individual enterprises often have specific security standards that need to be met to allow deployment).
 
-> **NOTE**: For future reference, to make your own stack from scratch, instead of extending an existing one, follow this tutorial: <https://developer.ibm.com/tutorials/create-appsody-stack/>.
+> **NOTE**: For future reference, to make your own stack from scratch, instead of extending an existing one, follow [this tutorial](https://developer.ibm.com/tutorials/create-appsody-stack/).
 
 ## 3. Create a new stack, based on an existing one
 
+The goal of this step is to create a new Node.js Express stack by modifying the existing one. We'll copy it, build, and modify it.
+
+### Initialize the stack
+
 To create a new stack, you must first construct a scaffold of the above structure. Stacks are classified as being `stable`, `incubating` or `experimental`. You can read more about these classifications [here](https://appsody.dev/docs/stacks/stacks-overview). To make things easy, the Appsody CLI supports an `appsody stack create` command to create a new stack, by copying an existing one.
 
-1. Copy and rename the nodejs-express stack, by running the `appsody stack create` command, which will create a sub directory containing the new stack.
+By running the `appsody stack create` command, *nodejs-express* stack will be copied and moved, a directory will be created containing the new stack.
 
-    ```bash
-    cd ~
-    appsody stack create my-nodejs-express --copy incubator/nodejs-express
-    cd my-nodejs-express
-    ls - al
-    total 16
-    drwxr-xr-x  6 henrynash  staff  192 21 Oct 00:14 .
-    drwxr-xr-x  3 henrynash  staff   96 21 Oct 00:14 ..
-    -rw-r--r--  1 henrynash  staff  621 21 Oct 00:14 README.md
-    drwxr-xr-x  7 henrynash  staff  224 21 Oct 00:14 image
-    -rw-r--r--  1 henrynash  staff  297 21 Oct 00:14 stack.yaml
-    drwxr-xr-x  3 henrynash  staff   96 21 Oct 00:14 templates
-    ```
+```bash
+cd ~/appsody-apps
+appsody stack create my-nodejs-express --copy incubator/nodejs-express
+cd my-nodejs-express
+ls -al
+```
 
-    If you inspect the contents of the `image` directory, you will see how it matches the stack structure given earlier.
+You should see output similar to the following:
 
-1. Build your new stack
+```bash
+$ ls -la
+total 24
+drwxr-xr-x  6 henrynash  staff   192  8 Nov 11:51 .
+drwxr-xr-x  5 henrynash  staff   160  8 Nov 11:51 ..
+-rw-r--r--  1 henrynash  staff  5026  8 Nov 11:51 README.md
+drwxr-xr-x  7 henrynash  staff   224  8 Nov 11:51 image
+-rw-r--r--  1 henrynash  staff   319  8 Nov 11:51 stack.yaml
+drwxr-xr-x  4 henrynash  staff   128  8 Nov 11:51 templates
+```
 
-    > **NOTE** In general, Appsody will always try and look in the existing repositories first for stacks, and then in the local cache. For normal stack usage this is exactly what you want - however, when in the process of creating new stacks, by definition, the existing repositories will not yet know about your new stack. Hence it is quicker in this situation to tell Appsody to look in the local cache first. You can do this by setting the following environment variable: `export APPSODY_PULL_POLICY=IFNOTPRESENT`.
+If you inspect the contents of the `image` directory, you will see how it matches the stack structure given earlier.
 
-    Before we make any changes, let's go through the steps of building (or *packaging*) a stack, to create a stack image (which is a Docker image) that the Appsody CLI can use to initiate a project using that stack.
+### Build your new stack
 
-    There is a Docker file (`Dockerfile-stack`) within the sample stack structure you copied. The `appsody stack package` command will use this to build the image.
+In general, Appsody will always try and look in the existing repositories first for stacks, and then in the local cache. For normal stack usage this is exactly what you want - however, when in the process of creating new stacks, by definition, the existing repositories will not yet know about your new stack. Hence it is quicker in this situation to tell Appsody to look in the local cache first.
 
-    To build your new stack in this way, from the `my-nodejs-express` directory enter:
+You can do this by setting the following environment variable:
 
-    ```bash
-    appsody stack package
-    ```
+```bash
+export APPSODY_PULL_POLICY=IFNOTPRESENT
+```
 
-    This runs a Docker build, installs `my-nodejs-express` into a local Appsody repository (called `dev.local`), and runs some basic tests to make sure the file is well formed.
+Before we make any changes, let's go through the steps of building (or *packaging*) a stack, to create a stack image (which is a Docker image) that the Appsody CLI can use to initiate a project using that stack.
 
-    Once the build is complete, check that it is now available in the local repo:
+There is a Docker file (`Dockerfile-stack`) within the sample stack structure you copied. The `appsody stack package` command will use this to build the image.
 
-    ```bash
-    $ appsody list dev.local
-    REPO        ID                 VERSION     TEMPLATES           DESCRIPTION
-    dev.local   my-nodejs-express  0.2.7       scaffold, *simple   Express web framework for Node.js
-    ```
+To build your new stack in this way, from the `my-nodejs-express` directory enter:
 
-1. Get the new stack working
+```bash
+appsody stack package
+```
 
-    So, at this point, you have been carrying out your role as a stack architect to build and install your new (albeit unchanged) stack. Now it's time to try it out as an application developer.
+This runs a Docker build, installs `my-nodejs-express` into a local Appsody repository (called `dev.local`), and runs some basic tests to make sure the file is well formed.
 
-    Create a new directory and initialize it with this new Appsody stack:
+Once the build is complete, use the `appsody list` command to check that it is now available in the local repo:
 
-    ```bash
-    mkdir ~/test
-    cd ~/test
-    appsody init dev.local/my-nodejs-express
-    ```
+```bash
+appsody list dev.local
+```
 
-    Now use `appsody run` to test running an application based on your copy of the stack:
+You should see output similar to the following:
 
-    ```bash
-    $ appsody run
-    Running development environment...
-    Using local cache for image dev.local/my-nodejs-express:SNAPSHOT
-    Running docker command: docker run --rm -p 3000:3000 -p 9229:9229 --name test73-dev -v /Users/henrynash/codewind-workspace/test73/:/project/user-app -v test73-deps:/project/user-app/node_modules -v /Users/henrynash/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller dev.local/my-nodejs-express:SNAPSHOT --mode=run
-    [Container] Running APPSODY_PREP command: npm install --prefix user-app && npm audit fix --prefix user-app
-    added 170 packages from 578 contributors and audited 295 packages in 3.5s
-    [Container] found 0 vulnerabilities
-    .
-    .
-    .
-    [Container] App started on PORT 3000
-    ```
+```bash
+$ appsody list dev.local
+REPO        ID                  VERSION     TEMPLATES           DESCRIPTION
+dev.local   my-nodejs-express   0.2.8       scaffold, *simple   Express web framework for Node.js
+```
 
-    To check it is running, we can use curl to hit the endpoint:
+### Run the new stack
 
-    ```bash
-    curl -http://localhost:3000
-    Hello from Appsody!
-    ```
+So, at this point, you have been carrying out your role as a stack architect to build and install your new (albeit unchanged) stack. Now it's time to try it out as an application developer.
 
-    So now we are ready to make change to our new stack. For this exercise we will harden the HTTP headers that an application, built using this stack, responds with. We can look at the current headers returned, by using the curl verbose option:
+Create a new directory and initialize it with this new Appsody stack:
 
-    ```bash
-    curl -v http://localhost:3000
-    * Rebuilt URL to: http://localhost:3000/
-    *   Trying ::1...
-    * TCP_NODELAY set
-    * Connected to localhost (::1) port 3000 (#0)
-    > GET / HTTP/1.1
-    > Host: localhost:3000
-    > User-Agent: curl/7.54.0
-    > Accept: */*
-    >
-    < HTTP/1.1 200 OK
-    < X-Powered-By: Express
-    < Content-Type: text/html; charset=utf-8
-    < Content-Length: 19
-    < ETag: W/"13-0ErcqB22cNteJ3vXrBgUhlCj8os"
-    < Date: Mon, 21 Oct 2019 12:09:49 GMT
-    < Connection: keep-alive
-    <
-    * Connection #0 to host localhost left intact
-    Hello from Appsody!
-    ```
+```bash
+mkdir ~/appsody-apps/test-my-stack
+cd ~/appsody-apps/test-my-stack
+appsody init dev.local/my-nodejs-express
+```
 
-    For this exercise will modify the stack to include the popular HTTP header security module [helmet](https://helmetjs.github.io), and hence this should change the headers we see returned to us. Note we will do this as a *stack architect* since we don't want to rely on *application developers* remembering to do this. By doing this in the stack itself, all applications built using our modified stack will have helmet automatically enabled.
+Now use `appsody run` to test running an application based on your copy of the stack:
 
-1. Modify your custom stack
+```bash
+appsody run
+```
 
-    When creating a custom stack, based on an existing stack, the first thing to do is to take a look at what the existing stack has provided. A more detailed description of the stack components can be found [here](https://appsody.dev/docs/stacks/stack-structure), but the key ones are:
+You should see output similar to the following:
 
-    * A Dockerfile (`image/Dockerfile-stack`) that builds your stack image. This is what the `appsody stack package` command used above to build a Docker image of your stack - which is, if you like, the eventual artifact that you deliver as a stack architect to application developers.
-    * A Dockerfile (`image/project/Dockerfile`) that application developers will use to build their final image. This final image will contain both your stack and their application, and this Dockerfile is processed by the application developer running `appsody build/deploy`.
-    * Typically some kind of server side code that is enabling the application the developer will create and run. For this stack, this is `image/project/server.js`.
-    * Some kind of dependency management, ensuring both the correct inclusion of components defined by the stack, as well as, potentially, any added by the application developer. For this stack, this is `image/project/package.json`.
-    * At least one sample application (or *template*); these are stored in the `templates` directory.
+```bash
+$ appsody run
+Running development environment...
+Using local cache for image dev.local/my-nodejs-express:SNAPSHOT
+Running docker command: docker run --rm -p 3000:3000 -p 9229:9229 --name test73-dev -v /Users/henrynash/codewind-workspace/test73/:/project/user-app -v test73-deps:/project/user-app/node_modules -v /Users/henrynash/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller dev.local/my-nodejs-express:SNAPSHOT --mode=run
+[Container] Running APPSODY_PREP command: npm install --prefix user-app && npm audit fix --prefix user-app
+added 170 packages from 578 contributors and audited 295 packages in 3.5s
+[Container] found 0 vulnerabilities
+...
+[Container] App started on PORT 3000
+```
 
-    It is worth taking some time checking out the files given above to get a feel of the stack.
+To check it is running, we can use `curl` to hit the endpoint:
 
-    For some stack modifications, you can actually use a form of stack inheritance - i.e. by using the existing stack images as the `FROM` image in `Dockerfile-stack`. An example of this might be where you just want to change one of the Dockerfile variables. In general, however, most modified stacks are effectively copies of an existing stack, with the additional changes added to gain the new, required functionality.
+```bash
+curl -v localhost:3000
+```
 
-    Having examined the files above, you might have already spotted what we need to do to incorporate helmet into the new stack - namely to modify `image/project/server.js` to enable it. The current code in `server.js` looks something like this:
+So now we are ready to make change to our new stack. For this exercise we will harden the HTTP headers that an application, built using this stack, responds with. We can look at the current headers returned:
 
-    ```java
-    // Requires statements and code for non-production mode usage
-    if (!process.env.NODE_ENV || !process.env.NODE_ENV === 'production') {
-    require('appmetrics-dash').attach();
+```bash
+$ curl -v localhost:3000
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to localhost (127.0.0.1) port 3000 (#0)
+> GET / HTTP/1.1
+> Host: localhost:3000
+> User-Agent: curl/7.64.1
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< X-Powered-By: Express
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 19
+< ETag: W/"13-0ErcqB22cNteJ3vXrBgUhlCj8os"
+< Date: Mon, 21 Oct 2019 12:09:49 GMT
+< Connection: keep-alive
+<
+* Connection #0 to host localhost left intact
+Hello from Appsody!
+```
+
+For this exercise will modify the stack to include the popular HTTP header security module [helmet](https://helmetjs.github.io), and hence this should change the headers we see returned to us. Note we will do this as a *stack architect* since we don't want to rely on *application developers* remembering to do this. By doing this in the stack itself, all applications built using our modified stack will have helmet automatically enabled.
+
+### Modify your custom stack
+
+When creating a custom stack, based on an existing stack, the first thing to do is to take a look at what the existing stack has provided. A more detailed description of the stack components can be found [here](https://appsody.dev/docs/stacks/stack-structure), but the key ones are:
+
+* A Dockerfile (`image/Dockerfile-stack`) that builds your stack image. This is what the `appsody stack package` command used above to build a Docker image of your stack - which is, if you like, the eventual artifact that you deliver as a stack architect to application developers.
+* A Dockerfile (`image/project/Dockerfile`) that application developers will use to build their final image. This final image will contain both your stack and their application, and this Dockerfile is processed by the application developer running `appsody build` and `appsody deploy`.
+* Typically some kind of server side code that is enabling the application the developer will create and run. For this stack, this is `image/project/server.js`.
+* Some kind of dependency management, ensuring both the correct inclusion of components defined by the stack, as well as, potentially, any added by the application developer. For this stack, this is `image/project/package.json`.
+* At least one sample application (or *template*); these are stored in the `templates` directory.
+
+It is worth taking some time checking out the files given above to get a feel of the stack.
+
+For some stack modifications, you can actually use a form of stack inheritance - i.e. by using the existing stack images as the `FROM` image in `Dockerfile-stack`. An example of this might be where you just want to change one of the Dockerfile variables. In general, however, most modified stacks are effectively copies of an existing stack, with the additional changes added to gain the new, required functionality.
+
+Having examined the files above, you might have already spotted what we need to do to incorporate helmet into the new stack - namely to modify `image/project/server.js` to enable it.
+
+Go back to the `my-nodejs-express` directory.
+
+```bash
+cd ~/appsody-apps/my-nodejs-express
+```
+
+The current code in `image/project/server.js` looks something like this:
+
+```javascript
+// Requires statements and code for non-production mode usage
+if (!process.env.NODE_ENV || !process.env.NODE_ENV === 'production') {
+require('appmetrics-dash').attach();
+}
+const express = require('express');
+const health = require('@cloudnative/health-connect');
+const fs = require('fs');
+
+require('appmetrics-prometheus').attach();
+
+const app = express();
+
+const basePath = __dirname + '/user-app/';
+
+function getEntryPoint() {
+    let rawPackage = fs.readFileSync(basePath + 'package.json');
+    let package = JSON.parse(rawPackage);
+    if (!package.main) {
+        console.error("Please define a primary entrypoint of your application by adding 'main: <entrypoint>' to package.json.")
+        process.exit(1)
     }
-    const express = require('express');
-    const health = require('@cloudnative/health-connect');
-    const fs = require('fs');
+    return package.main;
+}
 
-    require('appmetrics-prometheus').attach();
+// Register the users app. As this is before the health/live/ready routes,
+// those can be overridden by the user
+const userApp = require(basePath + getEntryPoint()).app;
+app.use('/', userApp);
 
-    const app = express();
+const healthcheck = new health.HealthChecker();
+app.use('/live', health.LivenessEndpoint(healthcheck));
+app.use('/ready', health.ReadinessEndpoint(healthcheck));
+app.use('/health', health.HealthEndpoint(healthcheck));
 
-    const basePath = __dirname + '/user-app/';
+app.get('*', (req, res) => {
+res.status(404).send("Not Found");
+});
 
-    function getEntryPoint() {
-        let rawPackage = fs.readFileSync(basePath + 'package.json');
-        let package = JSON.parse(rawPackage);
-        if (!package.main) {
-            console.error("Please define a primary entrypoint of your application by agdding 'main: <entrypoint>' to package.json.")
-            process.exit(1)
-        }
-        return package.main;
-    }
+const PORT = process.env.PORT || 3000;
+const server = app.listen(PORT, () => {
+console.log(`App started on PORT ${PORT}`);
+});
 
-    // Register the users app. As this is before the health/live/ready routes,
-    // those can be overridden by the user
-    const userApp = require(basePath + getEntryPoint()).app;
-    app.use('/', userApp);
+// Export server for testing purposes
+module.exports.server = server;
+module.exports.PORT = PORT;
+```
 
-    const healthcheck = new health.HealthChecker();
-    app.use('/live', health.LivenessEndpoint(healthcheck));
-    app.use('/ready', health.ReadinessEndpoint(healthcheck));
-    app.use('/health', health.HealthEndpoint(healthcheck));
+We will modify this file by adding two lines, to import helmet (with `require()`), and to enable it with `app.use()`:
 
-    app.get('*', (req, res) => {
-    res.status(404).send("Not Found");
-    });
+```javascript
+// Requires statements and code for non-production mode usage
+if (!process.env.NODE_ENV || !process.env.NODE_ENV === 'production') {
+require('appmetrics-dash').attach();
+}
+const express = require('express');
+const helmet = require('helmet');
+const health = require('@cloudnative/health-connect');
+const fs = require('fs');
 
-    const PORT = process.env.PORT || 3000;
-    const server = app.listen(PORT, () => {
-    console.log(`App started on PORT ${PORT}`);
-    });
+require('appmetrics-prometheus').attach();
 
-    // Export server for testing purposes
-    module.exports.server = server;
-    module.exports.PORT = PORT;
-    ```
+const app = express();
+app.use(helmet());
 
-    We will modify this file by adding two lines, to `require` the inclusion of helmet (just after express), as well as enable it with `app.use`:
+const basePath = __dirname + '/user-app/';
+...
+```
 
-    ```java
-    // Requires statements and code for non-production mode usage
-    if (!process.env.NODE_ENV || !process.env.NODE_ENV === 'production') {
-    require('appmetrics-dash').attach();
-    }
-    const express = require('express');
-    const helmet = require('helmet');
-    const health = require('@cloudnative/health-connect');
-    const fs = require('fs');
+Since we have added a new module that is required, we must also update the dependency management (package.json), to ensure this is pulled in:
 
-    require('appmetrics-prometheus').attach();
+```json
+{
+...
+"dependencies": {
+    "@cloudnative/health-connect": "^2.0.0",
+    "appmetrics-prometheus": "^3.0.0",
+    "express": "~4.16.0",
+    "helmet": "^3.21.1"
+},
+...
+}
+```
 
-    const app = express();
-    app.use(helmet());
+Now that we have modified our stack, we need to re-package it, using the same command as before:
 
-    const basePath = __dirname + '/user-app/';
-    .
-    .
-    .
-    ```
+```bash
+appsody stack package
+```
 
-    Since we have added a new module that is required, we must also update the dependency management (package.json), to ensure this is pulled in:
+> **TODO** confirm with Henry. I couldn't get the `appsody run` command to pull down the latest packaged version. I had to delete the directory and re-initialize.
 
-    ```json
-    {
-    .
-    .
-    .
-    "dependencies": {
-        "@cloudnative/health-connect": "^2.0.0",
-        "appmetrics-prometheus": "^3.0.0",
-        "express": "~4.16.0",
-        "helmet": "^3.21.1"
-    },
-    .
-    .
-    .
-    }
-    ```
+```bash
+cd ~/appsody-apps
+rm -rf test-my-stack
+mkdir test-my-stack
+cd test-my-stack
+appsody init dev.local/my-nodejs-express
+```
 
-    Now that we have modified our stack, we need to re-package it, using the same command as before:
+This will have updated the dev.local index, so we can again go and run our application:
 
-    ```bash
-    appsody stack package
-    ```
+```bash
+appsody run
+```
 
-    This will have updated the dev.local index, so we can again go and run our application:
+If we now hit the endpoint as before with `curl` in verbose mode, we can see if the HTTP headers have changed:
 
-    ```bash
-    $ appsody run
-    Running development environment...
-    .
-    .
-    .
-    [Container] App started on PORT 3000
-    ```
+```bash
+curl -v localhost:3000
+```
 
-    If we now hit the endpoint as before with curl in verbose mode, we can see if the HTTP headers have changed:
+You should now see security related headers like `X-DNS-Prefetch-Control`, `Strict-Transport-Security`, and `X-Download-Options`:
 
-    ```bash
-    CHANGE THIS
-    curl -v http://localhost:3000
-    * Rebuilt URL to: http://localhost:3000/
-    *   Trying ::1...
-    * TCP_NODELAY set
-    * Connected to localhost (::1) port 3000 (#0)
-    > GET / HTTP/1.1
-    > Host: localhost:3000
-    > User-Agent: curl/7.54.0
-    > Accept: */*
-    >
-    < HTTP/1.1 302 Found
-    < X-DNS-Prefetch-Control: off
-    < X-Frame-Options: SAMEORIGIN
-    < Strict-Transport-Security: max-age=15552000; includeSubDomains
-    < X-Download-Options: noopen
-    < X-Content-Type-Options: nosniff
-    < X-XSS-Protection: 1; mode=block
-    < X-Powered-By: Express
-    < Location: /quote
-    < Vary: Accept
-    < Content-Type: text/plain; charset=utf-8
-    < Content-Length: 28
-    < Date: Mon, 21 Oct 2019 18:30:20 GMT
-    < Connection: keep-alive
-    <
-    * Connection #0 to host localhost left intact
-    Hello from Appsody!
-    ```
+```bash
+$ curl -v localhost:3000
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to localhost (127.0.0.1) port 3000 (#0)
+> GET / HTTP/1.1
+> Host: localhost:3000
+> User-Agent: curl/7.64.1
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< X-DNS-Prefetch-Control: off
+< X-Frame-Options: SAMEORIGIN
+< Strict-Transport-Security: max-age=15552000; includeSubDomains
+< X-Download-Options: noopen
+< X-Content-Type-Options: nosniff
+< X-XSS-Protection: 1; mode=block
+< X-Powered-By: Express
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 19
+< ETag: W/"13-0ErcqB22cNteJ3vXrBgUhlCj8os"
+< Date: Fri, 08 Nov 2019 19:39:22 GMT
+< Connection: keep-alive
+<
+* Connection #0 to host localhost left intact
+Hello from Appsody!*
+```
 
-    As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
+As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
 
-    A final step is to switch the actual quote-frontend application we built in [Exercise 2](workshop/exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
+## 4. Use the new stack in our example application
 
-    The formal way of doing this is to repeat the steps from Exercise 2, where the new project is initialized (using our new stack), and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
+A final step is to switch the actual quote-frontend application we built in [Exercise 2](workshop/exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
 
-    ```bash
-    $ ls -al
-    total 192
-    drwxr-xr-x  16 henrynash  staff    512 15 Oct 12:42 .
-    drwxr-xr-x+ 85 henrynash  staff   2720 17 Oct 21:37 ..
-    -rw-r--r--   1 henrynash  staff     64 19 Oct 11:10 .appsody-config.yaml
-    -rw-r--r--   1 henrynash  staff   1316 15 Oct 11:12 .gitignore
-    drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:12 .vscode
-    -rw-rw-r--   1 henrynash  staff    806 15 Oct 12:50 app-deploy.yaml
-    -rw-r--r--   1 henrynash  staff    290 15 Oct 11:15 app.js
-    drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:15 config
-    drwxr-xr-x   2 henrynash  staff     64 15 Oct 11:16 node_modules
-    -rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_dc.log
-    -rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_restclient.log
-    -rw-r--r--@  1 henrynash  staff  73319 15 Oct 11:16 package-lock.json
-    -rw-r--r--   1 henrynash  staff    615 15 Oct 11:15 package.json
-    -rw-r--r--   1 henrynash  staff   2779 15 Oct 11:15 quote.js
-    drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:12 test
-    drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:15 views
-    ```
+The formal way of doing this is to repeat the steps from Exercise 2, where the new project is initialized (using our new stack), and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
 
-    Inspecting that file, reveals that it contains a pointer to the stack:
+```bash
+cd ~/appsody-apps/quote-frontend
+ls -la
+```
 
-    ```bash
-    $ cat .appsody-config.yaml
-    project-name: quote-frontend
-    stack: kabanero/nodejs-express:0.2
-    ```
+You should see output similar to the following:
 
-    We can simply change the second line to, instead, point out our new stack, i.e.:
+```bash
+$ ls -al
+total 192
+drwxr-xr-x  16 henrynash  staff    512 15 Oct 12:42 .
+drwxr-xr-x+ 85 henrynash  staff   2720 17 Oct 21:37 ..
+-rw-r--r--   1 henrynash  staff     64 19 Oct 11:10 .appsody-config.yaml
+-rw-r--r--   1 henrynash  staff   1316 15 Oct 11:12 .gitignore
+drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:12 .vscode
+-rw-rw-r--   1 henrynash  staff    806 15 Oct 12:50 app-deploy.yaml
+-rw-r--r--   1 henrynash  staff    290 15 Oct 11:15 app.js
+drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:15 config
+drwxr-xr-x   2 henrynash  staff     64 15 Oct 11:16 node_modules
+-rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_dc.log
+-rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_restclient.log
+-rw-r--r--@  1 henrynash  staff  73319 15 Oct 11:16 package-lock.json
+-rw-r--r--   1 henrynash  staff    615 15 Oct 11:15 package.json
+-rw-r--r--   1 henrynash  staff   2779 15 Oct 11:15 quote.js
+drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:12 test
+drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:15 views
+```
 
-    ```bash
-    $ cat .appsody-config.yaml
-    project-name: quote-frontend
-    stack: dev.local/my-nodejs-express:SNAPSHOT
-    ```
+Inspecting that file, reveals that it contains a pointer to the stack:
 
-    If now re-run the front end, it will use our new stack:
+```bash
+cat .appsody-config.yaml
+```
 
-    ```bash
-    $ appsody run
-    Running development environment...
-    Using local cache for image dev.local/my-nodejs-express:SNAPSHOT
-    .
-    .
-    .
-    [Container] App started on PORT 3000
-    ```
+Should output a configuration that uses `nodejs-express`:
 
-    We can confirm that our new HTTP protection is being used by, instead of using a browser, again using curl in verbose mode to hit the published endpoint:
+```ini
+project-name: quote-frontend
+stack: kabanero/nodejs-express:0.2
+```
 
-    ```bash
-    $ curl -v http://localhost:3000
-    *   Trying ::1...
-    * TCP_NODELAY set
-    * Connected to localhost (::1) port 3000 (#0)
-    > GET / HTTP/1.1
-    > Host: localhost:3000
-    > User-Agent: curl/7.54.0
-    > Accept: */*
-    >
-    < HTTP/1.1 302 Found
-    < X-DNS-Prefetch-Control: off
-    < X-Frame-Options: SAMEORIGIN
-    < Strict-Transport-Security: max-age=15552000; includeSubDomains
-    < X-Download-Options: noopen
-    < X-Content-Type-Options: nosniff
-    < X-XSS-Protection: 1; mode=block
-    < X-Powered-By: Express
-    < Location: /quote
-    < Vary: Accept
-    < Content-Type: text/plain; charset=utf-8
-    < Content-Length: 28
-    < Date: Mon, 21 Oct 2019 18:30:20 GMT
-    < Connection: keep-alive
-    <
-    * Connection #0 to host localhost left intact
-    Found. Redirecting to /quote
-    ```
+We can simply change the second line to, instead, point to our new stack, i.e.:
 
-    So we have successfully built and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.
+> **NOTE**: When using a stack that is in development, we won't have a version number, so we will use the keyword `SNAPSHOT` to represent the local version.
+
+```bash
+project-name: quote-frontend
+stack: dev.local/my-nodejs-express:SNAPSHOT
+```
+
+Now re-run the frontend with `appsody run`:
+
+```bash
+appsody run
+```
+
+It should use our new stack:
+
+```bash
+$ appsody run
+Running development environment...
+Using local cache for image dev.local/my-nodejs-express:SNAPSHOT
+...
+[Container] App started on PORT 3000
+```
+
+We can confirm that our new HTTP protection is being used by, instead of using a browser, again using `curl` in verbose mode to hit the published endpoint:
+
+```bash
+curl -v localhost:3000
+```
+
+You should see output similar to the following:
+
+```bash
+$ curl -v localhost:3000
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to localhost (127.0.0.1) port 3000 (#0)
+> GET / HTTP/1.1
+> Host: localhost:3000
+> User-Agent: curl/7.64.1
+> Accept: */*
+>
+< HTTP/1.1 302 Found
+< X-DNS-Prefetch-Control: off
+< X-Frame-Options: SAMEORIGIN
+< Strict-Transport-Security: max-age=15552000; includeSubDomains
+< X-Download-Options: noopen
+< X-Content-Type-Options: nosniff
+< X-XSS-Protection: 1; mode=block
+< X-Powered-By: Express
+< Location: /quote
+< Vary: Accept
+< Content-Type: text/plain; charset=utf-8
+< Content-Length: 28
+< Date: Fri, 08 Nov 2019 19:51:50 GMT
+< Connection: keep-alive
+<
+* Connection #0 to host localhost left intact
+Found. Redirecting to /quote
+```
+
+We can tell our sample application is now using the new stack because it includes the new security related headers.
+
+**Congratulations**! We have successfully built and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.

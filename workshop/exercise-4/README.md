@@ -316,4 +316,4 @@ Open a browser to `http://<url-from-above>` and see the usual interface for the 
 
 ![sample interface](images/example-interface.png)
 
-**Congratulations!!** Day 1 of the workshop is now complete!
+**Congratulations**! You have deployed the sample application to OpenShift using Tekton. Day 1 of the workshop is now complete!

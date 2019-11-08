@@ -363,4 +363,4 @@ You can then use a browser to open the frontend application, at the url given ab
 > **NOTE**: If you are not using the Dacadoo Health Score API, you may see different text after the quote
 ("determined using mocked backend computation" instead of "determined using Dacadoo Health Score API").
 
-Congratulations, you have now deployed both front and backend applications to OpenShift, hooked them together as well as enable outreach to an external service.
+**Congratulations**! You have now deployed both front and backend applications to OpenShift, hooked them together as well as enable outreach to an external service.
