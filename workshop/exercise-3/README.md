@@ -8,6 +8,8 @@ When you have completed this exercise, you will understand how to:
 
 In later exercises we will learn how to use appsody with a Tekton pipeline, hooked to git, to trigger an automated deployment.
 
+![Tools used during Exercise 3](images/ex3.png)
+
 ## Prerequisites
 
 You should have already carried out the prerequisites defined in [Exercise 0](workshop/exercise-0/README.md), and in addition:

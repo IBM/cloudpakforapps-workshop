@@ -2,17 +2,17 @@
 
 This section is broken up into the following steps:
 
-1. [IDs](#1-ids)
+1. [Accounts](#1-accounts)
 1. [Install Docker](#2-install-docker)
 1. [Install Appsody CLI](#3-install-appsody-cli)
 1. [Install OpenShift CLI](#4-install-appsody-cli)
 1. [Check access to OpenShift cluster](#5-check-access-to-openshift-cluster)
 1. [Ensure Cloud Pak for Applications is installed](#6-ensure-cloud-pak-for-applications-is-installed)
-1. [Install VS Code](#7-install-vs-code)
+1. [Install VS Code](#7-install-vs-code) (Optional)
 
-## 1. IDs
+## 1. Accounts
 
-The following IDs are needed for this workshop:
+The following accounts are needed for this workshop:
 
 * [Github](https://github.com)
 * [IBM Cloud](https://cloud.ibm.com)
@@ -99,6 +99,6 @@ Clicking on the *Kabanero Enterprise instance* link will show you information ab
 
 ## 7. Install VS Code
 
-In Exercise 1 of this workshop, Codewind is used to integrate rapid development with an IDE. Both VSCode and Eclipse are supported as extensions by Codewind. At the moment, this workshop has instructions for VSCode. If you don't already have VSCode installed on your machine, you should do so now:
+VS Code and the Codewind extension are used in *Step 4* of [Exercise 1](../exercise-1/README.md). **The rest of this workshop can be completed without that step**. If you don't already have VSCode installed on your machine, and would like to complete that step, use the following link:
 
 [Install VSCode](https://code.visualstudio.com/download)

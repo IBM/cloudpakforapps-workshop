@@ -10,6 +10,8 @@ When you have completed this exercise, you will understand how to
 * create a frontend web application and a backend REST application using the Appsody Node.js Express and Spring Boot stacks
 * test the applications locally in a containerized environment
 
+![Tools used during Exercise 2](images/ex2.png)
+
 > **IMPORTANT** This example is used as the basis for the rest of the day 1 workshop, it's crucial to ensure it is working properly before continuing to the next exercise.
 
 ## Application architecture

@@ -6,6 +6,8 @@ In this exercise, we will introduce Appsody, which is the underpinning developme
 * the concept of pre-configured "stacks" and templates for popular open source runtimes (such as Node.js and Spring Boot) on which to build applications
 * the Appsody command-line interface to develop containerized applications, how to run and test them locally,
 
+![Tools used during Exercise 1](images/ex1.png)
+
 ## Prerequisites
 
 You should have already carried out the prerequisites defined in [Exercise 0](workshop/exercise-0/README.md). Check that you have access to the Appsody CLI by typing (the exact version number my be greater than shown below):

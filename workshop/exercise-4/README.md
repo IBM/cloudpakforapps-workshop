@@ -11,6 +11,8 @@ When you have completed this exercise, you will understand how to:
 
 * leverage Tekton pipelines with Kabanero collections to deploy applications to OpenShift
 
+![Tools used during Exercise 4](images/ex4.png)
+
 ## Prerequisites
 
 You should have already carried out the prerequisites defined in [Exercise 3](workshop/exercise-3/README.md), and in addition:
