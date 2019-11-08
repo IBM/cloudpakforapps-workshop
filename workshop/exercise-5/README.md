@@ -100,14 +100,14 @@ To create a new stack, you must first construct a scaffold of the above structur
     appsody stack package
     ```
 
-    This runs a Docker build, installs `my-nodejs-express` into a local Appsody repository (called `dev-local`), and runs some basic tests to make sure the file is well formed.
+    This runs a Docker build, installs `my-nodejs-express` into a local Appsody repository (called `dev.local`), and runs some basic tests to make sure the file is well formed.
 
     Once the build is complete, check that it is now available in the local repo:
 
     ```bash
-    $ appsody list dev-local
+    $ appsody list dev.local
     REPO        ID                 VERSION     TEMPLATES           DESCRIPTION
-    dev-local   my-nodejs-express  0.2.7       scaffold, *simple   Express web framework for Node.js
+    dev.local   my-nodejs-express  0.2.7       scaffold, *simple   Express web framework for Node.js
     ```
 
 1. Get the new stack working
@@ -119,7 +119,7 @@ To create a new stack, you must first construct a scaffold of the above structur
     ```bash
     mkdir ~/test
     cd ~/test
-    appsody init dev-local/my-nodejs-express
+    appsody init dev.local/my-nodejs-express
     ```
 
     Now use `appsody run` to test running an application based on your copy of the stack:
@@ -285,7 +285,7 @@ To create a new stack, you must first construct a scaffold of the above structur
     appsody stack package
     ```
 
-    This will have updated the dev-local index, so we can again go and run our application:
+    This will have updated the dev.local index, so we can again go and run our application:
 
     ```bash
     $ appsody run
