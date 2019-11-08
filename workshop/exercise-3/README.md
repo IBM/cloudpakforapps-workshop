@@ -12,7 +12,7 @@ In later exercises we will learn how to use appsody with a Tekton pipeline, hook
 
 You should have already carried out the prerequisites defined in [Exercise 0](workshop/exercise-0/README.md), and in addition:
 
-* In order for the backend application to access the Dacadoo Health Score API, visit <https://models.dacadoo.com/doc/> to request an API key for evaluation purposes. Access to this API is granted individually to insurance professionals. There is a mock implementation of the API in the code that you can use if you do not want to register.
+* In order for the backend application to access the Dacadoo Health Score API, visit <https://models.dacadoo.com/doc/> to register and request an API key for evaluation purposes. Access to this API is usually granted individually to those that apply. You need to record the `url` for the API (displayed by clicking on the Health Score link under Models - usually `https://models.dacadoo.com/score/2`) and the `Key` (something similar to `UFDzMHAfsEg0oKzGp4rCSmXPClKKq3hDPLbPdvc2h`). There is a mock implementation of the API in the code that you can use if you do not want to register.
 
 ## Steps
 
@@ -75,7 +75,7 @@ Run the following to create a new route.
 oc create route reencrypt docker-registry --service=docker-registry -n default
 ```
 
-Describing the route we can see it does not have the necessary `annotation`:
+Describing the route we can see it although it now exists, there is no path exposed by the proxy (which would be indicated by an `annotation`):
 
 ```bash
 $ oc describe route docker-registry -n default
@@ -102,7 +102,29 @@ Give the route a `path`:
 oc patch route docker-registry -n default --type='json' -p='[{"op": "add", "path": "/metadata/annotations/haproxy.router.openshift.io~1balance", "value":"source"}]'
 ```
 
-Get the Docker registry URL:
+The proxy annotation should not be in place, i.e.:
+
+```bash
+$ oc describe route docker-registry -n default
+Name:    docker-registry
+Namespace:    default
+Created:    20 seconds ago
+Labels:    docker-registry=default
+Annotations:    haproxy.router.openshift.io/balance=source
+                openshift.io/host.generated=true
+Requested Host:    docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
+      exposed on router router 3 minutes ago
+Path:    <none>
+TLS Termination:    reencrypt
+Insecure Policy:    <none>
+Endpoint Port:    5000-tcp
+
+Service:    docker-registry
+Weight:    100 (100%)
+Endpoints:    172.30.112.3:5000, 172.30.112.4:5000
+```
+
+We can now get the Docker registry URL:
 
 ```bash
 oc get route --all-namespaces | grep registry
@@ -143,7 +165,7 @@ Appsody has the ability to deploy directly to a kubernetes cluster using a defau
 
 #### 3.1 Create a config map for the Dacadoo API key
 
-In order to have the backend application sends requests to the Dacadoo Health Score API, we need to create a secret that contains the configuration for making requests to the Dacadoo server. (Note: If you do not want to use the Dacadoo Health Score API, you can skip this setup and continue to use the mock endpoint.)
+In order to have the backend application send requests to the Dacadoo Health Score API, we need to create a secret that contains the configuration for making requests to the Dacadoo server, that you obtained in the pre-requisites of this exercise. (Note: If you do not want to use the Dacadoo Health Score API, you can skip this setup and continue to use the mock endpoint.)
 
 ```bash
 oc create configmap dacadoo-config --from-literal=url=<url> --from-literal=apikey=<apikey>

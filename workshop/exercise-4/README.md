@@ -46,7 +46,11 @@ Note, we still have the `insurance-quote` namespace, the `dacadoo-config` config
 
 ### 1. Launch the Tekton dashboard
 
-You can the tekton dashboard from Cloud Pak for Apps.
+You can launch the tekton dashboard by first selecting the Kabanero Enterprise tab at the bottom of the list in the OpenShift Application Console...
+
+![OpenShift Application console](images/kabanero-enterprise.png)
+
+...and then selecting the tekton link
 
 ![Launch Tekton](images/launch_tekton.png)
 
@@ -119,7 +123,7 @@ These are visible through the UI, too:
 
 ### 2. Update Kabanero to deploy to alternate namespaces with Tekton
 
-Find the kabanero custom resource
+Out of the box, Kabanero will only allow deployments to the kabanero namespace. It is recommended that you create separate namespaces either for individual applications or classes of application. To do this, you need to add these new namespaces to the kabanero custom resource. To find this resource
 
 ```bash
 $ oc get kabaneros -n kabanero
@@ -133,7 +137,7 @@ Edit the kabanero custom resource
 oc edit kabaneros kabanero -n kabanero
 ```
 
-Add a `targetNamespaces` key to `spec` with value `insurance-quote`:
+Add a `targetNamespaces` key to `spec` with, in this case, a single value of `insurance-quote`:
 
 ```yaml
 spec:
@@ -268,7 +272,13 @@ Scroll down to see any payloads being delivered. There is currently a bug where 
 
 ### 5. Test it all out
 
-In your `quote-backend` repo, change the file `quote-backend/src/main/java/application/Quote.java`. Change a value in a logger statement.
+In your `quote-backend` repo, change the file `quote-backend/src/main/java/application/Quote.java`. Change a value in a logger statement. Then commit this change and push to your github repo, for example:
+
+```bash
+git add -u
+git commit -m "test change"
+git push -f -u origin master
+```
 
 This will trigger the tekton pipleine. Go to the tekton dashboard and access the new pipeline it created.
 

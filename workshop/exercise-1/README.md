@@ -135,6 +135,7 @@ We recommend creating a new directory from your user home to work with new Appso
 ```bash
 cd ~
 mkdir appsody-apps
+cd appsody-apps
 ```
 
 #### Create a new application
@@ -562,4 +563,4 @@ You can click Run Test and have Monitor and Performance dashboards side by side 
 
 ![Run test and monitor results](images/js_lab1_app_side_by_side_perf_test.png)
 
-> **NOTE:** Profiling the node.js code is currently not working an [issue](https://github.com/eclipse/codewind-node-profiler/issues/5) is opened on the github repo for the codewind node.js profiler extension.
+> **NOTE:** Profiling the node.js code is currently not working, an [issue](https://github.com/eclipse/codewind/issues/533) is opened on the github repo for the codewind node.js profiler extension.
