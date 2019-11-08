@@ -275,3 +275,5 @@ appsody test
 ```
 
 Look at [quote-backend/src/test/java/application/QuoteTests.java](quote-backend/src/test/java/application/QuoteTests.java) to see the tests for the backend application.
+
+**Congratulations**! We have tested out our sample application locally and are ready to move on to the next step, deploying it!
