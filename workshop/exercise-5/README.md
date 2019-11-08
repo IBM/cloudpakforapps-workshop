@@ -1,7 +1,5 @@
 # Exercise 5: Customizing an existing Appsody Stack
 
-> ***WORK IN PROGRESS***
-
 The goals for this day are to customize all each pre-configured asset from Day 1, meaning we will:
 
 * extend an Appsody Stacks
