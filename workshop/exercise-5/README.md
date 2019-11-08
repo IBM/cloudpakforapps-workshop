@@ -1,8 +1,8 @@
 # Exercise 5: Customizing an existing Appsody Stack
 
-The goals for this day are to customize all each pre-configured asset from Day 1, meaning we will:
+The goals for this day are to customize each of the pre-configured asset from Day 1, meaning we will:
 
-* extend an Appsody Stacks
+* extend an Appsody Stack
 * publish a new Kabanero collections
 * add a new Tekton task to our Tekton pipeline
 
