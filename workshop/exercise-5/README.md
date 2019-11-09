@@ -126,14 +126,6 @@ If you inspect the contents of the `image` directory, you will see how it matche
 
 ### Build your new stack
 
-In general, Appsody will always try and look in the existing repositories first for stacks, and then in the local cache. For normal stack usage this is exactly what you want - however, when in the process of creating new stacks, by definition, the existing repositories will not yet know about your new stack. Hence it is quicker in this situation to tell Appsody to look in the local cache first.
-
-You can do this by setting the following environment variable:
-
-```bash
-export APPSODY_PULL_POLICY=IFNOTPRESENT
-```
-
 Before we make any changes, let's go through the steps of building (or *packaging*) a stack, to create a stack image (which is a Docker image) that the Appsody CLI can use to initiate a project using that stack.
 
 There is a Docker file (`Dockerfile-stack`) within the sample stack structure you copied. The `appsody stack package` command will use this to build the image.
@@ -192,7 +184,7 @@ added 170 packages from 578 contributors and audited 295 packages in 3.5s
 [Container] App started on PORT 3000
 ```
 
-To check it is running, we can use `curl` to hit the endpoint:
+To check it is running, in a separate terminal window we can use `curl` to hit the endpoint:
 
 ```bash
 curl -v localhost:3000
@@ -222,14 +214,16 @@ $ curl -v localhost:3000
 Hello from Appsody!
 ```
 
-For this exercise will modify the stack to include the popular HTTP header security module [helmet](https://helmetjs.github.io), and hence this should change the headers we see returned to us. Note we will do this as a *stack architect* since we don't want to rely on *application developers* remembering to do this. By doing this in the stack itself, all applications built using our modified stack will have helmet automatically enabled.
+Stop this current appsody run by either using CNTL-C in the initial terminal window or running `appsody stop` in a separate terminal window, from within the same directory.
+
+For this exercise we will modify the stack to include the popular HTTP header security module [helmet](https://helmetjs.github.io), and hence this should change the headers we see returned to us. Note we will do this as a *stack architect* since we don't want to rely on *application developers* remembering to do this. By doing this in the stack itself, all applications built using our modified stack will have helmet automatically enabled.
 
 ### Modify your custom stack
 
 When creating a custom stack, based on an existing stack, the first thing to do is to take a look at what the existing stack has provided. A more detailed description of the stack components can be found [here](https://appsody.dev/docs/stacks/stack-structure), but the key ones are:
 
 * A Dockerfile (`image/Dockerfile-stack`) that builds your stack image. This is what the `appsody stack package` command used above to build a Docker image of your stack - which is, if you like, the eventual artifact that you deliver as a stack architect to application developers.
-* A Dockerfile (`image/project/Dockerfile`) that application developers will use to build their final image. This final image will contain both your stack and their application, and this Dockerfile is processed by the application developer running `appsody build` and `appsody deploy`.
+* A Dockerfile (`image/project/Dockerfile`) that builds the final application image. This final image will contain both your stack and their application, and this Dockerfile is processed by the application developer running `appsody build` and `appsody deploy`.
 * Typically some kind of server side code that is enabling the application the developer will create and run. For this stack, this is `image/project/server.js`.
 * Some kind of dependency management, ensuring both the correct inclusion of components defined by the stack, as well as, potentially, any added by the application developer. For this stack, this is `image/project/package.json`.
 * At least one sample application (or *template*); these are stored in the `templates` directory.
