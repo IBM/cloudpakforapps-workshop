@@ -223,7 +223,7 @@ For this exercise we will modify the stack to include the popular HTTP header se
 When creating a custom stack, based on an existing stack, the first thing to do is to take a look at what the existing stack has provided. A more detailed description of the stack components can be found [here](https://appsody.dev/docs/stacks/stack-structure), but the key ones are:
 
 * A Dockerfile (`image/Dockerfile-stack`) that builds your stack image. This is what the `appsody stack package` command used above to build a Docker image of your stack - which is, if you like, the eventual artifact that you deliver as a stack architect to application developers.
-* A Dockerfile (`image/project/Dockerfile`) that application developers will use to build their final image. This final image will contain both your stack and their application, and this Dockerfile is processed by the application developer running `appsody build` and `appsody deploy`.
+* A Dockerfile (`image/project/Dockerfile`) that builds the final application image. This final image will contain both your stack and their application, and this Dockerfile is processed by the application developer running `appsody build` and `appsody deploy`.
 * Typically some kind of server side code that is enabling the application the developer will create and run. For this stack, this is `image/project/server.js`.
 * Some kind of dependency management, ensuring both the correct inclusion of components defined by the stack, as well as, potentially, any added by the application developer. For this stack, this is `image/project/package.json`.
 * At least one sample application (or *template*); these are stored in the `templates` directory.
