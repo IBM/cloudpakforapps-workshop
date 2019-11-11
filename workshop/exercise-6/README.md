@@ -185,4 +185,6 @@ The YAML file can be accessed with the URL:
 
 `https://github.com/<username>/collections/releases/download/0.1.0/kabanero-index.yaml`
 
+> TODO(stevemar): Maybe show how you can do `appsody repo add <username> <url>` and that `appsody list` includes the new `my-node-express` stack?
+
 **Congratulations!!** We've just created our own custom collection that included our own custom stack. Now we need to update our Kabanero instance to use this new collection. On to the next exercise.
