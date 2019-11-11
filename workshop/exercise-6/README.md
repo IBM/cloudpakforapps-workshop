@@ -187,4 +187,8 @@ The YAML file can be accessed with the URL:
 
 > TODO(stevemar): Maybe show how you can do `appsody repo add <username> <url>` and that `appsody list` includes the new `my-node-express` stack?
 
+More TODOS!
+
+> TODO(stevemar): The custom stack in my generated YAML file does not include an "image" section. I guess I have to push that up somewhere? Unclear.
+
 **Congratulations!!** We've just created our own custom collection that included our own custom stack. Now we need to update our Kabanero instance to use this new collection. On to the next exercise.

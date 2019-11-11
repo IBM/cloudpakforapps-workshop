@@ -88,4 +88,8 @@ nodejs-express      17d
 nodejs-loopback     17d
 ```
 
+And your collection should appear in the Cloud Pak for Applications dashboard, too.
+
+![New collection location for our Kabanero Enterprise](images/new-repo-url.png)
+
 **Congratulations!!** We've got our Kabanero instance updated to use our custom collection.
