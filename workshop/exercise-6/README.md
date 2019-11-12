@@ -28,10 +28,12 @@ The default collections can be modified to meet an organization's unique needs.
 ## Steps
 
 1. Create a new repo to host your custom collection
+1. Create a new image namespace to host images on OpenShift
 1. Set up a local build environment
 1. Add custom stack to local collection
 1. Build collections
-1. Push changes and release a new collection
+1. Push images
+1. Update code repo and release a new collection
 
 ## 1. Create a new repo to host your custom collection
 
@@ -67,7 +69,20 @@ experimental (or incubator, or stable)
     └── [collection files - see collection structure below]
 ```
 
-## 2. Set up a local build environment
+## 2. Create a new image namespace to host images on OpenShift
+
+To actually use the stacks we need images, images will be hosted on openshift
+
+> Despite the warning, this worked
+
+```bash
+oc new-project kabanero-noauth
+oc policy add-role-to-group registry-viewer system:unauthenticated -n kabanero-noauth
+Warning: Group 'system:unauthenticated' not found
+role "registry-viewer" added: "system:unauthenticated"
+```
+
+## 3. Set up a local build environment
 
 There are several tools that are used to build:
 
@@ -76,9 +91,15 @@ There are several tools that are used to build:
 
 There are several environment variables that need to be set up. These are required in order to correctly build the collections.
 
-> TODO(stevemar): I didn't need to set up any env vars... i'm not sure if i need `yq` or not.
+```bash
+export IMAGE_REGISTRY_ORG=kabanero-noauth
+export IMAGE_REGISTRY_PUBLISH=true
+export IMAGE_REGISTRY=docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
+export IMAGE_REGISTRY_USERNAME=$(oc whoami)
+export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
+```
 
-## 3. Add custom stack to local collection
+## 4. Add custom stack to local collection
 
 Now we take our custom stack from exercise 5 (recall that is was named `my-nodejs-express` and includes the `helmet` library) and copy it over to the incubator folder of our collection repo. From the `collections` repo, perform the following steps:
 
@@ -101,13 +122,31 @@ common java-spring-boot2 nodejs nodejs-loopback
 java-microprofile my-nodejs-express nodejs-express triggers
 ```
 
+> FIXME(stevemar): Currently there is no support for creating a stack based off a kabanero stack, only an appsody stack. As a result, the folder `my-nodejs-express` is missing a few things.
+
+Create a new file called `collection.yaml` in `collections/incubator/my-nodejs-express`, add the following:
+
+```yaml
+default-image: my-nodejs-express
+default-pipeline: default
+images:
+- id: my-nodejs-express
+  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.2
+```
+
+And also create a directory called `pipelines` in `collections/incubator/my-nodejs-express`, and add a single empty file called `.gitkeep`.
+
 ## 4. Build collections
+
+This step builds the `kabanero-index.yaml` file.
 
 From the collections directory, run the build script. For example:
 
 ```bash
 ./ci/build.sh
 ```
+
+> **NOTE**: This process can take several minutes to complete.
 
 Note that this will build all the collections in the incubator directory, including the new `my-nodejs-express` stack.
 
@@ -145,7 +184,74 @@ error=0
 ~/appsody-apps/collections
 ```
 
-## 5. Push changes and release a new collection
+## 5. Push images
+
+This command actually pushes the images to the image registry
+
+```bash
+./ci/release.sh
+```
+
+You should see output like the following, take not of the `my-nodejs-express` stack being pushed to the registry, and ensure there are no errors in the output:
+
+```bash
+$ ./ci/release.sh
+ == Running pre_env.d scripts
+ == Done pre_env.d scripts
+ == Running post_env.d scripts
+ == Done post_env.d scripts
+...
+Releasing: /Users/stevemar/appsody-apps/collections/ci/assets/incubator.my-nodejs-express.v0.2.8.templates.scaffold.tar.gz
+Releasing: /Users/stevemar/appsody-apps/collections/ci/assets/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
+...
+Pushing docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express
+The push refers to repository [docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express]
+535ab22146d1: Layer already exists
+0: digest: sha256:535ab22146d1 size: 3883
+535ab22146d1: Layer already exists
+0.2: digest: sha256:535ab22146d1 size: 3883
+535ab22146d1: Layer already exists
+0.2.8: digest: sha256:535ab22146d1 size: 3883
+535ab22146d1: Layer already exists
+latest: digest: sha256:535ab22146d1 size: 3883
+Tagging docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.2.8
+> docker tag kabanero-noauth/my-nodejs-express:0.2.8 docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.2.8
+...
+```
+
+## FIXME(stevemar): update generated kabanero-index.yaml manually
+
+Open up `collections/ci/release/kabanero-index.yaml` and find your custom stack. Change the `image` URL to specify your docker registry. It should look like:
+
+```yaml
+- default-image: my-nodejs-express
+  default-pipeline: default
+  default-template: simple
+  description: Express web framework for Node.js with Helmet
+  id: my-nodejs-express
+  images:
+  - id: my-nodejs-express
+    image: docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.2
+  language: nodejs
+  license: Apache-2.0
+  maintainers:
+  - email: stevemar@ca.ibm.com
+    github-id: stevemar
+    name: Steve Martinelli
+  name: Node.js Express with Helmet
+  pipelines:
+  - id: default
+    sha256: 9f202247428d421fd9045a2090204c138c156ca57db1d5deacfb658e599aa2bf
+    url: https://github.com/stevemar/collections/releases/download/0.3.0/incubator.common.pipeline.default.tar.gz
+  templates:
+  - id: scaffold
+    url: https://github.com/stevemar/collections/releases/download/0.3.0/incubator.my-nodejs-express.v0.2.8.templates.scaffold.tar.gz
+  - id: simple
+    url: https://github.com/stevemar/collections/releases/download/0.3.0/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
+  version: 0.2.8
+```
+
+## 6. Update code repo and release a new collection
 
 Once you have made all the changes to the collection and you are ready to push the changes back to your git repository then
 
@@ -163,32 +269,26 @@ git push -u my-org
 To create a full release of the collections, create a git tag:
 
 ```bash
-git tag 0.1.0 -m "Custom collections, version 0.1.0"
+git tag 0.3.0 -m "Custom collections, version 0.3.0"
 git push --tags
 ```
 
 Navigating back to your GitHub repo, you should see a new release available:
 
-![Our own collection, version 0.1.0](images/new-release.png)
+![Our own collection, version 0.3.0](images/new-release.png)
 
 Click on *Edit tag*.
 
-Upload the file `collections/ci/assets/kabanero-index.yaml`, which was generated as the images were built.
+Upload all the files in `collections/ci/release/`, which were generated from the previous steps.
 
-![Update release with the YAML file](images/edit-release.png)
+![NEEDS NEW SCREENSHOT - Update release with the YAML file](images/edit-release.png)
 
 You should now see that your release includes `kabanero-index.yaml`.
 
-![Includes a new YAML file](images/new-release-with-yaml.png)
+![NEEDS NEW SCREENSHOT - Includes a new YAML file](images/new-release-with-yaml.png)
 
 The YAML file can be accessed with the URL:
 
-`https://github.com/<username>/collections/releases/download/0.1.0/kabanero-index.yaml`
-
-> TODO(stevemar): Maybe show how you can do `appsody repo add <username> <url>` and that `appsody list` includes the new `my-node-express` stack?
-
-More TODOS!
-
-> TODO(stevemar): The custom stack in my generated YAML file does not include an "image" section. I guess I have to push that up somewhere? Unclear.
+`https://github.com/<username>/collections/releases/download/0.3.0/kabanero-index.yaml`
 
 **Congratulations!!** We've just created our own custom collection that included our own custom stack. Now we need to update our Kabanero instance to use this new collection. On to the next exercise.
