@@ -1,5 +1,7 @@
 # Exercise 7: Configuring Kabanero to use an Alternate Collection Repository
 
+> ***WORK IN PROGRESS***
+
 In this exercise, we will show how to update your Kabanero instance to use a custom Kabanero Collection Hub.
 
 When you have completed this exercise, you will understand how to
@@ -42,7 +44,7 @@ NAME       AGE       VERSION   READY
 kabanero   17d       0.1.0     True
 ```
 
-Edit the speific CR instance using `oc edit kabaneros <name> -n kabanero`, replacing `<name>` with the instance name.
+Edit the specific CR instance using `oc edit kabaneros <name> -n kabanero`, replacing `<name>` with the instance name.
 
 ```bash
 oc edit kabaneros kabanero -n kabanero

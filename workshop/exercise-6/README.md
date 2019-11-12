@@ -1,5 +1,7 @@
 # Exercise 6: Building a custom Appsody Stack Collection in Kabanero
 
+> ***WORK IN PROGRESS***
+
 In this exercise, we will show how to create a custom Kabanero collection, that include the custome Appsody Stack from the previous exercise.
 
 When you have completed this exercise, you will understand how to
