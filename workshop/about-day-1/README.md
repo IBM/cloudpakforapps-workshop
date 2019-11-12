@@ -8,7 +8,7 @@ We'll also explore how to deploy an application to OpenShift, first manually wit
 
 Our goal for the end of the day is represented below. But, don't worry about it right now, we'll get there together by following the exercises step-by-step.
 
-![Our end state for Day](images/architecture.png)
+![Our end state when Day 1 is done](images/architecture.png)
 
 ## Agenda
 
