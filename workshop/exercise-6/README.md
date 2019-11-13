@@ -292,26 +292,30 @@ git push -u my-org
 To create a full release of the collections, create a git tag:
 
 ```bash
-git tag 0.3.0 -m "Custom collections, version 0.3.0"
+git tag 0.3.0-custom -m "Custom collections, version 0.3.0-custom"
 git push --tags
 ```
 
 Navigating back to your GitHub repo, you should see a new release available:
 
-![Our own collection, version 0.3.0](images/new-release.png)
+![Our own collection, version 0.3.0-custom](images/new-release.png)
 
-Click on *Edit tag*.
+Clicking on the release name (0.3.0-custom) will allow you to edit the release.
 
-Upload all the files in `collections/ci/release/`, which were generated from the previous steps.
+![Our own collection, page for version 0.3.0-custom](images/new-release-main.png)
 
-![NEEDS NEW SCREENSHOT - Update release with the YAML file](images/edit-release.png)
+Click on *Edit tag*. and then upload all the files in `collections/ci/release/`, which were generated from the previous steps.
 
-You should now see that your release includes `kabanero-index.yaml`. You should click *Publish release*, at the bottom of the page, to formally publish your new collection.
+![Our own collection,  upload files to release](images/edit-release.png)
 
-![NEEDS NEW SCREENSHOT - Includes a new YAML file](images/new-release-with-yaml.png)
+Once you have uploaded the files you can publish your new collection by clicking *Publish release*, at the bottom of the page
 
-The YAML file can be accessed with the URL:
+![Our own collection,  published](images/new-release-published.png)
 
-`https://github.com/<username>/collections/releases/download/0.3.0/kabanero-index.yaml`
+You will note that the collection includes the `kabanero-index.yaml` file we edited earlier. The url to this index file is is what you will provide appsody as a link to your new custom repository (that is contained within the new collection. You normally obtain and copy the url (depending on your browser) by CNTL-clicking over the `kabanero-index.yaml` item in the list of files shown in the release. It should be of the form:
+
+`https://github.com/<username>/collections/releases/download/0.3.0-custom/kabanero-index.yaml`
+
+You will need this url for the next exercise, where we will create an appsody application based on your new collection.
 
 **Congratulations!!** We've just created our own custom collection that included our own custom stack. Now we need to update our Kabanero instance to use this new collection. On to the next exercise.

@@ -24,7 +24,7 @@ Obtain the URL to the collection repository. If a Git release was created for th
 
 In our workshop, it'll likely be:
 
-`https://github.com/<username>/collections/releases/download/0.3.0/kabanero-index.yaml`
+`https://github.com/<username>/collections/releases/download/0.3.0-custom/kabanero-index.yaml`
 
 * Replace `<username>` with your Github username
 
@@ -62,7 +62,7 @@ spec:
   collections:
     repositories:
     - name: custom
-      url: https://github.com/<username>/collections/releases/download/0.3.0/kabanero-index.yaml
+      url: https://github.com/<username>/collections/releases/download/0.3.0-custom/kabanero-index.yaml
       activateDefaultCollections: true
 ```
 
@@ -93,7 +93,7 @@ Initialize the appsody stack
 ```bash
 $ appsody init stevemar/my-nodejs-express
 Running appsody init...
-Downloading my-nodejs-express template project from https://github.com/stevemar/collections/releases/download/0.3.0/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
+Downloading my-nodejs-express template project from https://github.com/stevemar/collections/releases/download/0.3.0-custom/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
 Download complete. Extracting files from /Users/stevemar/appsody-apps/testo/my-nodejs-express.tar.gz
 Setting up the development environment
 Your Appsody project name has been set to testo
