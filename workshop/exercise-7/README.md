@@ -15,11 +15,11 @@ You should have already carried out the prerequisites defined in [Exercise 6](..
 
 ## Steps
 
-1. [Get the collection URL](#1-the-collection-url)
+1. [Get the collection URL](#1-get-the-collection-url)
 2. [Update the Kabanero Custom Resource](#2-update-the-kabanero-custom-resource)
 3. [Test the new stack and collection](#3-test-the-new-stack-and-collection)
 
-### 1. Get release URL
+### 1. Get the collection URL
 
 Obtain the URL to the collection repository. If a Git release was created for the collections, the URL format will be: `https://<github.com>/<organization>/collections/releases/download/<release>/kabanero-index.yaml`
 
@@ -29,7 +29,7 @@ In our workshop, it'll likely be:
 
 * Replace `<username>` with your Github username
 
-### 2. Edit Kabanero Custom Resource
+### 2. Update the Kabanero Custom Resource
 
 Use `oc get kabaneros -n kabanero` to obtain a list of all Kabanero CR instances in namespace `kabanero`. The default name for the CR instance is `kabanero`.
 
