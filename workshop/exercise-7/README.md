@@ -10,7 +10,7 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 6](workshop/exercise-6/README.md).
+You should have already carried out the prerequisites defined in [Exercise 6](../exercise-6/README.md).
 
 ## Steps
 

@@ -15,7 +15,7 @@ When you have completed this exercise, you will understand how to:
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 3](workshop/exercise-3/README.md), and in addition:
+You should have already carried out the prerequisites defined in [Exercise 3](../exercise-3/README.md), and in addition:
 
 First we delete the deployments, run the `appsody deploy delete` command to remove them.
 

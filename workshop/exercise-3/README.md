@@ -1,6 +1,6 @@
 # Exercise 3: Deploying to OpenShift with Appsody
 
-In this exercise, we will show how to deploy the sample insurance quote application built in [Exercise 2](workshop/exercise-2/README.md) to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
+In this exercise, we will show how to deploy the sample insurance quote application built in [Exercise 2](../exercise-2/README.md) to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
 
 When you have completed this exercise, you will understand how to:
 
@@ -12,7 +12,7 @@ In later exercises we will learn how to use appsody with a Tekton pipeline, hook
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 0](workshop/exercise-0/README.md), and in addition:
+You should have already carried out the prerequisites defined in the [Pre-work](../pre-work/README.md) section, and in addition:
 
 * In order for the backend application to access the Dacadoo Health Score API, visit <https://models.dacadoo.com/doc/> to register and request an API key for evaluation purposes. Access to this API is usually granted individually to those that apply. You need to record the `url` for the API (displayed by clicking on the Health Score link under Models - usually `https://models.dacadoo.com/score/2`) and the `Key` (something similar to `UFDzMHAfsEg0oKzGp4rCSmXPClKKq3hDPLbPdvc2h`). There is a mock implementation of the API in the code that you can use if you do not want to register.
 

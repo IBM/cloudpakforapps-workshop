@@ -11,7 +11,7 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 5](workshop/exercise-5/README.md). In addition, you need to ensure you have the following installed on your local machine:
+You should have already carried out the prerequisites defined in [Exercise 5](../exercise-5/README.md). In addition, you need to ensure you have the following installed on your local machine:
 
 * yq
 * python3
@@ -107,7 +107,7 @@ export IMAGE_REGISTRY_USERNAME=$(oc whoami)
 export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
 ```
 
-In addition to the above the IMAGE_REGISTRY environment variable should still be set from [Exercise 3](workshop/exercise-3/README.md), which you can check with:
+In addition to the above the IMAGE_REGISTRY environment variable should still be set from [Exercise 3](../exercise-3/README.md), which you can check with:
 
 ```bash
 env | grep IMAGE_REGISTRY
@@ -118,7 +118,7 @@ $ env | grep
 IMAGE_REGISTRY=docker-registry-default.henrycluster6-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-gb.containers.appdomain.cloud
 ```
 
-If IMAGE_REGISTRY is not set, then you need to set it up again described in [Exercise 3 - Access the internal docker registry](workshop/exercise-3/README.md#2-access-the-internal-docker-registry)
+If `IMAGE_REGISTRY` is not set, then you need to set it up again described in [Exercise 3 - Access the internal docker registry](../exercise-3/README.md#2-access-the-internal-docker-registry)
 
 ## 4. Add custom stack to local collection
 

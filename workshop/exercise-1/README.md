@@ -10,7 +10,7 @@ In this exercise, we will introduce Appsody, which is the underpinning developme
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in the [Pre-work](workshop/pre-work/README.md). Check that you have access to the Appsody CLI by typing (the exact version number my be greater than shown below):
+You should have already carried out the prerequisites defined in the [Pre-work](../pre-work/README.md). Check that you have access to the Appsody CLI by typing (the exact version number my be greater than shown below):
 
 > **NOTE:** In the exercises that follow you will see the actual command to run, followed by a separate example of running the command with the expected output. You only need to run the first example and never need to run a command you see preceded by a "$". You can even use the copy button on the right side of the command to make copying easier.
 
@@ -364,7 +364,7 @@ Up until now, we have been using appsody in what we call "Rapid Local Developmen
 These enable a couple of capabilities:
 
 * support for building a standalone docker image (containing your application and the stack technologies), that can be deployed either using regular Docker commands, or manually to a kubernetes cluster.
-* support deploying the final image directly to a kubernetes cluster, under control of the Appsody Operator. We will cover deployment in [Exercise 3](workshop/exercise-3/README.md).
+* support deploying the final image directly to a kubernetes cluster, under control of the Appsody Operator. We will cover deployment in [Exercise 3](../exercise-3/README.md).
 
 In this section we will carry out the first of these - i.e. simply building a standalone image. Perhaps unsurprisingly, this is enacted by:
 

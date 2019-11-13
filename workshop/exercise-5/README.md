@@ -14,7 +14,7 @@ Specifically, when you have completed this exercise, you will understand how to:
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in the [Pre-work](workshop/pre-work/README.md). Check that you have access to the Appsody CLI by typing (the exact version number my be greater than shown below):
+You should have already carried out the prerequisites defined in the [Pre-work](../pre-work/README.md). Check that you have access to the Appsody CLI by typing (the exact version number my be greater than shown below):
 
 > **NOTE:** In the exercises that follow you will see the actual command to run, followed by a separate example of running the command with the expected output. You only need to run the first example and never need to run a command you see preceded by a "$". You can even use the copy button on the right side of the command to make copying easier.
 
@@ -389,7 +389,7 @@ As you should see, because the stack now incorporates helmet, the HTTP headers h
 
 ## 4. Use the new stack in our example application
 
-A final step is to switch the actual quote-frontend application we built in [Exercise 2](workshop/exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
+A final step is to switch the actual quote-frontend application we built in [Exercise 2](../exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
 
 The formal way of doing this is to repeat the steps from Exercise 2, where the new project is initialized (using our new stack), and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
 
