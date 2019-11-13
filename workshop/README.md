@@ -40,7 +40,7 @@ In the second day we'll learn about Kabanero Enterprise and how to productionize
 
 |   |   |
 | - | - |
-| [Lecture 4: Intro to Appsody Stacks and Repo](https://ibm.box.com/s/kbuympaqftxswyi1aoswdlqussmqf1ba) | Learn all about the stacks and repos |
+| [Lecture 4: Customizing Appsody and Kabanero](https://ibm.box.com/s/kbuympaqftxswyi1aoswdlqussmqf1ba) | Learn all about the stacks and repos |
 | [Exercise 6: Building a custom Kabanero Collection](exercise-6/README.md) | Create a collection that will contain custom appsody stacks and pipelines |
 | [Exercise 5: Customizing an existing Appsody Stack](exercise-5/README.md) | Create a custom stack, to be hosted in our custom repository |
 | [Exercise 7: Configuring Kabanero to use an Alternate Collection Repository](exercise-7/README.md) | Learn how to manage these custom stacks and how to make them available to developers |
