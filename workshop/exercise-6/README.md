@@ -124,7 +124,7 @@ If IMAGE_REGISTRY is not set, then you need to set it up again described in [Exe
 
 Now we take our custom stack from exercise 5 (recall that is was named `my-nodejs-express` and includes the `helmet` library) and copy it over to the incubator folder of our collection repo. From the `collections` repo, perform the following steps:
 
-Listing before the copy:
+List the collections before the copy:
 
 ```bash
 ls incubator
@@ -132,11 +132,13 @@ common java-spring-boot2 nodejs-express triggers
 java-microprofile nodejs nodejs-loopback
 ```
 
+Now copy in our new customer stack:
+
 ```bash
 cp -R ~/appsody-apps/my-nodejs-express incubator
 ```
 
-Listing after the move:
+Check that we now have this in the list of collections:
 
 ```bash
 ls incubator
