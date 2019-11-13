@@ -98,11 +98,6 @@ role "registry-viewer" added: "system:unauthenticated"
 
 ## 3. Set up a local build environment
 
-There are several tools that are used to build:
-
-* `yq`: Command-line YAML processor (macOS: `brew install yq`)
-* `docker`: A tool to help you build and run apps within containers
-
 There are several environment variables that need to be set up. These are required in order to correctly build the collections.
 
 ```bash
