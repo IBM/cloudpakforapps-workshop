@@ -36,13 +36,13 @@ appsody 0.4.10
 1. [Create a new stack, based on an existing one](#3-create-a-new-stack-based-on-an-existing-one)
 1. [Use the new stack in our example application](#4-use-the-new-stack-in-our-example-application)
 
-## 1. The role of a stack in the development process
+### 1. The role of a stack in the development process
 
 Developers use stacks to simplify building applications that require a specific set of technologies or development patterns. While there are numerous publicly available stacks to choose from, many enterprises want to build their own set of stacks that uphold their specific requirements and standards for how they want to their developers to build cloud native applications.
 
 In this exercise, you will learn how to modify an existing stack to more closely match your requirements. Before starting this, let's do a quick review of the design requirements for stacks. A stack is designed to support the developer in either a rapid, local development mode or a build-and-deploy mode.
 
-### Rapid, local development mode
+#### Rapid, local development mode
 
 In this mode, the stack contains everything a developer needs to build a new application on a local machine, with the application always running in a local containerized Docker environment. Introducing containerization from the start of the application development process (as opposed to development solely in the user space of the local machine) decreases the introduction of subtle errors in the containerization process and removes the need for a developer to install the core technology components of their application.
 
@@ -50,7 +50,7 @@ In this mode, the stack is required to have all the dependencies for the specifi
 
 Rapid local development mode in Appsody consists of the Appsody CLI (hooked into a local IDE if required) communicating with a local Docker container that is running the application under development. With this mode, application code can be held on the local file system, while being mounted in the Docker container, so that a local change can automatically trigger a restart of the application.
 
-### Build-and-deploy mode
+#### Build-and-deploy mode
 
 In this mode, the stack enables the Appsody CLI to build a self-contained Docker image that includes both the core technologies in the stack plus the application code, along with the combined dependencies of both. You can deploy the resulting image manually or programmatically to any platform that supports Docker images (such as a local or public Kubernetes cluster).
 
@@ -60,7 +60,7 @@ A pictorial view of how an application developer uses a stack, looks like this:
 
 The above development flow shows the manual deployment to a Kubernetes cluster. In more production-orientated environments, GitOps might trigger the build and deploy steps and Tekton Pipelines would drive the deployment. [Kabanero Collections](https://github.com/kabanero-io/collections/), which is part of [Cloud Pak for Applications](https://www.ibm.com/cloud/cloud-pak-for-applications), brings together Appsody stacks, GitOps, and Tekton Pipelines to provide an enterprise-ready solution for cloud-native application development and deployment. We'll look at this in later exercises.
 
-## 2. Stack structure
+### 2. Stack structure
 
 Because a single Appsody stack can enable both rapid, local development and build-and-deploy modes, all stacks follow a standard structure. The structure below represents the source structure of a stack:
 
@@ -92,11 +92,11 @@ For this exercise we will modify the nodejs-express stack that we have been usin
 
 > **NOTE**: For future reference, to make your own stack from scratch, instead of extending an existing one, follow [this tutorial](https://developer.ibm.com/tutorials/create-appsody-stack/).
 
-## 3. Create a new stack, based on an existing one
+### 3. Create a new stack, based on an existing one
 
 The goal of this step is to create a new Node.js Express stack by modifying the existing one. We'll copy it, build, and modify it.
 
-### Initialize the stack
+#### Initialize the stack
 
 To create a new stack, you must first construct a scaffold of the above structure. Stacks are classified as being `stable`, `incubating` or `experimental`. You can read more about these classifications [here](https://appsody.dev/docs/stacks/stacks-overview). To make things easy, the Appsody CLI supports an `appsody stack create` command to create a new stack, by copying an existing one.
 
@@ -124,7 +124,7 @@ drwxr-xr-x  4 henrynash  staff   128  8 Nov 11:51 templates
 
 If you inspect the contents of the `image` directory, you will see how it matches the stack structure given earlier.
 
-### Build your new stack
+#### Build your new stack
 
 Before we make any changes, let's go through the steps of building (or *packaging*) a stack, to create a stack image (which is a Docker image) that the Appsody CLI can use to initiate a project using that stack.
 
@@ -152,7 +152,7 @@ REPO        ID                  VERSION     TEMPLATES           DESCRIPTION
 dev.local   my-nodejs-express   0.2.8       scaffold, *simple   Express web framework for Node.js
 ```
 
-### Run the new stack
+#### Run the new stack
 
 So, at this point, you have been carrying out your role as a stack architect to build and install your new (albeit unchanged) stack. Now it's time to try it out as an application developer.
 
@@ -218,7 +218,7 @@ Stop this current appsody run by either using CNTL-C in the initial terminal win
 
 For this exercise we will modify the stack to include the popular HTTP header security module [helmet](https://helmetjs.github.io), and hence this should change the headers we see returned to us. Note we will do this as a *stack architect* since we don't want to rely on *application developers* remembering to do this. By doing this in the stack itself, all applications built using our modified stack will have helmet automatically enabled.
 
-### Modify your custom stack
+#### Modify your custom stack
 
 When creating a custom stack, based on an existing stack, the first thing to do is to take a look at what the existing stack has provided. A more detailed description of the stack components can be found [here](https://appsody.dev/docs/stacks/stack-structure), but the key ones are:
 
@@ -333,7 +333,7 @@ Now that we have modified our stack, we need to re-package it, using the same co
 appsody stack package
 ```
 
-> **TODO** confirm with Henry. I couldn't get the `appsody run` command to pull down the latest packaged version. I had to delete the directory and re-initialize.
+> **NOTE** The `appsody run` command should pull down the latest packaged version, but in case this doesn't work, delete the directory and re-initialize.
 
 ```bash
 cd ~/appsody-apps
@@ -387,7 +387,7 @@ Hello from Appsody!*
 
 As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
 
-## 4. Use the new stack in our example application
+### 4. Use the new stack in our example application
 
 A final step is to switch the actual quote-frontend application we built in [Exercise 2](../exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
 

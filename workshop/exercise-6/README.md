@@ -1,13 +1,13 @@
 # Exercise 6: Building a custom Appsody Stack Collection in Kabanero
 
-> ***WORK IN PROGRESS***
-
 In this exercise, we will show how to create a custom Kabanero collection, that include the custom Appsody Stack from the previous exercise.
 
 When you have completed this exercise, you will understand how to
 
 * clone and host your own Kabanero Collection
 * modify the Collection to include a custom Appsody Stack
+
+![Tools used during Exercise 6](images/ex6.png)
 
 ## Prerequisites
 
@@ -22,10 +22,10 @@ On macOS, you can install the above with:
 ```bash
 brew install yq
 brew install python
-pyYAML
+pip install pyYAML
 ```
 
-## 1. About custom Kabanero Repositories
+## About custom Kabanero Repositories
 
 By default Kabanero Enterprise is configured to automatically use the latest release at [https://github.com/kabanero-io/collections](https://github.com/kabanero-io/collections).
 
@@ -41,15 +41,15 @@ The default collections can be modified to meet an organization's unique needs.
 
 ## Steps
 
-1. Create a new repo to host your custom collection
-1. Create a new image namespace to host images on OpenShift
-1. Set up a local build environment
-1. Add custom stack to local collection
-1. Build collections
-1. Push images
-1. Update code repo and release a new collection
+1. [Create a new repo to host your custom collection](#1-create-a-new-repo-to-host-your-custom-collection)
+1. [Create a new image namespace to host images on OpenShift](#2-create-a-new-image-namespace-to-host-images-on-openshift)
+1. [Set up a local build environment](#3-set-up-a-local-build-environment)
+1. [Add our custom stack to the new collection](#4-add-our-custom-stack-to-the-new-collection)
+1. [Build the new collection](#5-build-the-new-collection)
+1. [Push collection images](#6-push-collection-images)
+1. [Update code repo and release a new collection](#7-update-code-repo-and-release-a-new-collection)
 
-## 1. Create a new repo to host your custom collection
+### 1. Create a new repo to host your custom collection
 
 Go to <https://github.com/new> and create a new repository, `collections`. Do not initiatize the repos with a license file or README.
 
@@ -65,7 +65,7 @@ git remote add my-org https://github.com/<username>/collections.git
 git push -u my-org
 ```
 
-### Kabanero Repo structure
+#### About the Kabanero Repo structure
 
 ```ini
 ci
@@ -83,11 +83,11 @@ experimental (or incubator, or stable)
     └── [collection files - see collection structure below]
 ```
 
-## 2. Create a new image namespace to host images on OpenShift
+### 2. Create a new image namespace to host images on OpenShift
 
 To actually use the stacks we need images, images will be hosted on openshift
 
-> Despite the warning, this worked
+> FIXME(stevemar): You may seem a warning about this step, but it should work.
 
 ```bash
 oc new-project kabanero-noauth
@@ -96,7 +96,7 @@ Warning: Group 'system:unauthenticated' not found
 role "registry-viewer" added: "system:unauthenticated"
 ```
 
-## 3. Set up a local build environment
+### 3. Set up a local build environment
 
 There are several environment variables that need to be set up. These are required in order to correctly build the collections.
 
@@ -120,7 +120,7 @@ IMAGE_REGISTRY=docker-registry-default.henrycluster6-5290c8c8e5797924dc1ad5d1b85
 
 If `IMAGE_REGISTRY` is not set, then you need to set it up again described in [Exercise 3 - Access the internal docker registry](../exercise-3/README.md#2-access-the-internal-docker-registry)
 
-## 4. Add custom stack to local collection
+### 4. Add our custom stack to the new collection
 
 Now we take our custom stack from exercise 5 (recall that is was named `my-nodejs-express` and includes the `helmet` library) and copy it over to the incubator folder of our collection repo. From the `collections` repo, perform the following steps:
 
@@ -146,7 +146,7 @@ common java-spring-boot2 nodejs nodejs-loopback
 java-microprofile my-nodejs-express nodejs-express triggers
 ```
 
-> FIXME(stevemar): Currently there is no support for creating a stack based off a kabanero stack, only an appsody stack. As a result, the folder `my-nodejs-express` is missing a few things.
+> FIXME(stevemar): The stack `my-nodejs-express` is missing `collection.yaml` and `pipelines` as `appsody stack create` doesn't allow collections as the base stack. Bug?
 
 Create a new file called `collection.yaml` in `collections/incubator/my-nodejs-express`, add the following:
 
@@ -160,7 +160,7 @@ images:
 
 And also create a directory called `pipelines` in `collections/incubator/my-nodejs-express`, and add a single empty file called `.gitkeep`.
 
-## 4. Build collections
+### 5. Build the new collection
 
 This step builds the `kabanero-index.yaml` file.
 
@@ -209,7 +209,7 @@ error=0
 ~/appsody-apps/collections
 ```
 
-## 5. Push images
+### 6. Push collection images
 
 This command actually pushes the images to the image registry
 
@@ -244,7 +244,7 @@ Tagging docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b8
 ...
 ```
 
-## FIXME(stevemar): update generated kabanero-index.yaml manually
+> FIXME(stevemar): the `image` property in `kabanero-index.yaml` should be updated in `build.sh`. Bug?
 
 Open up `collections/ci/release/kabanero-index.yaml` and find your custom stack. Change the `image` URL to specify your docker registry. It should look like:
 
@@ -276,7 +276,7 @@ Open up `collections/ci/release/kabanero-index.yaml` and find your custom stack.
   version: 0.2.8
 ```
 
-## 6. Update code repo and release a new collection
+### 7. Update code repo and release a new collection
 
 Once you have made all the changes to the collection and you are ready to push the changes back to your git repository then
 
