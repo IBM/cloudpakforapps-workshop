@@ -2,7 +2,15 @@
 
 ## Day 1: Kabanero and Appsody for Developers and Operators
 
-In this first day we'll learn how to use Appsody to run the *inner loop* of the development and test cycle for a developer, and how these tools can be integrated into your favorite IDE. We'll also explore how to deploy an application to OpenShift, first manually with Appsody for dev/test purposes, and then using the standard Kabanero Tekton piplines with GitOps as part of a continual test/production cycle.
+In this first day we'll learn how to use Appsody to run the *inner loop* of the development and test cycle for a developer, and how these tools can be integrated into your favorite IDE.
+
+We'll also explore how to deploy an application to OpenShift, first manually with Appsody for dev/test purposes, and then using the standard Kabanero Tekton piplines with GitOps as part of a continual test/production cycle.
+
+Our goal for the end of the day is represented below. But, don't worry about it right now, we'll get there together by following the exercises step-by-step.
+
+![Our end state when Day 1 is done](images/architecture.png)
+
+## Agenda
 
 | Section | Description |
 | - | - |
