@@ -2,7 +2,7 @@
 
 > ***WORK IN PROGRESS***
 
-In this exercise, we will show how to create a custom Kabanero collection, that include the custome Appsody Stack from the previous exercise.
+In this exercise, we will show how to create a custom Kabanero collection, that include the custom Appsody Stack from the previous exercise.
 
 When you have completed this exercise, you will understand how to
 
@@ -11,7 +11,19 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 5](workshop/exercise-5/README.md).
+You should have already carried out the prerequisites defined in [Exercise 5](workshop/exercise-5/README.md). In addition, you need to ensure you have the following installed on your local machine:
+
+* yq
+* python3
+* pyYAML
+
+On macOS, you can install the above with:
+
+```bash
+brew install yq
+brew install python
+pyYAML
+```
 
 ## 1. About custom Kabanero Repositories
 
@@ -96,10 +108,21 @@ There are several environment variables that need to be set up. These are requir
 ```bash
 export IMAGE_REGISTRY_ORG=kabanero-noauth
 export IMAGE_REGISTRY_PUBLISH=true
-export IMAGE_REGISTRY=docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 export IMAGE_REGISTRY_USERNAME=$(oc whoami)
 export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
 ```
+
+In addition to the above the IMAGE_REGISTRY environment variable should still be set from [Exercise 3](workshop/exercise-3/README.md), which you can check with:
+
+```bash
+env | grep IMAGE_REGISTRY
+```
+
+```bash
+$ env | grep IMAGE_REGISTRY=docker-registry-default.henrycluster6-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-gb.containers.appdomain.cloud
+```
+
+If IMAGE_REGISTRY is not set, then you need to set it up again described in [Exercise 3 - Access the internal docker registry](workshop/exercise-3/README.md#2-access-the-internal-docker-registry)
 
 ## 4. Add custom stack to local collection
 
@@ -111,6 +134,7 @@ Listing before the copy:
 ls incubator
 common java-spring-boot2 nodejs-express triggers
 java-microprofile nodejs nodejs-loopback
+```
 
 ```bash
 cp -R ~/appsody-apps/my-nodejs-express incubator
@@ -145,6 +169,7 @@ This step builds the `kabanero-index.yaml` file.
 From the collections directory, run the build script. For example:
 
 ```bash
+cd ~/appsody-apps/collections
 ./ci/build.sh
 ```
 
@@ -154,7 +179,7 @@ Note that this will build all the collections in the incubator directory, includ
 
 Following the build, you can find the generated collection assets in the `collections/ci/assets/` directory and all the docker images in your local docker registry.
 
-You should see output like the following, take not of the `my-nodejs-express` stack being built, and ensure there are no errors in the output:
+You should see output like the following, take note of the `my-nodejs-express` stack being built, and ensure there are no errors in the output:
 
 ```bash
 ...
@@ -194,7 +219,7 @@ This command actually pushes the images to the image registry
 ./ci/release.sh
 ```
 
-You should see output like the following, take not of the `my-nodejs-express` stack being pushed to the registry, and ensure there are no errors in the output:
+You should see output like the following, take note of the `my-nodejs-express` stack being pushed to the registry, and ensure there are no errors in the output:
 
 ```bash
 $ ./ci/release.sh
@@ -285,7 +310,7 @@ Upload all the files in `collections/ci/release/`, which were generated from the
 
 ![NEEDS NEW SCREENSHOT - Update release with the YAML file](images/edit-release.png)
 
-You should now see that your release includes `kabanero-index.yaml`.
+You should now see that your release includes `kabanero-index.yaml`. You should click *Publish release*, at the bottom of the page, to formally publish your new collection.
 
 ![NEEDS NEW SCREENSHOT - Includes a new YAML file](images/new-release-with-yaml.png)
 

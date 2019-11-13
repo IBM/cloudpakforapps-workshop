@@ -145,13 +145,13 @@ The URL we want to use is the `docker-registry` one, it'll look like `docker-reg
 Once we have the URL, set it as a variable:
 
 ```bash
-export DOCKER_REGISTRY=<docker_url>
+export IMAGE_REGISTRY=<docker_url>
 ```
 
 And set our local `docker` command to use that registry, use `docker login`:
 
 ```bash
-docker login -u $(oc whoami) -p $(oc whoami -t) $DOCKER_REGISTRY
+docker login -u $(oc whoami) -p $(oc whoami -t) $IMAGE_REGISTRY
 ```
 
 ### 3. Deploy the backend application to OpenShift
@@ -254,11 +254,11 @@ spec:
 Now use `appsody deploy` to push the image and deploy it. When using the OpenShift docker registry, the urls used to push and pull a given image are different. `appsody deploy` allows us to specify these on the command line:
 
 ```bash
-appsody deploy --tag insurance-quote/quote-backend:v1 --push-url $DOCKER_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
+appsody deploy --tag insurance-quote/quote-backend:v1 --push-url $IMAGE_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
 ```
 
 ```bash
-$ appsody deploy --tag insurance-quote/quote-backend:v1 --push-url $DOCKER_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
+$ appsody deploy --tag insurance-quote/quote-backend:v1 --push-url $IMAGE_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
 .
 .
 [Docker] Successfully built 4294712e0f9e
@@ -335,11 +335,11 @@ spec:
 Save the yaml file and do the deployment.
 
 ```bash
-appsody deploy --tag insurance-quote/quote-frontend:v1 ---push-url $DOCKER_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
+appsody deploy --tag insurance-quote/quote-frontend:v1 ---push-url $IMAGE_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
 ```
 
 ```bash
-$ appsody deploy --tag insurance-quote/quote-frontend:v1 ---push-url $DOCKER_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
+$ appsody deploy --tag insurance-quote/quote-frontend:v1 ---push-url $IMAGE_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
 ...
 [Docker] Successfully built ba7451568a04
 [Docker] Successfully tagged docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
