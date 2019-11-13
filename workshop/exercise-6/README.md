@@ -306,13 +306,13 @@ Clicking on the release name (0.3.0-custom) will allow you to edit the release.
 
 ![Our own collection, page for version 0.3.0-custom](images/new-release-main.png)
 
-Click on *Edit tag*. and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the &Attach binaries...* box.
+Click on *Edit tag*. and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
 
-![Our own collection,  upload files to release](images/edit-release.png)
+![Our own collection, upload files to release](images/edit-release.png)
 
 Once you have uploaded the files you can publish your new collection by clicking *Publish release*, at the bottom of the page
 
-![Our own collection,  published](images/new-release-published.png)
+![Our own collection, published](images/new-release-published.png)
 
 You will note that the collection includes the `kabanero-index.yaml` file we edited earlier. The url to this index file is is what you will provide appsody as a link to your new custom repository (that is contained within the new collection. You normally obtain and copy the url (depending on your browser) by CNTL-clicking over the `kabanero-index.yaml` item in the list of files shown in the release. It should be of the form:
 
