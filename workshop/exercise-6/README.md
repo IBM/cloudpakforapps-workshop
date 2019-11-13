@@ -304,7 +304,7 @@ Clicking on the release name (0.3.0-custom) will allow you to edit the release.
 
 ![Our own collection, page for version 0.3.0-custom](images/new-release-main.png)
 
-Click on *Edit tag*. and then upload all the files in `collections/ci/release/`, which were generated from the previous steps.
+Click on *Edit tag*. and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the &Attach binaries...* box.
 
 ![Our own collection,  upload files to release](images/edit-release.png)
 
