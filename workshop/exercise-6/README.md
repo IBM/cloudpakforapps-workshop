@@ -114,7 +114,8 @@ env | grep IMAGE_REGISTRY
 ```
 
 ```bash
-$ env | grep IMAGE_REGISTRY=docker-registry-default.henrycluster6-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-gb.containers.appdomain.cloud
+$ env | grep
+IMAGE_REGISTRY=docker-registry-default.henrycluster6-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-gb.containers.appdomain.cloud
 ```
 
 If IMAGE_REGISTRY is not set, then you need to set it up again described in [Exercise 3 - Access the internal docker registry](workshop/exercise-3/README.md#2-access-the-internal-docker-registry)
