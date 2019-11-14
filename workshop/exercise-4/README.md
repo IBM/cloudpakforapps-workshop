@@ -1,6 +1,6 @@
 # Exercise 4: Use Tekton and Kabanero Pipelines to continuously deploy
 
-In this exercise we're going to take our insurance quote application from exercise 3 and instead of deploying it as a stand alone app, we will push the code up to a GitHub repo and use Tekton pipelines to constantly deploy the app to our OpenShift cluster and speed up your deployment process.
+In this exercise we're going to take our insurance quote application from exercise 3 and instead of deploying it as a stand alone app, we will push the code up to a GitHub repo and use Tekton pipelines to automatically deploy the app to our OpenShift cluster and speed up your deployment process.
 
 Recall that the application from exercise 3 consists of:
 
