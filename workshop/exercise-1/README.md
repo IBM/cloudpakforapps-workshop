@@ -99,7 +99,7 @@ kabanero    nodejs-express      0.2.5       *simple, skaffold   Express web fram
 kabanero    nodejs-loopback     0.1.4       *scaffold           LoopBack 4 API Framework for Node.js
 ```
 
-Given that we'll exclusively be using the kabanero stacks in this workshop, for each of use we can set the kabanero repository to be the default for the CLI:
+Given that we'll exclusively be using the kabanero stacks in this workshop, for ease of use we can set the kabanero repository to be the default for the CLI:
 
 ```bash
 appsody repo set-default kabanero
@@ -142,7 +142,7 @@ cd appsody-apps
 
 #### Create a new application
 
-We will now use on of the stacks to create an application. First, create a new directory for the project and change directory into it.
+We will now use one of the stacks to create an application. First, create a new directory for the project and change directory into it.
 
 ```bash
 mkdir appsody_sample_nodejs-express
@@ -394,7 +394,7 @@ $ appsody build
 Built docker image appsody-sample-nodejs-express
 ```
 
-We now have a standalone image (independant of appsody), we can view the image using our local Docker environment:
+We now have a standalone image (independent of appsody).  We can view the image using our local Docker environment:
 
 ```bash
 docker images

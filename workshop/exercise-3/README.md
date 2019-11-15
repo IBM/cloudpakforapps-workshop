@@ -1,6 +1,6 @@
 # Exercise 3: Deploying to OpenShift with Appsody
 
-In this exercise, we will show how to deploy the sample insurance quote application built in [Exercise 2](../exercise-2/README.md) to OpenShift using Appsody. Appsody is an open source project that provides the following tools you can use to build cloud-native applications:
+In this exercise, we will show how to deploy the sample insurance quote application built in [Exercise 2](../exercise-2/README.md) to OpenShift using Appsody.
 
 When you have completed this exercise, you will understand how to:
 
@@ -104,7 +104,7 @@ Give the route a `path`:
 oc patch route docker-registry -n default --type='json' -p='[{"op": "add", "path": "/metadata/annotations/haproxy.router.openshift.io~1balance", "value":"source"}]'
 ```
 
-The proxy annotation should not be in place, i.e.:
+The proxy annotation should now be in place, i.e.:
 
 ```bash
 $ oc describe route docker-registry -n default
