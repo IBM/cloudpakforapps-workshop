@@ -18,7 +18,7 @@
 ### Day 2 (In Progress)
 
 * [About Day 2](about-day-2/README.md)
-    * [Lecture 4: Intro to Appsody Stacks and Repo](https://ibm.box.com/s/kbuympaqftxswyi1aoswdlqussmqf1ba)
+    * [Lecture 4: Customizing Appsody and Kabanero](https://ibm.box.com/s/kbuympaqftxswyi1aoswdlqussmqf1ba)
     * [Exercise 5: Customizing an existing Appsody Stack](exercise-5/README.md)
     * [Exercise 6: Building a custom Kabanero Collection repository](exercise-6/README.md)
     * [Exercise 7: Configuring Kabanero to use an Alternate Collection Repository](exercise-7/README.md)
