@@ -85,8 +85,8 @@ Create a new directory to work in:
 
 ```bash
 cd ~/appsody-apps
-mkdir test-custom
-cd test-custom
+mkdir test-custom-stack
+cd test-custom-stack
 ```
 
 Initialize the appsody stack
