@@ -24,7 +24,7 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 0](../pre-work/README.md).
+You should have already carried out the prerequisites defined in the [Pre-work](../pre-work/README.md) section.
 
 In addition to the pre-reqs above, we need to clone the repo: <https://github.com/IBM/cloudpakforapps-workshop>
 
