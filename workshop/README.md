@@ -45,8 +45,8 @@ In the second day we'll learn about Kabanero Enterprise and how to productionize
 | [Exercise 5: Customizing an existing Appsody Stack](exercise-5/README.md) | Create a custom stack, to be hosted in our custom repository |
 | [Exercise 7: Configuring Kabanero to use an Alternate Collection Repository](exercise-7/README.md) | Learn how to manage these custom stacks and how to make them available to developers |
 | [Lecture 5: Tekton Overview](https://ibm.box.com/s/tg0f6nhs91trlzkb5pfnh5e1rdzg4wm6) | Learn all Tekton CI/CD and how Kabanero uses it |
-| [Exercise 8: Create a Tekton pipleline for a custom collection](exercise-8/README.md) | Build a pipeline that will fit into a custom Kabanero collection |
-| [Exercise 9: Deploy an application from Custom Stack & Repository](exercise-9/README.md) | Build and deploy an application using the custom stack, collection and pipelines built by the Architects' and Operators' tracks |
+| [Exercise 8: Create a custom Tekton Task and Pipleline](exercise-8/README.md) | Build a pipeline that will fit into a custom Kabanero collection |
+| [Exercise 9: Deploy an application with a custom Stack, custom Collection, and custom Tekton Pipeline](exercise-9/README.md) | Build and deploy an application using the custom stack, collection and pipelines built by the Architects' and Operators' tracks |
 
 ## Compatability
 
