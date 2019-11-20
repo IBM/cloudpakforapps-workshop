@@ -88,17 +88,17 @@ oc login <url> --token=<token>
 
 ## 6. Ensure Cloud Pak for Applications is installed
 
-Cloud Pak for Applications should already have been installed in your managed OpenShift cluster. Check you have access to this by ensuring that *Kabanero Enterprise* exists in the *Application Console* of your OpenShift cluster.
+Cloud Pak for Applications should already have been installed in your managed OpenShift cluster. Check you have access to this by ensuring that *Cloud Pak for Applications* exists in the *Application Console* of your OpenShift cluster.
 
-![Kabanero in your OpenShift cluster](images/oc-console-kabanero.png)
+![Cloud Pak for Applications in your OpenShift cluster](images/oc-console-kabanero.png)
 
 When clicked, the *Cloud Pak for Applications* landing page should appear:
 
-![Cloud Pak for Applications](images/cpa-console.png)
+![Cloud Pak for Applications Overview](images/cpa-console.png)
 
-Clicking on the *Kabanero Enterprise instance* link will show you information about your Kabanero Enterprise service.
+Clicking on the *Instance* menu link will show you information about Kabanero.
 
-![Kabanero Enterprise](images/kabanero-console.png)
+![Tools available in Kabanero](images/kabanero-console.png)
 
 ## 7. Install VS Code
 

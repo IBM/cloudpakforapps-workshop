@@ -48,11 +48,7 @@ Note, we still have the `insurance-quote` namespace, the `dacadoo-config` config
 
 ### 1. Launch the Tekton dashboard
 
-You can launch the tekton dashboard by first selecting the Kabanero Enterprise tab at the bottom of the list in the OpenShift Application Console...
-
-![OpenShift Application console](images/kabanero-enterprise.png)
-
-...and then selecting the tekton link
+You can launch the tekton dashboard by accessing the *Cloud Pak for Applications* dashboard and selecting the Tekton link. Revisit the [Pre-work](../pre-work/README.md) section if unable to recall how to access the *Cloud Pak for Applications* dashboard.
 
 ![Launch Tekton](images/launch_tekton.png)
 
