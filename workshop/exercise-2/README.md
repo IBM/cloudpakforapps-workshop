@@ -68,9 +68,11 @@ It's possible to run this application on your workstation immediately.
 appsody run
 ```
 
+You can see the output of the application by navigating to `http://localhost:3000` in a browser window.
+
 Appsody builds a containerized version of the application for you and runs it in Docker. You can enter `http://localhost:3000` in a browser to see the default endpoint served by the application.
 
-The Node.js Express stack also provides out-of-the-box health checking and application metrics endpoints and a performance monitoring and analysis dashboard (which is only present in this development container and not the production container which we'll build later).
+The Node.js Express stack also provides out-of-the-box health checking, application metrics endpoints and performance monitoring. In development containers (i.e. during Rapid Local Development Mode), it also provides an analysis dashboard.
 
 * Health endpoint: <http://localhost:3000/health>
 * Liveness endpoint: <http://localhost:3000/live>
@@ -99,7 +101,7 @@ We're going to replace the starter code with the insurance quote frontend applic
 }
 ```
 
-The Node.js Express stack installs the package dependencies into the containerized application. However it won't do this when the containerized application is already running. You must stop the current application by pressing `Ctrl-C` and then re-run `appsody run` to start it back up.
+The Node.js Express stack installs the package dependencies into the containerized application. However it won't do this when the containerized application is already running. You must stop the current application by entering `appsody stop` in a separate window, and then re-run `appsody run` to start it back up.
 
 Now copy the files from the `quote-frontend` directory in the cloned git repo to your Appsody project, for example:
 
