@@ -1,12 +1,13 @@
 # Exercise 3: Deploying to OpenShift with Appsody
 
-In this exercise, we will show how to deploy the sample insurance quote application built in [Exercise 2](../exercise-2/README.md) to OpenShift using Appsody.
+In [Exercise 2](../exercise-2/README.md) you were running the insurance quote application under "appsody control" in Local Rapid Development Mode (sometimes called the *inner loop* of development). In this exercise, we will show how to deploy the same application to OpenShift using Appsody. Appsody provides the functionaliy to build a standard Docker image for your applicaiton (including all the components from stack), for deployment to Docker or Kubernetes, enabling additional testings within these environment. In particular:
+
+* `appsody build` will create a Docker image
+* `apposdy deploy` will deploy the image to a Kubernetes cluster, by default using the Appsody Operator. For simplicity, `appsody deploy` will also execute a build ahead of the deployment.
 
 When you have completed this exercise, you will understand how to:
 
 * deploy the applications to OpenShift using the appsody CLI
-
-In later exercises we will learn how to use appsody with a Tekton pipeline, hooked to git, to trigger an automated deployment.
 
 ![Tools used during Exercise 3](images/ex3.png)
 
@@ -315,3 +316,5 @@ You can then use a browser to open the frontend application, at the url given ab
 ("determined using mocked backend computation" instead of "determined using Dacadoo Health Score API").
 
 **Congratulations**! You have now deployed both front and backend applications to OpenShift, hooked them together as well as enable outreach to an external service.
+
+In general, using appsody to deploy your application in this fashion is recommended only to enable additional testing within a Docker or Kubernetes environment. As you are probably aware, using such a manual approach inside formal test, staging and production environments doesn't solve the problems of maintaining consistency, repeatability and control. In later exercises we will learn how to use appsody and kabanero to achieve these - using a Tekton pipeline, hooked to a git repository of the code of the application, ensuring triggering of automated builds and deployments. This is the recommended methodology supported by Kabanero and Cloud Pak for Applications.
