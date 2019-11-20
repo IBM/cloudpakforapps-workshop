@@ -21,7 +21,10 @@ The following accounts are needed for this workshop:
 
 A key part of the Appsody development experience is Rapid Local Development Mode, where the code you develop is continuously being run in a local docker container. If you don't already have Docker installed on your machine, you should do so now:
 
-[Install Docker](https://docs.docker.com/get-started/)
+* [Install Docker for macOS](https://docs.docker.com/docker-for-mac/install/)
+* [Install Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
+
+If you are not familiar with Docker Desktop, you can learn more about the orientation and setup [here](https://docs.docker.com/get-started/#Install-Docker-Desktop).
 
 ```bash
 docker version
@@ -99,6 +102,6 @@ Clicking on the *Kabanero Enterprise instance* link will show you information ab
 
 ## 7. Install VS Code
 
-VS Code and the Codewind extension are used in *Step 4* of [Exercise 1](../exercise-1/README.md). **The rest of this workshop can be completed without that step**. If you don't already have VSCode installed on your machine, and would like to complete that step, use the following link:
+VS Code and its Codewind extension are used in a number of steps in [Exercise 1](../exercise-1/README.md). Although it is possible to comlete the workshop without these steps, we recommend you install VSCode on your machine if you don't have it already, using the following link:
 
 [Install VSCode](https://code.visualstudio.com/download)

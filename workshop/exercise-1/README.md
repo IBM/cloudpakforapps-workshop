@@ -190,7 +190,7 @@ The sample application comes ready to run using appsody:
 appsody run
 ```
 
-This step results in the stack image, with the sample application mounted into it, run in you local Docker environment. The output has the endpoint for the application.
+This step results in the stack image, with the sample application mounted into it, run in your local Docker environment. The output finishes by giving you the endpoint for the application.
 
 ```bash
 Running development environment...
@@ -231,7 +231,7 @@ By default, the template sample application also provides the following endpoint
 * Metrics endpoint: <http://localhost:3000/metrics>
 
 For more details on this particular stack, refer to [Node.js Express
-Stack](https://github.com/appsody/stacks/blob/master/incubator/nodejs-express/README.md).
+Stack](https://github.com/kabanero-io/collections/blob/master/incubator/nodejs-express/README.md).
 
 #### Stop the application
 
@@ -240,8 +240,6 @@ To stop the application container, run this command from the same directory (e.g
 ```bash
 appsody stop
 ```
-
-Alternatively, you can also press `Ctrl+C` in the first window that is running the application.
 
 #### Test the application
 
@@ -291,7 +289,7 @@ added 170 packages from 578 contributors and audited 295 packages in 2.76s
 
 As well as supporting the running and testing of your application, an appsody stack enables the execution of your application in debug mode. Typically the stack will be configured to support whatever the appropriate debugger is for the language and technology components within it.
 
-Open your editor. We are using `VS Code`. Add the project to your workspace, or use the command `code .`
+Open an IDE for debugging the application. The examples here will be based on VS Code. After starting the IDE add the project to your workspace or launch VS Code using `code` from the application directory.`
 
 ![Initialized Appsody code](images/js_lab1_vscode_project.png)
 
@@ -331,11 +329,11 @@ Now you can again open the application at <http://localhost:3000/>
 
 ![The application running in debug mode](images/js_lab1_endpoint.png)
 
-Update the message and save the change.
+Make an update to the application by opening the `app.js` file and editing the message. Then save the file.
 
 ![Change the message](images/js_lab1_code_change.png)
 
-The debugger will now rebuild the container and reload the application for you.
+Appsody will now rebuild the container and reload the application for you.
 
 Refresh the browser to see the changes:
 
@@ -357,9 +355,11 @@ Refresh the browser and watch how the debugger stops at the breakpoint:
 
 ![The debugger in action](images/js_lab1_vscode_attach_break.png)
 
+Stop the VS Code debugging session (by pressing the red stop/disconnect icon). From the application directory, stop the appsody debug session by entering `appsody stop` in a terminal window.
+
 #### Build the application
 
-Up until now, we have been using appsody in what we call "Rapid Local Development Mode", where we can cycle round code changes, testing and debugging them - all within a local Docker environment. Appsody is making this environment possible, through a combination of the CLI, the stack and appsody code within that stack. Once you are ready to deploy the application outside of appsody control, there are two additional appsody commands to help you.
+Up until now, we have been using appsody in what we call "Rapid Local Development Mode", where we can cycle through code change, test and debug - all within a local Docker environment. Appsody is making this environment possible, through a combination of the CLI, the stack and appsody code within that stack. Once you are ready to deploy the application outside of appsody control, there are two additional appsody commands to help you.
 
 These enable a couple of capabilities:
 
@@ -429,7 +429,7 @@ App started on PORT 3000
 
 Again, hitting the endpoint of <http://localhost:3000/> should give us the hello message.
 
-You now have seen the basics of the appsody CLI in operation. We'll now take things up a level, and see how the CLI can be integrated into an IDE (VS Code in this case).
+You now have seen the basics of the appsody CLI in operation. We'll now take things up a level, and see how the CLI can be integrated into an IDE (VS Code in this case). Before we do this, terminate the current docker run using Ctrl-C.
 
 ### 3. Appsody tasks on VS Code
 
@@ -483,13 +483,16 @@ This opens `Codewind`:
 
 #### Adding the application
 
-You can create a new project or add an existing project to Codewind. Since, we already created one using appsody earlier, we can add the existing project.
+You can create a new project or add an existing project to Codewind. Since, we already created one using appsody earlier, we can add the existing project. In order to do this, we must first copy the project to the codewind workspace (which is `codewind-workspaces/` in your HOME directory on macOS, or typically `C:\codewind-workspace` on Windows). For example, on macOS:
 
-Right click on `Projects` under Codewind. Select `Add Existing Project` in the menu:
+```bash
+cd ~
+cp -R appsody-apps/appsody_sample_nodejs-express codewind-workspaces
+```
+
+To add the project, right click (or Ctrl-click) on `Projects` under Codewind. Select `Add Existing Project` in the menu:
 
 ![Choose to add an existing project](images/sb_lab1_codewind_add_existing_project.png)
-
-> **NOTE** Before doing this, copy your project to the codewind workspace, in the directory `codewind-workspaces/` in your HOME directory. At this point in time, codewind only accepts the projects that are available in the `codewind workspace`.
 
 From the codewind workspace, select the project you created earlier:
 

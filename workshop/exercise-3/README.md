@@ -77,55 +77,6 @@ Run the following to create a new route.
 oc create route reencrypt docker-registry --service=docker-registry -n default
 ```
 
-Describing the route we can see it although it now exists, there is no path exposed by the proxy (which would be indicated by an `annotation`):
-
-```bash
-$ oc describe route docker-registry -n default
-Name:    docker-registry
-Namespace:    default
-Created:    20 seconds ago
-Labels:    docker-registry=default
-Annotations:    openshift.io/host.generated=true
-Requested Host:    docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
-      exposed on router router 20 seconds ago
-Path:    <none>
-TLS Termination:    reencrypt
-Insecure Policy:    <none>
-Endpoint Port:    5000-tcp
-
-Service:    docker-registry
-Weight:    100 (100%)
-Endpoints:    172.30.112.3:5000, 172.30.112.4:5000
-```
-
-Give the route a `path`:
-
-```bash
-oc patch route docker-registry -n default --type='json' -p='[{"op": "add", "path": "/metadata/annotations/haproxy.router.openshift.io~1balance", "value":"source"}]'
-```
-
-The proxy annotation should now be in place, i.e.:
-
-```bash
-$ oc describe route docker-registry -n default
-Name:    docker-registry
-Namespace:    default
-Created:    20 seconds ago
-Labels:    docker-registry=default
-Annotations:    haproxy.router.openshift.io/balance=source
-                openshift.io/host.generated=true
-Requested Host:    docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
-      exposed on router router 3 minutes ago
-Path:    <none>
-TLS Termination:    reencrypt
-Insecure Policy:    <none>
-Endpoint Port:    5000-tcp
-
-Service:    docker-registry
-Weight:    100 (100%)
-Endpoints:    172.30.112.3:5000, 172.30.112.4:5000
-```
-
 We can now get the Docker registry URL:
 
 ```bash
@@ -279,22 +230,22 @@ Deployed project running at quote-backend-insurance-quote.cp4apps-workshop-prop-
 > **NOTE**: If the deployment times out, see the section [Pushing to the OpenShift registry times out](../admin-guide/README.md#pushing-to-the-openshift-registry-times-out) in the Admin Guide.
 > **NOTE**: Running `appsody deploy` will install the [appsody operator](https://github.com/appsody/appsody-operator) on the *Default* namespace of the cluster.
 
-After the deployment completes, you can test the service using curl. The deployment should complete with something like:
+After the deployment completes, you can test the service using curl. The last line output (above) in the deploy gives you the url to the backend application. For simplicity, let's put that in an environment variable, i.e, for the example above:
 
 ```bash
-curl -X POST -d @backend-input.json  -H "Content-Type: application/json"  http://<url-to-backend>/quote
+export  BACKEND_URL=quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
+```
+
+```bash
+curl -X POST -d @backend-input.json  -H "Content-Type: application/json"  http://$BACKEND_URL/quote
 ```
 
 You should see output similar to the following:
 
 ```bash
-$ curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://<url-to-backend>/quote
+$ curl -X POST -d @backend-input.json -H "Content-Type: application/json" http://$BACKEND_URL/quote
 {"quotedAmount":70,"basis":"Dacadoo Health Score API"}
 ```
-
-where:
-
-* `<url-to-backend>` is the endpoint given above at the end of running appsody deploy (i.e. *quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud* in the example above)
 
 > **NOTE**: If you are not using the Dacadoo Health Score API, you may see different text for the value of "basis" -- ("mocked backend computation" instead of "Dacadoo Health Score API").
 
@@ -335,11 +286,11 @@ spec:
 Save the yaml file and do the deployment.
 
 ```bash
-appsody deploy --tag insurance-quote/quote-frontend:v1 ---push-url $IMAGE_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
+appsody deploy --tag insurance-quote/quote-frontend:v1 --push-url $IMAGE_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
 ```
 
 ```bash
-$ appsody deploy --tag insurance-quote/quote-frontend:v1 ---push-url $IMAGE_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
+$ appsody deploy --tag insurance-quote/quote-frontend:v1 --push-url $IMAGE_REGISTRY --push --pull-url docker-registry.default.svc:5000 --namespace insurance-quote
 ...
 [Docker] Successfully built ba7451568a04
 [Docker] Successfully tagged docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/insurance-quote/quote-frontend:v1
