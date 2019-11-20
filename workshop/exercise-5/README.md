@@ -26,7 +26,7 @@ You should see output similar to the following:
 
 ```bash
 $ appsody version
-appsody 0.4.10
+appsody 0.5.0
 ```
 
 ## Steps

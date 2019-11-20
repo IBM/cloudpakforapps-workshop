@@ -41,7 +41,7 @@ Client: Docker Engine - Community
 
 ## 3. Install Appsody CLI
 
-Appsody includes a CLI which allows you to manage you stack based development (this workshop requries version 0.4.10 or later). This should be installed on your development machine:
+Appsody includes a CLI which allows you to manage you stack based development (this workshop requries version 0.5.0 or later). This should be installed on your development machine:
 
 [Install the Appsody CLI](https://appsody.dev/docs/getting-started/installation)
 
@@ -55,7 +55,7 @@ You should see output similar to the following:
 
 ```bash
 $ appsody version
-appsody 0.4.10
+appsody 0.5.0
 ```
 
 ## 4. Install OpenShift CLI
