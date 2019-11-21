@@ -61,6 +61,7 @@ Clone the default collections repository and create a new copy of it in your Git
 cd ~/appsody-apps/
 git clone https://github.com/kabanero-io/collections
 cd collections
+git checkout tags/0.2.1 -b 0.2.1
 git remote add my-org https://github.com/<username>/collections.git
 git push -u my-org
 ```
