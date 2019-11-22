@@ -122,6 +122,18 @@ spec:
           resource: docker-image
 ```
 
+Also update the default pipeline for this collection?
+
+In `incubator/my-nodejs-express` update `collection.yaml` to change the default pipeline
+
+```yaml
+default-image: my-nodejs-express
+default-pipeline: CollectionId-test-build-deploy-pipeline
+images:
+- id: my-nodejs-express
+  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.2
+```
+
 ### 2. Re-run the scripts
 
 Run `build.sh` and `release.sh` again. From collections home run:
