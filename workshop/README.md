@@ -53,6 +53,7 @@ In the second day we'll learn about Kabanero Enterprise and how to productionize
 This workshop has been tested on the following platforms:
 
 * **macOS**: Mojave (10.14), Catalina (10.15)
+* **Windows** Windows 10 (with enterprise AAD and git bash)
 
 ## About Cloud Pak for Applications
 
@@ -75,7 +76,8 @@ Cloud Pak for Applications:
 
 ## Credits
 
-This workshop was created by Henry Nash and Steve Martinelli. Content was leveraged content from other IBM'ers such as:
+This workshop was primarily written by [Henry Nash](https://github.com/henrynash) and [Steve Martinelli](https://github.com/stevemar). Many other IBMers have contributed to help shape, test, and contribute to the workshop.
 
-* [Appsody Code Pattern - Greg Dritschler](https://github.com/IBM/appsody-sample-quote-app)
-* [Learning Kabanero 101 - Carlos Santana](https://ibm-cloud-architecture.github.io/Learning-Kabanero-101)
+* [Greg Dritschler](https://github.com/GregDritschler): For his [Insurance Quote Code Pattern](https://github.com/IBM/appsody-sample-quote-app)
+* [Carlos Santana](https://github.com/csantanapr): For his [Learning Kabanero 101 Tutorial](https://ibm-cloud-architecture.github.io/Learning-Kabanero-101)
+* [Tim Robinson](https://github.com/timroster): For testing the lab on Windows
