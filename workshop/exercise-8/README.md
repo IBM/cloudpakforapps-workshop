@@ -2,6 +2,8 @@
 
 In this exercise, we will show how to create Tekton artifacts, and how to plug into the existing pipelines and environment knowledge that Kabanero provides to those artifacts.
 
+> FIXME (henrynash): This exercise is standalone - i.e. Exercise 9 is not dependent on it. So this exercise is more of an intro into creating pipelines & tasks. Should we keep this in or remove it?
+
 When you have completed this exercise, you will understand how to
 
 * create a custom Task in Tekton

@@ -25,7 +25,7 @@ Obtain the URL to the collection repository. If a Git release was created for th
 
 In our workshop, it'll likely be:
 
-`https://github.com/<username>/collections/releases/download/0.3.0-custom/kabanero-index.yaml`
+`https://github.com/<username>/collections/releases/download/0.2.1-custom/kabanero-index.yaml`
 
 * Replace `<username>` with your Github username
 
@@ -63,7 +63,7 @@ spec:
   collections:
     repositories:
     - name: custom
-      url: https://github.com/<username>/collections/releases/download/0.3.0-custom/kabanero-index.yaml
+      url: https://github.com/<username>/collections/releases/download/0.2.1-custom/kabanero-index.yaml
       activateDefaultCollections: true
 ```
 
@@ -78,7 +78,7 @@ First, your collection should appear in the Cloud Pak for Applications dashboard
 Now that we know the URL, let's add the repo to our local appsody
 
 ```bash
-appsody repo add stevemar https://github.com/stevemar/collections/releases/download/0.3.0/kabanero-index.yaml
+appsody repo add stevemar https://github.com/stevemar/collections/releases/download/0.2.1-custom/kabanero-index.yaml
 ```
 
 Create a new directory to work in:
@@ -100,7 +100,7 @@ You should see output similar to the following:
 ```bash
 $ appsody init stevemar/my-nodejs-express
 Running appsody init...
-Downloading my-nodejs-express template project from https://github.com/stevemar/collections/releases/download/0.3.0-custom/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
+Downloading my-nodejs-express template project from https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
 Download complete. Extracting files from /Users/stevemar/appsody-apps/testo/my-nodejs-express.tar.gz
 ...
 Pulling docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.2
