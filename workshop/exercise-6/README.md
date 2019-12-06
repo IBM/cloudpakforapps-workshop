@@ -61,7 +61,7 @@ Clone the default collections repository and create a new copy of it in your Git
 cd ~/appsody-apps/
 git clone https://github.com/kabanero-io/collections
 cd collections
-git checkout tags/0.2.1 -b 0.2.1
+git checkout tags/0.2.1 -b 0.2.1-custom
 git remote add my-org https://github.com/<username>/collections.git
 git push -u my-org
 ```
@@ -146,8 +146,6 @@ ls incubator
 common java-spring-boot2 nodejs nodejs-loopback
 java-microprofile my-nodejs-express nodejs-express triggers
 ```
-
-> FIXME(stevemar): The stack `my-nodejs-express` is missing `collection.yaml` and `pipelines` as `appsody stack create` doesn't allow collections as the base stack. Bug?
 
 Create a new file called `collection.yaml` in `collections/incubator/my-nodejs-express`, add the following:
 
@@ -245,9 +243,39 @@ Tagging docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b8
 ...
 ```
 
-> FIXME(stevemar): the `image` property in `kabanero-index.yaml` should be updated in `build.sh`. Bug?
+> NOTE: Since this above is pushing a lot of images, it is possible that you might see this command fail with a timeout error, or unknown blob. Retrying the command (more than once if necessary) will get round this issue.
 
-Open up `collections/ci/release/kabanero-index.yaml` and find your custom stack. Change the `image` URL to specify your docker registry. It should look like:
+Open up `collections/ci/release/kabanero-index.yaml` and find your custom stack. It should look something like:
+
+```yaml
+- default-image: my-nodejs-express
+  default-pipeline: default
+  default-template: simple
+  description: Express web framework for Node.js with Helmet
+  id: my-nodejs-express
+  images:
+  - id: my-nodejs-express
+    image: kabanero-noauth/my-nodejs-express:0.2
+  language: nodejs
+  license: Apache-2.0
+  maintainers:
+  - email: stevemar@ca.ibm.com
+    github-id: stevemar
+    name: Steve Martinelli
+  name: Node.js Express with Helmet
+  pipelines:
+  - id: default
+    sha256: 9f202247428d421fd9045a2090204c138c156ca57db1d5deacfb658e599aa2bf
+    url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.common.pipeline.default.tar.gz
+  templates:
+  - id: scaffold
+    url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.my-nodejs-express.v0.2.8.templates.scaffold.tar.gz
+  - id: simple
+    url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
+  version: 0.2.8
+```
+
+Change the `image` URL to be prefixed with your docker registry (the one you stored in `$IMAGE_REGISTRY`), and update the urls for your pipelines and templates to reference your new release:
 
 ```yaml
 - default-image: my-nodejs-express
@@ -268,12 +296,12 @@ Open up `collections/ci/release/kabanero-index.yaml` and find your custom stack.
   pipelines:
   - id: default
     sha256: 9f202247428d421fd9045a2090204c138c156ca57db1d5deacfb658e599aa2bf
-    url: https://github.com/stevemar/collections/releases/download/0.3.0/incubator.common.pipeline.default.tar.gz
+    url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.common.pipeline.default.tar.gz
   templates:
   - id: scaffold
-    url: https://github.com/stevemar/collections/releases/download/0.3.0/incubator.my-nodejs-express.v0.2.8.templates.scaffold.tar.gz
+    url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.2.8.templates.scaffold.tar.gz
   - id: simple
-    url: https://github.com/stevemar/collections/releases/download/0.3.0/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
+    url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
   version: 0.2.8
 ```
 
@@ -295,17 +323,19 @@ git push -u my-org
 To create a full release of the collections, create a git tag:
 
 ```bash
-git tag 0.3.0-custom -m "Custom collections, version 0.3.0-custom"
+git tag 0.2.1-custom -m "Custom collections, version 0.2.1-custom"
 git push --tags
 ```
 
+> FIXME (henrynash): In the following pictures, the release should be 0.2.1-custom, not 0.3.0-custom.
+
 Navigating back to your GitHub repo, you should see a new release available:
 
-![Our own collection, version 0.3.0-custom](images/new-release.png)
+![Our own collection, version 0.2.1-custom](images/new-release.png)
 
-Clicking on the release name (0.3.0-custom) will allow you to edit the release.
+Clicking on the release name (0.2.1-custom) will allow you to edit the release.
 
-![Our own collection, page for version 0.3.0-custom](images/new-release-main.png)
+![Our own collection, page for version 0.2.1-custom](images/new-release-main.png)
 
 Click on *Edit tag*. and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
 
@@ -317,7 +347,7 @@ Once you have uploaded the files you can publish your new collection by clicking
 
 You will note that the collection includes the `kabanero-index.yaml` file we edited earlier. The url to this index file is is what you will provide appsody as a link to your new custom repository (that is contained within the new collection. You normally obtain and copy the url (depending on your browser) by CNTL-clicking over the `kabanero-index.yaml` item in the list of files shown in the release. It should be of the form:
 
-`https://github.com/<username>/collections/releases/download/0.3.0-custom/kabanero-index.yaml`
+`https://github.com/<username>/collections/releases/download/0.2.1-custom/kabanero-index.yaml`
 
 You will need this url for the next exercise, where we will create an appsody application based on your new collection.
 

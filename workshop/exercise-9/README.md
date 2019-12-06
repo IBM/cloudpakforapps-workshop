@@ -23,6 +23,8 @@ You should have already carried out the prerequisites defined in [Exercise 8](..
 
 Run `tkn task delete` and `tkn pipeline delete`
 
+> FIXME (henrynash): IF we do keep exercise 8, then need to describe the above better (e.g. install tkn?)?
+
 ## Steps
 
 ### 1. Add the tasks to the collection
@@ -33,9 +35,9 @@ In your local `collections/incubator/my-nodejs-express/pipelines` folder add a n
 incubator
 └── my-nodejs-express/
     └── pipelines/
-        └── my-custom-pipeline/
-                └── test-task.yaml
-                └── test-build-deploy-pipeline.yaml
+        └── custom-pipeline/
+              └── test-task.yaml
+              └── test-build-deploy-pipeline.yaml
 ```
 
 The `test-task.yaml` is the same as in Exercise 8
@@ -91,7 +93,7 @@ spec:
   tasks:
     - name: test-task
       taskRef:
-        name: test-task
+        name: CollectionId-test-task
       resources:
         inputs:
         - name: git-source
@@ -160,6 +162,17 @@ And that the generated `ci/release/kabanero-index.yaml` has a section like the f
     url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.my-nodejs-express.v0.2.9.pipeline.custom-pipeline.tar.gz
 ```
 
+Like we did in Exercise 6, we need to ensure the url for our custom pipeline points at our new collection:
+
+```yaml
+- default-image: my-nodejs-express
+  ...
+  pipelines:
+  - id: custom-pipeline
+    sha256: e3c3050850bf88b97c8fba728592d0cf671bb9d27b582ebaa9f90d939bfa60a5
+    url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.2.9.pipeline.custom-pipeline.tar.gz
+```
+
 ### 3. Release a point release
 
 Upload the changes and add a new tag
@@ -178,13 +191,25 @@ git push -u my-org
 To create a full release of the collections, create a git tag:
 
 ```bash
-git tag 0.3.1-custom -m "Custom collections, version 0.3.1-custom"
+git tag 0.2.1-custom2 -m "Custom collections, version 0.2.1-custom2"
 git push --tags
 ```
 
-> Needs more text here...
+Navigating back to your GitHub repo, you should see a new release available:
 
-Re-add the files with the GitHub UI
+![Our own collection, version 0.2.1-custom2](images/new-release.png)
+
+Clicking on the release name (0.2.1-custom) will allow you to edit the release.
+
+![Our own collection, page for version 0.2.1-custom2](images/new-release-main.png)
+
+Click on *Edit tag*. and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
+
+![Our own collection, upload files to release](images/edit-release.png)
+
+Once you have uploaded the files you can publish your new collection by clicking *Publish release*, at the bottom of the page
+
+![Our own collection, published](images/new-release-published.png)
 
 ### 4. Update Kabanero CRD
 
@@ -194,7 +219,7 @@ Run:
 oc edit kabaneros kabanero -n kabanero
 ```
 
-Update the URL with the new release
+Update the URL with the new release (i.e. referencing `0.2.1-custom2`):
 
 ```yaml
 apiVersion: kabanero.io/v1alpha1
@@ -206,13 +231,13 @@ spec:
   collections:
     repositories:
     - name: custom
-      url: https://github.com/<username>/collections/releases/download/0.3.1-custom/kabanero-index.yaml
+      url: https://github.com/<username>/collections/releases/download/0.2.1-custom2/kabanero-index.yaml
       activateDefaultCollections: true
 ```
 
 ### 5. Test it all out
 
-Go to tekton, you should see the new pipeline and task (it was added when updating the Kabanero CRD)
+If you go to the tekton dashboard, you should see the new pipeline and task (it was added when updating the Kabanero CR by the Kabanero Operator)
 
 ![New pipelines!](images/new-pipelines.png)
 
