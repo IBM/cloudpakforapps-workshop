@@ -96,8 +96,8 @@ oc policy add-role-to-group registry-viewer system:unauthenticated -n kabanero-n
 > NOTE: You may seem a warning about this step, but it should still have worked, e.g.
 
 ```bash
-$ oc new-project kabanero-noauth
-$ oc policy add-role-to-group registry-viewer system:unauthenticated -n kabanero-noauth
+oc new-project kabanero-noauth
+oc policy add-role-to-group registry-viewer system:unauthenticated -n kabanero-noauth
 Warning: Group 'system:unauthenticated' not found
 role "registry-viewer" added: "system:unauthenticated"
 ```
