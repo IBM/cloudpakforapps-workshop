@@ -256,16 +256,30 @@ Navigating back to the registry dashboard should show the new image.
 
 ### 4. Deploy the frontend application to OpenShift
 
-We are now going to deploy the frontend application to OpenShift. The steps are similar to what we did for the backend application.
+We are now going to deploy the frontend application to OpenShift. The steps are similar to what we did for the backend application. The difference here is that we need to tell the frontend application how to talk to the backend application. The frontend will look at an environment variable `BACKEND_URL` to find the address of the backend, so we will set this in the application CR.
 
-First we need to generate the deployment yaml so that we can edit it. Change the current directory back to the frontend application and generate the deployment yaml.
+Now we could specify this as the actual exposed backend url we used earlier, however since both front and backend are running within the same cluster, it is better to use the service that is defined for the backend. You can see this by entering:
+
+```bash
+oc get services
+```
+
+which should produce something like:
+
+```bash
+$ oc get services
+NAME             TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+quote-backend    NodePort   172.21.175.254   <none>        8080:32379/TCP   15m
+```
+
+In order to be able to reference this in the application CR, we first we need to generate the deployment yaml so that we can edit it. Change the current directory back to the frontend application and generate the deployment yaml.
 
 ```bash
 cd ../quote-frontend
 appsody deploy --generate-only
 ```
 
-Edit the file that was created, `app-deploy.yaml`, and add the `env` section as shown below (which defines an environment variable with the URL of the backend application within the cluster, be sure to include `/quote` at the end). Be careful to match the indentation (`env:` is indented the same number of spaces as `applicationImage:`). `url-to-backend` is the same as the one we tested about against the backend.
+Edit the file that was created, `app-deploy.yaml`, and add the `env` section as shown below (which defines an environment variable with the URL of the backend application within the cluster). Be careful to match the indentation (`env:` is indented the same number of spaces as `applicationImage:`):
 
 ```yaml
 apiVersion: appsody.dev/v1beta1
@@ -278,7 +292,7 @@ spec:
   applicationImage: quote-frontend
   env:
   - name: BACKEND_URL
-    value: <url-to-backend>
+    value: quote-backend
   .
   .
   .
