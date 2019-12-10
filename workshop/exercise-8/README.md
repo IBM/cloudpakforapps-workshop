@@ -2,8 +2,6 @@
 
 In this exercise, we will show how to create Tekton artifacts, and how to plug into the existing pipelines and environment knowledge that Kabanero provides to those artifacts.
 
-> FIXME (henrynash): This exercise is standalone - i.e. Exercise 9 is not dependent on it. So this exercise is more of an intro into creating pipelines & tasks. Should we keep this in or remove it?
-
 When you have completed this exercise, you will understand how to
 
 * create a custom Task in Tekton
@@ -46,22 +44,16 @@ drwxr-xr-x  14 stevemar  staff    448 19 Nov 14:20 .
 drwxr-xr-x   9 stevemar  staff    288 19 Nov 16:26 ..
 -rw-r--r--   1 stevemar  staff     70 15 Nov 10:02 .appsody-config.yaml
 -rw-r--r--   1 stevemar  staff   1316 15 Nov 10:02 .gitignore
--rw-r--r--   1 stevemar  staff    111 15 Nov 10:47 Dockerfile
 -rw-r--r--   1 stevemar  staff    130 15 Nov 10:12 app.js
 drwxr-xr-x   2 stevemar  staff     64 15 Nov 10:03 node_modules
 -rw-r--r--   1 stevemar  staff  51421 15 Nov 10:02 package-lock.json
 -rw-r--r--   1 stevemar  staff    455 19 Nov 12:52 package.json
-drwxr-xr-x   4 stevemar  staff    128 19 Nov 12:53 pipelines
 drwxr-xr-x   3 stevemar  staff     96 15 Nov 10:02 test
 ```
 
 We will now upload that code to Github.
 
 Go to <https://github.com/new> and create a new repository, `test-custom-stack`. Do not initiatize the repos with a license file or README.
-
-> TODO(stevemar): update this image, do i even need it?
-
-![New repo](images/new_repo.png)
 
 From your `test-custom-stack` directory, run the commands below, replacing `<username>` with your own.
 
@@ -87,7 +79,7 @@ mkdir tekton-tasks
 cd tekton-tasks
 ```
 
-Create a new file named `test-task.yaml`.
+Create a new file named `test-task.yaml` with the following contents:
 
 ```yaml
 apiVersion: tekton.dev/v1alpha1
@@ -126,12 +118,12 @@ spec:
 Run the following to create the Task in Tekton:
 
 ```bash
-kubectl apply -f test-task.yaml -n kabanero
+oc apply -f test-task.yaml -n kabanero
 ```
 
 ### 3. Create a custom Tekton Pipeline
 
-Create a new file named `test-pipeline.yaml`.
+Create a new file named `test-pipeline.yaml` with the following contents:
 
 ```yaml
 apiVersion: tekton.dev/v1alpha1
@@ -157,7 +149,7 @@ spec:
 Run the following to create the Pipeline in Tekton:
 
 ```bash
-kubectl apply -f test-pipeline.yaml -n kabanero
+oc apply -f test-pipeline.yaml -n kabanero
 ```
 
 ### 4. Add a webhook to Tekton to watch Github for changes
@@ -180,6 +172,8 @@ Pipeline: test-pipeline
 Service account: kabanero-operator
 Docker Registry: docker-registry.default.svc:5000/kabanero
 ```
+
+Return to your git repo and check the `Settings` > `Webhooks` panel to verify that the webhook has been added and is working.
 
 ### 5. Test it all out
 
