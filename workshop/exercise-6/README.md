@@ -88,7 +88,12 @@ experimental (or incubator, or stable)
 
 To actually use the stacks we need images, images will be hosted on openshift
 
-> FIXME(stevemar): You may seem a warning about this step, but it should work.
+```bash
+oc new-project kabanero-noauth
+oc policy add-role-to-group registry-viewer system:unauthenticated -n kabanero-noauth
+```
+
+> NOTE: You may seem a warning about this step, but it should still have worked, e.g.
 
 ```bash
 oc new-project kabanero-noauth
@@ -101,11 +106,15 @@ role "registry-viewer" added: "system:unauthenticated"
 
 There are several environment variables that need to be set up. These are required in order to correctly build the collections.
 
+> NOTE: When setting the `TRAVIS_REPO_SLUG` variable, make sure you substitute the actual github repo you created above in place of `<username>`.
+
 ```bash
 export IMAGE_REGISTRY_ORG=kabanero-noauth
 export IMAGE_REGISTRY_PUBLISH=true
 export IMAGE_REGISTRY_USERNAME=$(oc whoami)
 export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
+export TRAVIS_REPO_SLUG=<username>/collections
+export TRAVIS_TAG=0.2.1-custom
 ```
 
 In addition to the above the IMAGE_REGISTRY environment variable should still be set from [Exercise 3](../exercise-3/README.md), which you can check with:
@@ -167,7 +176,7 @@ From the collections directory, run the build script. For example:
 
 ```bash
 cd ~/appsody-apps/collections
-./ci/build.sh
+IMAGE_REGISTRY_ORG=$IMAGE_REGISTRY/$IMAGE_REGISTRY_ORG ./ci/build.sh
 ```
 
 > **NOTE**: This process can take several minutes to complete.
@@ -210,9 +219,10 @@ error=0
 
 ### 6. Push collection images
 
-This command actually pushes the images to the image registry
+To push the collection images, there is a little editing of one of the image list files (ensuring the registry location is correct), and then there is a release script that will do the actual pushing to the image registry. The two commands below will achieve this:
 
 ```bash
+sed -i".bak" -e "s/$IMAGE_REGISTRY\///" ci/build/image_list && rm -f ci/build/image_list.bak
 ./ci/release.sh
 ```
 
@@ -244,66 +254,6 @@ Tagging docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b8
 ```
 
 > NOTE: Since this above is pushing a lot of images, it is possible that you might see this command fail with a timeout error, or unknown blob. Retrying the command (more than once if necessary) will get round this issue.
-
-Open up `collections/ci/release/kabanero-index.yaml` and find your custom stack. It should look something like:
-
-```yaml
-- default-image: my-nodejs-express
-  default-pipeline: default
-  default-template: simple
-  description: Express web framework for Node.js with Helmet
-  id: my-nodejs-express
-  images:
-  - id: my-nodejs-express
-    image: kabanero-noauth/my-nodejs-express:0.2
-  language: nodejs
-  license: Apache-2.0
-  maintainers:
-  - email: stevemar@ca.ibm.com
-    github-id: stevemar
-    name: Steve Martinelli
-  name: Node.js Express with Helmet
-  pipelines:
-  - id: default
-    sha256: 9f202247428d421fd9045a2090204c138c156ca57db1d5deacfb658e599aa2bf
-    url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.common.pipeline.default.tar.gz
-  templates:
-  - id: scaffold
-    url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.my-nodejs-express.v0.2.8.templates.scaffold.tar.gz
-  - id: simple
-    url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
-  version: 0.2.8
-```
-
-Change the `image` URL to be prefixed with your docker registry (the one you stored in `$IMAGE_REGISTRY`), and update the urls for your pipelines and templates to reference your new release:
-
-```yaml
-- default-image: my-nodejs-express
-  default-pipeline: default
-  default-template: simple
-  description: Express web framework for Node.js with Helmet
-  id: my-nodejs-express
-  images:
-  - id: my-nodejs-express
-    image: docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.2
-  language: nodejs
-  license: Apache-2.0
-  maintainers:
-  - email: stevemar@ca.ibm.com
-    github-id: stevemar
-    name: Steve Martinelli
-  name: Node.js Express with Helmet
-  pipelines:
-  - id: default
-    sha256: 9f202247428d421fd9045a2090204c138c156ca57db1d5deacfb658e599aa2bf
-    url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.common.pipeline.default.tar.gz
-  templates:
-  - id: scaffold
-    url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.2.8.templates.scaffold.tar.gz
-  - id: simple
-    url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
-  version: 0.2.8
-```
 
 ### 7. Update code repo and release a new collection
 
