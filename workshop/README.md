@@ -15,7 +15,7 @@ The introductory page of the workshop is broken down into the following sections
 
 * [Agenda](#agenda)
 * [Compatability](#compatability)
-* [About Cloud Pak for Applications](#about-cloud-pak-for-application)
+* [About Cloud Pak for Applications](#about-cloud-pak-for-applications)
 * [Credits](#credits)
 
 ## Agenda
