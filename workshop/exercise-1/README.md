@@ -22,7 +22,7 @@ You should see output similar to the following:
 
 ```bash
 $ appsody version
-appsody 0.5.0
+appsody 0.5.3
 ```
 
 ## Steps
