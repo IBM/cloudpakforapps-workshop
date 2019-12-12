@@ -61,8 +61,8 @@ From your `test-custom-stack` directory, run the commands below, replacing `<use
 git init
 git add -A
 git commit -m "first commit"
-git remote add origin git@github.com:<username>/test-custom-stack.git
-git push -u origin master
+git remote add my-org git@github.com:<username>/test-custom-stack.git
+git push -u my-org
 ```
 
 The repo should look like this:
