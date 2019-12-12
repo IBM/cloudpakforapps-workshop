@@ -130,7 +130,7 @@ In `incubator/my-nodejs-express` update `collection.yaml` to change the default 
 
 ```yaml
 default-image: my-nodejs-express
-default-pipeline: CollectionId-test-build-deploy-pipeline
+default-pipeline: my-nodejs-express-test-build-deploy-pipeline
 images:
 - id: my-nodejs-express
   image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.2

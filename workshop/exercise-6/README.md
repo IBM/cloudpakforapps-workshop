@@ -117,18 +117,18 @@ export TRAVIS_REPO_SLUG=<username>/collections
 export TRAVIS_TAG=0.2.1-custom
 ```
 
-In addition to the above the IMAGE_REGISTRY environment variable should still be set from [Exercise 3](../exercise-3/README.md), which you can check with:
+In addition to the above, the IMAGE_REGISTRY environment variable should still be set from [Exercise 3](../exercise-3/README.md), which you can check with:
 
 ```bash
 env | grep IMAGE_REGISTRY
 ```
 
 ```bash
-$ env | grep
+$ env | grep IMAGE_REGISTRY
 IMAGE_REGISTRY=docker-registry-default.henrycluster6-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-gb.containers.appdomain.cloud
 ```
 
-If `IMAGE_REGISTRY` is not set, then you need to set it up again described in [Exercise 3 - Access the internal docker registry](../exercise-3/README.md#2-access-the-internal-docker-registry)
+If `IMAGE_REGISTRY` is not set, then you need to set it up again, as described in [Exercise 3 - Access the internal docker registry](../exercise-3/README.md#2-access-the-internal-docker-registry)
 
 ### 4. Add our custom stack to the new collection
 
