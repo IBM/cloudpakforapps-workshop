@@ -214,7 +214,7 @@ $ curl -v localhost:3000
 Hello from Appsody!
 ```
 
-Stop this current appsody run by either using Ctrl-C in the initial terminal window or running `appsody stop` in a separate terminal window, from within the same directory.
+Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory.
 
 For this exercise we will modify the stack to include the popular HTTP header security module [helmet](https://helmetjs.github.io), and hence this should change the headers we see returned to us. Note we will do this as a *stack architect* since we don't want to rely on *application developers* remembering to do this. By doing this in the stack itself, all applications built using our modified stack will have helmet automatically enabled.
 
@@ -387,6 +387,8 @@ Hello from Appsody!*
 
 As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
 
+Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory.
+
 ### 4. Use the new stack in our example application
 
 A final step is to switch the actual quote-frontend application we built in [Exercise 2](../exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
@@ -497,5 +499,7 @@ Found. Redirecting to /quote
 ```
 
 We can tell our sample application is now using the new stack because it includes the new security related headers.
+
+Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory.
 
 **Congratulations**! We have successfully built and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.
