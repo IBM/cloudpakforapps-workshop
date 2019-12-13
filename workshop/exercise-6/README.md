@@ -120,11 +120,11 @@ export TRAVIS_TAG=0.2.1-custom
 In addition to the above, the IMAGE_REGISTRY environment variable should still be set from [Exercise 3](../exercise-3/README.md), which you can check with:
 
 ```bash
-env | grep IMAGE_REGISTRY
+echo $IMAGE_REGISTRY
 ```
 
 ```bash
-$ env | grep IMAGE_REGISTRY
+$ echo $IMAGE_REGISTRY
 IMAGE_REGISTRY=docker-registry-default.henrycluster6-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-gb.containers.appdomain.cloud
 ```
 
@@ -138,11 +138,11 @@ List the collections before the copy:
 
 ```bash
 ls incubator
-common java-spring-boot2 nodejs-express triggers
+common java-spring-boot2 nodejs-express
 java-microprofile nodejs nodejs-loopback
 ```
 
-Now copy in our new customer stack:
+Now copy in our new custom stack:
 
 ```bash
 cp -R ~/appsody-apps/my-nodejs-express incubator
@@ -164,6 +164,21 @@ default-pipeline: default
 images:
 - id: my-nodejs-express
   image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.2
+```
+
+Edit the new file called `stack.yaml` in `collections/incubator/my-nodejs-express` (you will probably see a different version, that's ok to keep as-is):
+
+```yaml
+name: Node.js Express with Helmet
+version: 0.2.8
+description: Express web framework for Node.js with Helmet
+license: Apache-2.0
+language: nodejs
+maintainers:
+  - name: Your Name
+    email: your email
+    github-id: yourgithubid
+default-template: simple
 ```
 
 And also create a directory called `pipelines` in `collections/incubator/my-nodejs-express`, and add a single empty file called `.gitkeep`.
@@ -219,17 +234,17 @@ error=0
 
 ### 6. Push collection images
 
-To push the collection images, there is a little editing of one of the image list files (ensuring the registry location is correct), and then there is a release script that will do the actual pushing to the image registry. The two commands below will achieve this:
+To push the collection images, there is a release script that will do the actual pushing to the image registry. The current scripts have a minor issue with private registry login and tagging so first log in to the private registry, and then run the release script. The two commands below will achieve this:
 
 ```bash
-sed -i".bak" -e "s/$IMAGE_REGISTRY\///" ci/build/image_list && rm -f ci/build/image_list.bak
-./ci/release.sh
+echo $IMAGE_REGISTRY_PASSWORD | docker login -u $IMAGE_REGISTRY_USERNAME --password-stdin $IMAGE_REGISTRY
+IMAGE_REGISTRY="" IMAGE_REGISTRY_PASSWORD="" ./ci/release.sh
 ```
 
 You should see output like the following, take note of the `my-nodejs-express` stack being pushed to the registry, and ensure there are no errors in the output:
 
 ```bash
-$ ./ci/release.sh
+$ IMAGE_REGISTRY="" IMAGE_REGISTRY_PASSWORD="" ./ci/release.sh
  == Running pre_env.d scripts
  == Done pre_env.d scripts
  == Running post_env.d scripts
@@ -295,10 +310,10 @@ Once you have uploaded the files you can publish your new collection by clicking
 
 ![Our own collection, published](images/new-release-published.png)
 
-You will note that the collection includes the `kabanero-index.yaml` file we edited earlier. The url to this index file is is what you will provide appsody as a link to your new custom repository (that is contained within the new collection. You normally obtain and copy the url (depending on your browser) by CNTL-clicking over the `kabanero-index.yaml` item in the list of files shown in the release. It should be of the form:
+You will note that the collection includes the `kabanero-index.yaml` file we edited earlier. The url to this index file is is what you will provide appsody as a link to your new custom repository (that is contained within the new collection. You normally obtain and copy the url (depending on your browser) by right (or secondary) clicking over the `kabanero-index.yaml` item in the list of files shown in the release. It should be of the form:
 
 `https://github.com/<username>/collections/releases/download/0.2.1-custom/kabanero-index.yaml`
 
 You will need this url for the next exercise, where we will create an appsody application based on your new collection.
 
-**Congratulations!!** We've just created our own custom collection that included our own custom stack. Now we need to update our Kabanero instance to use this new collection. On to the next exercise.
+**Congratulations!!** We've just created our own custom collection that included our own custom stack. Now we need to test our released collection using Appsody. On to the next exercise.
