@@ -175,8 +175,8 @@ You should see output similar to the following:
 ```bash
 $ appsody run
 Running development environment...
-Using local cache for image dev.local/my-nodejs-express:SNAPSHOT
-Running docker command: docker run --rm -p 3000:3000 -p 9229:9229 --name test73-dev -v /Users/henrynash/codewind-workspace/test73/:/project/user-app -v test73-deps:/project/user-app/node_modules -v /Users/henrynash/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller dev.local/my-nodejs-express:SNAPSHOT --mode=run
+Using local cache for image dev.local/appsody/my-nodejs-express:0.2
+Running docker command: docker run --rm -p 3000:3000 -p 9229:9229 --name test73-dev -v /Users/henrynash/codewind-workspace/test73/:/project/user-app -v test73-deps:/project/user-app/node_modules -v /Users/henrynash/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller dev.local/appsody/my-nodejs-express:0.2 --mode=run
 [Container] Running APPSODY_PREP command: npm install --prefix user-app && npm audit fix --prefix user-app
 added 170 packages from 578 contributors and audited 295 packages in 3.5s
 [Container] found 0 vulnerabilities
@@ -214,7 +214,7 @@ $ curl -v localhost:3000
 Hello from Appsody!
 ```
 
-Stop this current appsody run by either using CNTL-C in the initial terminal window or running `appsody stop` in a separate terminal window, from within the same directory.
+Stop this current appsody run by either using Ctrl-C in the initial terminal window or running `appsody stop` in a separate terminal window, from within the same directory.
 
 For this exercise we will modify the stack to include the popular HTTP header security module [helmet](https://helmetjs.github.io), and hence this should change the headers we see returned to us. Note we will do this as a *stack architect* since we don't want to rely on *application developers* remembering to do this. By doing this in the stack itself, all applications built using our modified stack will have helmet automatically enabled.
 
@@ -436,11 +436,11 @@ stack: kabanero/nodejs-express:0.2
 
 We can simply change the second line to, instead, point to our new stack, i.e.:
 
-> **NOTE**: When using a stack that is in development, we won't have a version number, so we will use the keyword `SNAPSHOT` to represent the local version.
+> **NOTE**: When using a stack that is in development, it will carry semantic versioning derived from the original copied stack in addition to a latest tag.
 
 ```bash
 project-name: quote-frontend
-stack: dev.local/my-nodejs-express:SNAPSHOT
+stack: dev.local/appsody/my-nodejs-express:latest
 ```
 
 Now re-run the frontend with `appsody run`:
@@ -454,7 +454,7 @@ It should use our new stack:
 ```bash
 $ appsody run
 Running development environment...
-Using local cache for image dev.local/my-nodejs-express:SNAPSHOT
+Using local cache for image dev.local/appsody/my-nodejs-express:latest
 ...
 [Container] App started on PORT 3000
 ```
