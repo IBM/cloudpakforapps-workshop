@@ -1,6 +1,6 @@
 # Exercise 6: Building a custom Appsody Stack Collection in Kabanero
 
-In this exercise, we will show how to create a custom Kabanero collection, that include the custom Appsody Stack from the previous exercise.
+In this exercise, we will show how to create a custom Kabanero collection, that includes the custom Appsody Stack from the previous exercise.
 
 When you have completed this exercise, you will understand how to
 
@@ -24,6 +24,8 @@ brew install yq
 brew install python
 pip install pyYAML
 ```
+
+> NOTE: do not install the python yq package, it has a different syntax than the yq application and will cause the build scripts to fail.
 
 ## About custom Kabanero Repositories
 
@@ -268,7 +270,7 @@ Tagging docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b8
 ...
 ```
 
-> NOTE: Since this above is pushing a lot of images, it is possible that you might see this command fail with a timeout error, or unknown blob. Retrying the command (more than once if necessary) will get round this issue.
+> NOTE: Since this above is pushing a lot of images, it is possible that you might see this command fail with a timeout error, or unknown blob. Retrying the command (more than once if necessary) will resolve this issue.
 
 ### 7. Update code repo and release a new collection
 
@@ -292,15 +294,13 @@ git tag 0.2.1-custom -m "Custom collections, version 0.2.1-custom"
 git push --tags
 ```
 
-> FIXME (henrynash): In the following pictures, the release should be 0.2.1-custom, not 0.3.0-custom.
-
 Navigating back to your GitHub repo, you should see a new release available:
 
-![Our own collection, version 0.2.1-custom](images/new-release.png)
+![Our own collection, version 0.2.1-custom](images/new-release-0.2.1-custom.png)
 
 Clicking on the release name (0.2.1-custom) will allow you to edit the release.
 
-![Our own collection, page for version 0.2.1-custom](images/new-release-main.png)
+![Our own collection, page for version 0.2.1-custom](images/new-release-main-0.2.1-custom.png)
 
 Click on *Edit tag*. and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
 
@@ -308,7 +308,7 @@ Click on *Edit tag*. and then upload all the files in `collections/ci/release/` 
 
 Once you have uploaded the files you can publish your new collection by clicking *Publish release*, at the bottom of the page
 
-![Our own collection, published](images/new-release-published.png)
+![Our own collection, published](images/new-release-published-0.2.1-custom.png)
 
 You will note that the collection includes the `kabanero-index.yaml` file we edited earlier. The url to this index file is is what you will provide appsody as a link to your new custom repository (that is contained within the new collection. You normally obtain and copy the url (depending on your browser) by right (or secondary) clicking over the `kabanero-index.yaml` item in the list of files shown in the release. It should be of the form:
 
