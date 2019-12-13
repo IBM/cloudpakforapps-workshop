@@ -102,13 +102,21 @@ appsody deploy --generate-only
 ```
 
 ```bash
-TODO - capture output sample
+$ appsody deploy --generate-only
+Extracting project from development environment
+Pulling docker image docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+Running command: docker pull docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+0.3: Pulling from kabanero-noauth/my-nodejs-express
+Digest: sha256:9145b3477ca00e2401d100380460a5d813a6f291ee149d10ac7d989f1923f1e3
+Status: Image is up to date for docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+Running command: docker run --name test-custom-stack-extract -v C:/Users/TimRobinson/appsody-apps/test-custom-stack/:/project/user-app --entrypoint /bin/bash docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3 -c cp -rfL /project /tmp/project
+...
 ```
 
 After the command completes, check the contents of the application directory with `ls`
 
 ```bash
-TODO - capture output sample
+app.js  app-deploy.yaml  node_modules/  package.json  package-lock.json  test/
 ```
 
 **Congratulations!!** We've got a published custom stack and it can be used for local development.
