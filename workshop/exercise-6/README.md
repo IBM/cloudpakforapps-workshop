@@ -165,14 +165,14 @@ default-image: my-nodejs-express
 default-pipeline: default
 images:
 - id: my-nodejs-express
-  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.2
+  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.3
 ```
 
 Edit the new file called `stack.yaml` in `collections/incubator/my-nodejs-express` (you will probably see a different version, that's ok to keep as-is):
 
 ```yaml
 name: Node.js Express with Helmet
-version: 0.2.8
+version: 0.3.0
 description: Express web framework for Node.js with Helmet
 license: Apache-2.0
 language: nodejs
