@@ -214,17 +214,6 @@ And that the generated `ci/release/kabanero-index.yaml` has a section like the f
     url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.my-nodejs-express.v0.3.0.pipeline.custom-pipeline.tar.gz
 ```
 
-Like we did in Exercise 6, we need to ensure the url for our custom pipeline points at our new collection:
-
-```yaml
-- default-image: my-nodejs-express
-  ...
-  pipelines:
-  - id: custom-pipeline
-    sha256: e3c3050850bf88b97c8fba728592d0cf671bb9d27b582ebaa9f90d939bfa60a5
-    url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.2.9.pipeline.custom-pipeline.tar.gz
-```
-
 ### 3. Update the current release
 
 Upload the changes
@@ -247,8 +236,6 @@ Navigating back to your GitHub repo, select the current custom release:
 Clicking on the release name (0.2.1-custom) will allow you to edit the release. Click on *Edit tag*. Click on the **x** to delete existing items from the release and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
 
 ![Our own collection, page for version 0.2.1-custom](images/new-release-revise-0.2.1-custom.png)
-
-> FIXME (timroster) maybe just push the pipeline files.
 
 ### 4. Update the Kabanero Custom Resource
 
