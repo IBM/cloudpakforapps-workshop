@@ -211,7 +211,7 @@ And that the generated `ci/release/kabanero-index.yaml` has a section like the f
   pipelines:
   - id: custom-pipeline
     sha256: e3c3050850bf88b97c8fba728592d0cf671bb9d27b582ebaa9f90d939bfa60a5
-    url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.my-nodejs-express.v0.2.9.pipeline.custom-pipeline.tar.gz
+    url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.my-nodejs-express.v0.3.0.pipeline.custom-pipeline.tar.gz
 ```
 
 Like we did in Exercise 6, we need to ensure the url for our custom pipeline points at our new collection:
@@ -242,21 +242,13 @@ git push -u my-org
 
 Navigating back to your GitHub repo, select the current custom release:
 
-![Our own collection, version 0.2.1-custom](images/new-release.png)
+![Our own collection, version 0.2.1-custom](images/new-release-published-0.2.1-custom.png)
 
-Clicking on the release name (0.2.1-custom) will allow you to edit the release.
+Clicking on the release name (0.2.1-custom) will allow you to edit the release. Click on *Edit tag*. Click on the **x** to delete existing items from the release and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
 
-![Our own collection, page for version 0.2.1-custom](images/new-release-main.png)
-
-Click on *Edit tag*. Click on the **x** to delete existing items from the release and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
+![Our own collection, page for version 0.2.1-custom](images/new-release-revise-0.2.1-custom.png)
 
 > FIXME (timroster) maybe just push the pipeline files.
-
-![Our own collection, upload files to release](images/edit-release.png)
-
-Once you have uploaded the files you can publish your new collection by clicking *Publish release*, at the bottom of the page
-
-![Our own collection, published](images/new-release-published.png)
 
 ### 4. Update the Kabanero Custom Resource
 
@@ -304,7 +296,7 @@ If you go to the tekton dashboard, you should see the new pipeline and task (it 
 
 ![New pipelines!](images/new-pipelines.png)
 
-Re-add the webhook, this time you should see the new pipeline as an option (without having to do `kubectl apply`). Use the same settings for the webhook as in Exercise 8:
+Re-add the webhook, this time you should see the new pipeline as an option (without having to do `kubectl apply`). Use similar settings for the webhook as in Exercise 8:
 
 ```ini
 Name: custom-stack-webhook
@@ -312,13 +304,46 @@ Repository URL: http://github.com/{username}/test-custom-stack
 Access Token: github-tekton
 
 Namespace: kabanero
-Pipeline: test-pipeline
+Pipeline: my-nodejs-express-test-build-deploy-pipeline
 Service account: kabanero-operator
 Docker Registry: docker-registry.default.svc:5000/kabanero
 ```
 
-It should, in addition to running the new test task, also run the build and deploy task.
+It should, in addition to running the new test task, also run the build and deploy task. Make a minor update to your test-custom-stack repo and commit to trigger the webhook.
+
+Return to the Tekton *Pipeline Runs* tab to check on the status of your deployment.
+
+![Pipeline running](images/tekton-pipeline-run.png)
 
 Confirm it works with a curl -v to the route, should see helmet responses.
+
+```bash
+$ curl -v http://test-custom-stack-kabanero.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdom
+ain.cloud/
+*   Trying 169.62.48.20...
+* TCP_NODELAY set
+* Connected to test-custom-stack-kabanero.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud (169.62.48.20) port 80 (#0)
+> GET / HTTP/1.1
+> Host: test-custom-stack-kabanero.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
+> User-Agent: curl/7.63.0
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< X-DNS-Prefetch-Control: off
+< X-Frame-Options: SAMEORIGIN
+< Strict-Transport-Security: max-age=15552000; includeSubDomains
+< X-Download-Options: noopen
+< X-Content-Type-Options: nosniff
+< X-XSS-Protection: 1; mode=block
+< X-Powered-By: Express
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 34
+< ETag: W/"22-E8hT/HhjJRx/5AG3TOq9TBd5R7g"
+< Date: Sat, 14 Dec 2019 00:40:30 GMT
+< Set-Cookie: e23eec15db4cc24793d795555bb55650=b8749458e2714fe3be1767f782a35058; path=/; HttpOnly
+< Cache-control: private
+<
+Hello from a Custom Appsody Stack!* Connection #0 to host test-custom-stack-kabanero.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud left intact
+```
 
 **Congratulations!!** You've successfully completed Day 2 of the workshop!
