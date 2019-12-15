@@ -146,7 +146,7 @@ images:
   image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.3
 ```
 
-You also need to update a tag in the common `build-task.yaml` used for all stacks in the collection. This update will select a builder container that uses appsody 0.5.3 to support the private registry semantics used in these exercises.
+Unusually in these exercises, we have been using a version of appsody that is ahead of the current level baked into some the standard kabanero tekton artifacts, so there is one additional change that is needed to get around this. You need to update a tag in the common `build-task.yaml` used for all stacks in the collection. This update will select a builder container that uses appsody 0.5.3 to support the private registry semantics used in these exercises.
 
 Open the `incubator/common/pipelines/default/build-task.yaml` file and add the tag `:0.5.3-buildah1.9.0` to the image spec in the **assemble-extract** step as shown:
 
@@ -211,7 +211,7 @@ And that the generated `ci/release/kabanero-index.yaml` has a section like the f
   pipelines:
   - id: custom-pipeline
     sha256: e3c3050850bf88b97c8fba728592d0cf671bb9d27b582ebaa9f90d939bfa60a5
-    url: https://github.com/stevemar/collections/releases/download/0.2.1/incubator.my-nodejs-express.v0.3.0.pipeline.custom-pipeline.tar.gz
+    url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.3.0.pipeline.custom-pipeline.tar.gz
 ```
 
 ### 3. Update the current release
@@ -296,13 +296,23 @@ Service account: kabanero-operator
 Docker Registry: docker-registry.default.svc:5000/kabanero
 ```
 
-It should, in addition to running the new test task, also run the build and deploy task. Make a minor update to your test-custom-stack repo and commit to trigger the webhook.
+When the pipeline runs, it should, in addition to running the new test task, also run the build and deploy task. You can test this by making a minor update to your test-custom-stack repo. Once you have done this then re-commit to trigger the webhook by:
+
+```bash
+git add -u
+git commit -m "Minor update to test pipeline"
+git push -u my-org
+```
 
 Return to the Tekton *Pipeline Runs* tab to check on the status of your deployment.
 
 ![Pipeline running](images/tekton-pipeline-run.png)
 
-Confirm it works with a curl -v to the route, should see helmet responses.
+Once complete, you can see that all three tasks were run:
+
+> FIXME (henrynash): Add a picture that shows how you should see all three tasks have run.
+
+Confirm that our test application, with the upgraded stack, is now running with a curl -v to the route. You should see helmet responses, e.g.:
 
 ```bash
 $ curl -v http://test-custom-stack-kabanero.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdom
@@ -333,4 +343,4 @@ ain.cloud/
 Hello from a Custom Appsody Stack!* Connection #0 to host test-custom-stack-kabanero.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud left intact
 ```
 
-**Congratulations!!** You've successfully completed Day 2 of the workshop!
+**Congratulations!!** You have completed Day 2 of the workshop! You have successfully created a custom appsody stack, included it in a custom kabanero collection that also includes a custom pipeline - showing how you can adapt the standard kabanero infrastructure to suit the needs of your enterprise.
