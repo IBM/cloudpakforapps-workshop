@@ -103,7 +103,7 @@ export IMAGE_REGISTRY=<docker_url>
 And set our local `docker` command to use that registry, use `docker login`:
 
 ```bash
-docker login -u $(oc whoami) -p $(oc whoami -t) $IMAGE_REGISTRY
+oc whoami -t | docker login -u $(oc whoami) --password-stdin $IMAGE_REGISTRY
 ```
 
 ### 3. Deploy the backend application to OpenShift

@@ -1,10 +1,10 @@
-# Exercise 7: Configuring Kabanero to use an Alternate Collection Repository
+# Exercise 7: Using a custom collection with Appsody
 
-In this exercise, we will show how to update your Kabanero instance to use a custom Kabanero Collection Hub.
+In this exercise, we will show how to add the custom collection to your Appsody cli and to create an example application. Hint, this is going to be a lot like one of the exercises from day 1, but this time with your custom collection.
 
 When you have completed this exercise, you will understand how to
 
-* update the Kabanero Custom Resource to point to a new collection
+* update Appsody CLI to point to a new collection
 * test out the custom stack in our custom collection
 
 ![Tools used during Exercise 7](images/ex7.png)
@@ -16,12 +16,12 @@ You should have already carried out the prerequisites defined in [Exercise 6](..
 ## Steps
 
 1. [Get the collection URL](#1-get-the-collection-url)
-2. [Update the Kabanero Custom Resource](#2-update-the-kabanero-custom-resource)
-3. [Test the new stack and collection](#3-test-the-new-stack-and-collection)
+2. [Test the new stack and collection](#2-test-the-new-stack-and-collection)
+3. [Prepare the new application for deployment](#3-prepare-the-new-application-for-deployment)
 
 ### 1. Get the collection URL
 
-Obtain the URL to the collection repository. If a Git release was created for the collections, the URL format will be: `https://<github.com>/<organization>/collections/releases/download/<release>/kabanero-index.yaml`
+Obtain the URL to the collection repository. If a Git release was created for the collections, generally, the URL format will be: `https://<git repository>/<organization>/collections/releases/download/<release>/kabanero-index.yaml`
 
 In our workshop, it'll likely be:
 
@@ -29,51 +29,7 @@ In our workshop, it'll likely be:
 
 * Replace `<username>` with your Github username
 
-### 2. Update the Kabanero Custom Resource
-
-Use `oc get kabaneros -n kabanero` to obtain a list of all Kabanero CR instances in namespace `kabanero`. The default name for the CR instance is `kabanero`.
-
-```bash
-oc get kabaneros -n kabanero
-```
-
-You should see output similar to the following:
-
-```bash
-$ oc get kabaneros -n kabanero
-NAME       AGE       VERSION   READY
-kabanero   17d       0.1.0     True
-```
-
-Edit the specific CR instance using `oc edit kabaneros <name> -n kabanero`, replacing `<name>` with the instance name.
-
-```bash
-oc edit kabaneros kabanero -n kabanero
-```
-
-Modify your Kabanero custom resource (CR) instance to target the new collections that were pushed to the remote Github repository. The `Spec.Collections.Repositories.url` attribute should be set to the URL of the collection repository.
-
-```yaml
-apiVersion: kabanero.io/v1alpha1
-kind: Kabanero
-metadata:
-  name: kabanero
-  namespace: kabanero
-spec:
-  collections:
-    repositories:
-    - name: custom
-      url: https://github.com/<username>/collections/releases/download/0.2.1-custom/kabanero-index.yaml
-      activateDefaultCollections: true
-```
-
-When you are done editing, save your changes and exit the editor. The updated Kabanero CR instance will be applied to your cluster.
-
-### 3. Test the new stack and collection
-
-First, your collection should appear in the Cloud Pak for Applications dashboard.
-
-![New collection location for our Kabanero Enterprise](images/new-repo-url.png)
+### 2. Test the new stack and collection
 
 Now that we know the URL, let's add the repo to our local appsody
 
@@ -133,4 +89,34 @@ Application Metrics 5.0.3.201908230949 (Agent Core 4.0.3)
 
 Test it out with `curl` and you'll see the helmet headers.
 
-**Congratulations!!** We've got our Kabanero instance updated to use our custom collection.
+Use the `appsody stop` command in another terminal in the same directory to stop the running application.
+
+### 3. Prepare the new application for deployment
+
+Before you can deploy this application using the pipeline you will be building in the upcoming exercises, there needs to be a deployment file added to the application. The deployment file is called `app-deploy.yaml`. This file was created automatically for you in day 1 exercise 3 with the `appsody deploy` command.
+
+It can also be created without deploying an application using the `--generate-only` flag. Run this command:
+
+```bash
+appsody deploy --generate-only
+```
+
+```bash
+$ appsody deploy --generate-only
+Extracting project from development environment
+Pulling docker image docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+Running command: docker pull docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+0.3: Pulling from kabanero-noauth/my-nodejs-express
+Digest: sha256:9145b3477ca00e2401d100380460a5d813a6f291ee149d10ac7d989f1923f1e3
+Status: Image is up to date for docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+Running command: docker run --name test-custom-stack-extract -v C:/Users/TimRobinson/appsody-apps/test-custom-stack/:/project/user-app --entrypoint /bin/bash docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3 -c cp -rfL /project /tmp/project
+...
+```
+
+After the command completes, check the contents of the application directory with `ls`
+
+```bash
+app.js  app-deploy.yaml  node_modules/  package.json  package-lock.json  test/
+```
+
+**Congratulations!!** We've got a published custom stack and it can be used for local development.
