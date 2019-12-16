@@ -3,12 +3,12 @@
 The goals for this day are to customize each of the pre-configured asset from Day 1, meaning we will:
 
 * extend an Appsody Stack
-* publish a new Kabanero collections
+* publish a new Collections
 * add a new Tekton task to our Tekton pipeline
 
 Specifically, when you have completed this exercise, you will understand how to:
 
-* extend an Appsody stack to create a new asset to be used in our Kabanero collection
+* extend an Appsody stack to create a new asset to be used in our Collection
 
 ![Tools used during Exercise 5](images/ex5.png)
 
@@ -58,7 +58,7 @@ A pictorial view of how an application developer uses a stack, looks like this:
 
 ![Appsody Flow](images/appsody.png)
 
-The above development flow shows the manual deployment to a Kubernetes cluster. In more production-orientated environments, GitOps might trigger the build and deploy steps and Tekton Pipelines would drive the deployment. [Kabanero Collections](https://github.com/kabanero-io/collections/), which is part of [Cloud Pak for Applications](https://www.ibm.com/cloud/cloud-pak-for-applications), brings together Appsody stacks, GitOps, and Tekton Pipelines to provide an enterprise-ready solution for cloud-native application development and deployment. We'll look at this in later exercises.
+The above development flow shows the manual deployment to a Kubernetes cluster. In more production-orientated environments, GitOps might trigger the build and deploy steps and Tekton Pipelines would drive the deployment. [Collections](https://github.com/kabanero-io/collections/), which are a part of [Cloud Pak for Applications](https://www.ibm.com/cloud/cloud-pak-for-applications), bring together Appsody stacks, GitOps, and Tekton Pipelines to provide an enterprise-ready solution for cloud-native application development and deployment. We'll look at this in later exercises.
 
 ### 2. Stack structure
 

@@ -34,7 +34,7 @@ appsody 0.5.3
 
 ### 1. Configure Appsody CLI
 
-In this section we'll configure our Appsody CLI to pull in Kabanero collections.
+In this section we'll configure our Appsody CLI to pull in Collections.
 
 #### List existing Appsody stacks
 
@@ -52,9 +52,9 @@ NAME            URL
 *incubator      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
 
-The exact repo list may be different to the above. `incubator` is one of the repos in the appsody project public hub (`appsodyhub`). For this workshop we are going to use the private enterprise-grade collection of stacks that come with Kabanero Enterprise (which is part of Cloud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
+The exact repo list may be different to the above. `incubator` is one of the repos in the appsody project public hub (`appsodyhub`). For this workshop we are going to use the private enterprise-grade collection of stacks that come with the Kabanero open source project (which is part of Cloud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
 
-#### Add Kabanero Collection to Appsody
+#### Add Collection to Appsody
 
 From the Cloud Pak for Applications landing page get the `CollectionHub` URL, for example:
 
@@ -81,7 +81,7 @@ NAME            URL
 kabanero        https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
 ```
 
-We can now list the appsody stacks available in the Kabanero collection:
+We can now list the appsody stacks available in the Collection:
 
 ```bash
 appsody list kabanero
