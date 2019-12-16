@@ -9,7 +9,7 @@ Recall that the application from exercise 3 consists of:
 
 When you have completed this exercise, you will understand how to:
 
-* leverage Tekton pipelines with Kabanero collections to deploy applications to OpenShift
+* leverage Tekton pipelines with Collections to deploy applications to OpenShift
 
 ![Tools used during Exercise 4](images/ex4.png)
 

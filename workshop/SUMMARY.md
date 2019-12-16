@@ -15,16 +15,16 @@
     * [Lecture 3: Adding value with IBM Cloud Pak for Applications](https://ibm.box.com/s/y4wh104vdos1vw5kdjwwuhebf8jgq580)
     * [Exercise 4: Use Tekton and Kabanero Pipelines to continuously deploy](exercise-4/README.md)
 
-### Day 2 (In Progress)
+### Day 2
 
 * [About Day 2](about-day-2/README.md)
     * [Lecture 4: Customizing Appsody and Kabanero](https://ibm.box.com/s/kbuympaqftxswyi1aoswdlqussmqf1ba)
     * [Exercise 5: Customizing an existing Appsody Stack](exercise-5/README.md)
-    * [Exercise 6: Building a custom Kabanero Collection repository](exercise-6/README.md)
-    * [Exercise 7: Configuring Kabanero to use an Alternate Collection Repository](exercise-7/README.md)
+    * [Exercise 6: Building a custom Collection repository](exercise-6/README.md)
+    * [Exercise 7: Using a custom Collection with Appsody](exercise-7/README.md)
     * [Lecture 5: Tekton Overview](https://ibm.box.com/s/tg0f6nhs91trlzkb5pfnh5e1rdzg4wm6)
     * [Exercise 8: Create a custom Tekton Task and Pipleline](exercise-8/README.md)
-    * [Exercise 9: Deploy an application with a custom Stack, custom Collection, and custom Tekton Pipeline](exercise-9/README.md)
+    * [Exercise 9: Deploy an application with a custom Stack, custom Collection, and custom Pipeline](exercise-9/README.md)
 
 ### Workshop Resources
 

@@ -1,10 +1,10 @@
 # Exercise 6: Building a custom Appsody Stack Collection in Kabanero
 
-In this exercise, we will show how to create a custom Kabanero collection, that includes the custom Appsody Stack from the previous exercise.
+In this exercise, we will show how to create a custom Collection, that includes the custom Appsody Stack from the previous exercise.
 
 When you have completed this exercise, you will understand how to
 
-* clone and host your own Kabanero Collection
+* clone and host your own Collection
 * modify the Collection to include a custom Appsody Stack
 
 ![Tools used during Exercise 6](images/ex6.png)
@@ -29,7 +29,7 @@ pip install pyYAML
 
 ## About custom Kabanero Repositories
 
-By default Kabanero Enterprise is configured to automatically use the latest release at [https://github.com/kabanero-io/collections](https://github.com/kabanero-io/collections).
+By default the Kabanero open source project is configured to automatically use the latest release at [https://github.com/kabanero-io/collections](https://github.com/kabanero-io/collections).
 
 The default collections can be modified to meet an organization's unique needs.
 
@@ -39,7 +39,7 @@ The default collections can be modified to meet an organization's unique needs.
   * `incubator`: collections that are actively being worked on to satisfy the stable criteria.
   * `experimental`: collections that are used for trying out specific capabilities or proof of concept work.
 
-* Kabanero Collections include an Appsody stack, and a Tekton pipeline.
+* Collections include an Appsody stack, and a Tekton pipeline.
 
 ## Steps
 
@@ -72,7 +72,7 @@ git push -u my-org
 
 ```ini
 ci
-├── [ files used for CI/CD of the Kabanero collections ]
+├── [ files used for CI/CD of the Collections ]
 experimental (or incubator, or stable)
 ├── common/
 |   ├── pipelines/
