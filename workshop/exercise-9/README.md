@@ -1,16 +1,12 @@
-# Exercise 9: Deploy an application with a custom Stack, custom Collection, and custom Tekton Pipeline
+# Exercise 9: Deploy an application with a custom Stack, custom Collection, and custom Pipeline
 
-> WORK IN PROGRESS
-
-In this exercise, we will show how to ...
+In this exercise, we will show how to bring all the custom components (Stacks, Collections, Pipelines) together.
 
 When you have completed this exercise, you will understand how to
 
 * Create a custom pipeline and add it to a collection
 * Update the Kabanero Custom Resource to point to a new collection
 * Deploy an application based on a custom stack using a custom Tekton pipeline
-
-> TODO(stevemar): update this image
 
 ![Tools used during Exercise 9](images/ex9.png)
 
@@ -19,8 +15,9 @@ When you have completed this exercise, you will understand how to
 You should have already carried out the prerequisites defined in [Exercise 8](../exercise-8/README.md).
 
 * Delete the webhook from Exercise 8:
-
-    Open the Tekton dashboard, and select `Webhooks` . Next, click on the box next to the `custom-slack-webhook` to select it and click on *Delete*. In the dialog, check the box to delete pipeline runs associated with the webhook and click on *Confirm*.
+    * Open the Tekton dashboard, and select `Webhooks`.
+    * Next, click on the box next to the `custom-slack-webhook` to select it and click on *Delete*.
+    * In the dialog, check the box to delete pipeline runs associated with the webhook and click on *Confirm*.
 
 * Delete the task and pipeline from Exercise 8, too.
 
@@ -29,8 +26,6 @@ You should have already carried out the prerequisites defined in [Exercise 8](..
     oc delete -f test-pipeline.yaml
     oc delete -f test-task.yaml
     ```
-
-> TODO (timroster) check formatting of nested items ^^ on gitbook in unordered list
 
 ## Steps
 
