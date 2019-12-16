@@ -15,9 +15,9 @@ When you have completed this exercise, you will understand how to
 You should have already carried out the prerequisites defined in [Exercise 8](../exercise-8/README.md).
 
 * Delete the webhook from Exercise 8:
-    * Open the Tekton dashboard, and select `Webhooks`.
-    * Next, click on the box next to the `custom-slack-webhook` to select it and click on *Delete*.
-    * In the dialog, check the box to delete pipeline runs associated with the webhook and click on *Confirm*.
+  * Open the Tekton dashboard, and select `Webhooks`.
+  * Next, click on the box next to the `custom-slack-webhook` to select it and click on *Delete*.
+  * In the dialog, check the box to delete pipeline runs associated with the webhook and click on *Confirm*.
 
 * Delete the task and pipeline from Exercise 8, too.
 
