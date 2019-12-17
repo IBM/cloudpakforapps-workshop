@@ -299,15 +299,15 @@ git commit -m "Minor update to test pipeline"
 git push -u my-org
 ```
 
-Return to the Tekton *Pipeline Runs* tab to check on the status of your deployment.
+Return to the Tekton *Pipeline Runs* tab to check on the status of your deployment. After a while it should show that the pipeline run is complete.
 
 ![Pipeline running](images/tekton-pipeline-run.png)
 
-Once complete, you can see that all three tasks were run:
+You can also click on the specific pipeline run link (`custom-stack-1576539163` in the above example), and see the progress of the three tasks which make up the new pipeline. Once they are all complete, it should look similar to the picture below. Notice how you can click on a given task (e.g. the new test-task we created) to see the output.
 
-> FIXME (henrynash): Add a picture that shows how you should see all three tasks have run.
+![Pipeline tasks complete](images/tekton-pipeline-complete.png)
 
-Confirm that our test application, with the upgraded stack, is now running with a curl -v to the route. You should see helmet responses, e.g.:
+Once the pipeline run is complete, you can confirm that our test application, with the upgraded stack, is now running with a curl -v to the route. You should see helmet responses, e.g.:
 
 ```bash
 $ curl -v http://test-custom-stack-kabanero.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdom
