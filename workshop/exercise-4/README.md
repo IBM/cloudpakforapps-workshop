@@ -93,7 +93,7 @@ These are visible through the UI, too:
 There are 10 **Tasks**, two for each collection kabanero comes with. Each collection has 2 **Tasks**, a *Build Task* and a *Deploy Task*.
 
 ```bash
-oc get pipeline -n kabanero
+oc get tasks -n kabanero
 ```
 
 You will see something similar to this.
