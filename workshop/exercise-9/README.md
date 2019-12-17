@@ -299,13 +299,19 @@ git commit -m "Minor update to test pipeline"
 git push -u my-org
 ```
 
-Return to the Tekton *Pipeline Runs* tab to check on the status of your deployment. After a while it should show that the pipeline run is complete.
+Return to the Tekton *Pipeline Runs* tab to check on the status of your deployment.
 
-![Pipeline running](images/tekton-pipeline-run.png)
+![Pipeline running](images/tekton-pipeline-run-in-progress.png)
 
-You can also click on the specific pipeline run link (`custom-stack-1576539163` in the above example), and see the progress of the three tasks which make up the new pipeline. Once they are all complete, it should look similar to the picture below. Notice how you can click on a given task (e.g. the new test-task we created) to see the output.
+ After a while it should show that the pipeline run is complete.
 
-![Pipeline tasks complete](images/tekton-pipeline-complete.png)
+![Pipeline running](images/tekton-pipeline-run-complete.png)
+
+You can also click on the specific pipeline run link (`custom-stack-1576283066` in the above example), and see the progress of the three tasks which make up the new pipeline. Once they are all complete, it should look similar to the picture below. Notice how you can click on a given task (e.g. the new test-task we created) to see the output.
+
+![Pipeline tasks complete](images/tekton-pipleline-tasks-complete.png)
+
+Although the task we added was a test task, you can imagine how you might add additional tasks that are more relevant to your enterprise environment - for example to check that the application code added by the developer meets your security standards.
 
 Once the pipeline run is complete, you can confirm that our test application, with the upgraded stack, is now running with a curl -v to the route. You should see helmet responses, e.g.:
 
