@@ -290,7 +290,7 @@ git commit -m "test change"
 git push -f -u origin master
 ```
 
-This should trigger another pipeline run to be created, using the `node-express-build-deploy` pipeline.
+This should trigger another pipeline run to be created, using the `nodejs-express-build-deploy` pipeline.
 
 ![Two PipelineRuns should appear](images/view-pipelines.png)
 
