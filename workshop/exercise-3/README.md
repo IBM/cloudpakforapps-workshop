@@ -292,7 +292,7 @@ spec:
   applicationImage: quote-frontend
   env:
   - name: BACKEND_URL
-    value: quote-backend
+    value: http://quote-backend:8080/quote
   .
   .
   .

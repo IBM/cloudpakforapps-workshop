@@ -282,19 +282,12 @@ This will trigger the tekton pipleine. Go to the tekton dashboard and access the
 
 ![See the java deploy pipeline](images/view-tasks.png)
 
-Wait until the task is complete, then find the route using `oc get routes`:
+Wait until the task is complete, and then in your `quote-frontend` repo, change the file `quote-frontend/app.js`. Change a value in a comment statement. Then commit this change and push to your github repo, for example:
 
 ```bash
-$ oc get routes -n insurance-quote | grep backend
-quote-backend   quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
-```
-
-In your `quote-frontend` repo, change the file `app-deploy.yml` to update the `BACKEND_URL` value with the URL from the previous step.
-
-```yaml
-  env:
-  - name: BACKEND_URL
-    value: http://quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/quote
+git add -u
+git commit -m "test change"
+git push -f -u origin master
 ```
 
 This should trigger another pipeline to be created, using the node-express pipeline.
