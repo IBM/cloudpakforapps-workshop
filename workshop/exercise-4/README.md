@@ -278,7 +278,7 @@ git commit -m "test change"
 git push -f -u origin master
 ```
 
-This will trigger the tekton pipleine. Go to the tekton dashboard and access the new pipeline it created.
+This will trigger the `java-spring-boot2-build-deploy` tekton pipeline. Go to the tekton dashboard and access the new pipeline run it created.
 
 ![See the java deploy pipeline](images/view-tasks.png)
 
@@ -290,7 +290,7 @@ git commit -m "test change"
 git push -f -u origin master
 ```
 
-This should trigger another pipeline to be created, using the node-express pipeline.
+This should trigger another pipeline run to be created, using the `node-express-build-deploy` pipeline.
 
 ![Two PipelineRuns should appear](images/view-pipelines.png)
 
