@@ -122,7 +122,7 @@ Appsody has the ability to deploy directly to a kubernetes cluster using a defau
 In order to have the backend application send requests to the Dacadoo Health Score API, we need to create a secret that contains the configuration for making requests to the Dacadoo server, that you obtained in the pre-requisites of this exercise. (Note: If you do not want to use the Dacadoo Health Score API, you can skip this setup and continue to use the mock endpoint.)
 
 ```bash
-oc create configmap dacadoo-config --from-literal=url=<url> --from-literal=apikey=<apikey>
+oc create configmap dacadoo-config --from-literal=DACADOO_URL=<url> --from-literal=DACADOO_APIKEY=<apikey>
 ```
 
 where:
