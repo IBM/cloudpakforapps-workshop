@@ -62,7 +62,7 @@ From the Cloud Pak for Applications landing page get the `CollectionHub` URL, fo
 Use the appsody CLI to add the Collection repo.
 
 ```bash
-appsody repo add kabanero https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
+appsody repo add kabanero https://github.com/kabanero-io/collections/releases/download/0.2.1/kabanero-index.yaml
 ```
 
 Now when we get our list of repos, we should see Kabanero listed:
