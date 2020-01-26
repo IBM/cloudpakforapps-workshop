@@ -306,7 +306,7 @@ You will note that the collection includes the `kabanero-index.yaml` file we edi
 
 You will need this url for the next section, where we will create an appsody application based on your new collection.
 
-### 7. Get the collection URL
+### 8. Get the collection URL
 
 Obtain the URL to the collection repository. If a Git release was created for the collections, generally, the URL format will be: `https://<git repository>/<organization>/collections/releases/download/<release>/kabanero-index.yaml`
 
@@ -316,7 +316,7 @@ In our workshop, it'll likely be:
 
 * Replace `<username>` with your Github username
 
-### 8. Test the new stack and collection
+### 9. Test the new stack and collection
 
 Now that we know the URL, let's add the repo to our local appsody replacing `<username>` with your GitHub username and adding your own collection URL.
 
@@ -378,7 +378,7 @@ Test it out with `curl` and you'll see the helmet headers.
 
 Use the `appsody stop` command in another terminal in the same directory to stop the running application.
 
-### 9. Prepare the new application for deployment
+### 10. Prepare the new application for deployment
 
 Before you can deploy this application using the pipeline you will be building in the upcoming exercises, there needs to be a deployment file added to the application. The deployment file is called `app-deploy.yaml`. This file was created automatically for you in day 1 exercise 3 with the `appsody deploy` command.
 
