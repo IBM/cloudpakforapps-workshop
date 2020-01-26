@@ -7,7 +7,7 @@
 ### Day 1
 
 * [About Day 1](about-day-1/README.md)
-    * [Lecture 2: Kabanero Overview](https://ibm.box.com/s/6jl4b7sj8xqgh7rvxtea5ykpsjyu1siz)
+    * [Lecture 1: Kabanero Overview](https://ibm.box.com/s/6jl4b7sj8xqgh7rvxtea5ykpsjyu1siz)
     * [Exercise 1: Introduction to Appsody and Codewind](exercise-1/README.md)
     * [Exercise 2: Using Appsody CLI to develop, test, and debug applications](exercise-2/README.md)
     * [Exercise 3: Deploying to OpenShift with Appsody](exercise-3/README.md)
