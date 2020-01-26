@@ -103,11 +103,15 @@ We're going to replace the starter code with the insurance quote frontend applic
 
 The Node.js Express stack installs the package dependencies into the containerized application. However it won't do this when the containerized application is already running. You must stop the current application by entering `appsody stop` in a separate window, and then re-run `appsody run` to start it back up.
 
+`Note: You can also pres ctrl+c to kill the appsody run process.`
+
 Now copy the files from the `quote-frontend` directory in the cloned git repo to your Appsody project, for example:
 
 ```bash
 cp -R ~/cloudpakforapps-workshop/exercise-frontend/* .
 ```
+
+If asked, press `y` to overwrite any existing files.
 
 The resulting directory structure of your Appsody project should look like this:
 

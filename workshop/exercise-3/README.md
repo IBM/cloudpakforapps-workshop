@@ -228,7 +228,10 @@ Running command: kubectl get route quote-backend -o jsonpath={.status.ingress[0]
 Deployed project running at quote-backend-insurance-quote.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud
 ```
 
+If you get an `unknown blob` error, retry the command.
+
 > **NOTE**: If the deployment times out, see the section [Pushing to the OpenShift registry times out](../instructor-guide/README.md#pushing-to-the-openshift-registry-times-out) in the Admin Guide.
+
 > **NOTE**: Running `appsody deploy` will install the [appsody operator](https://github.com/appsody/appsody-operator) on the *Default* namespace of the cluster.
 
 After the deployment completes, you can test the service using curl. The last line output (above) in the deploy gives you the url to the backend application. For simplicity, let's put that in an environment variable, i.e, for the example above:

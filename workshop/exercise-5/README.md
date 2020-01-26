@@ -243,18 +243,27 @@ cd ~/appsody-apps/my-nodejs-express
 The current code in `image/project/server.js` looks something like this:
 
 ```javascript
-// Requires statements and code for non-production mode usage
-if (!process.env.NODE_ENV || !process.env.NODE_ENV === 'production') {
-require('appmetrics-dash').attach();
-}
 const express = require('express');
 const health = require('@cloudnative/health-connect');
 const fs = require('fs');
-
-require('appmetrics-prometheus').attach();
+const http = require('http');
 
 const app = express();
+const server = http.createServer(app)
 
+// Code sensitive to production vs development mode.
+// See: http://expressjs.com/en/4x/api.html#app.settings.table
+const PRODUCTION = app.get('env') === 'production';
+if (!PRODUCTION) {
+  require('appmetrics-dash').monitor({server, app});
+}
+const pino = require('pino')({
+  level: PRODUCTION ? 'info' : 'debug',
+});
+app.use(require('express-pino-logger')({logger: pino}));
+
+// Register the users app. As this is before the health/live/ready routes,
+// those can be overridden by the user.
 const basePath = __dirname + '/user-app/';
 
 function getEntryPoint() {
@@ -267,48 +276,48 @@ function getEntryPoint() {
     return package.main;
 }
 
-// Register the users app. As this is before the health/live/ready routes,
-// those can be overridden by the user
-const userApp = require(basePath + getEntryPoint()).app;
-app.use('/', userApp);
+const userApp = require(basePath + getEntryPoint());
+app.use('/', userApp({
+  server: server,
+  app: app,
+}));
 
+// Builtin routes and handlers.
 const healthcheck = new health.HealthChecker();
 app.use('/live', health.LivenessEndpoint(healthcheck));
 app.use('/ready', health.ReadinessEndpoint(healthcheck));
 app.use('/health', health.HealthEndpoint(healthcheck));
+app.use('/metrics', require('appmetrics-prometheus').endpoint());
 
 app.get('*', (req, res) => {
-res.status(404).send("Not Found");
+  res.status(404).send("Not Found");
 });
 
+// Listen and serve.
 const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => {
-console.log(`App started on PORT ${PORT}`);
+server.listen(PORT, () => {
+  console.log(`App started on PORT ${PORT}`);
 });
 
-// Export server for testing purposes
+// Export server for stack testing purposes.
 module.exports.server = server;
 module.exports.PORT = PORT;
+
 ```
 
 We will modify this file by adding two lines, to import helmet (with `require()`), and to enable it with `app.use()`:
 
 ```javascript
-// Requires statements and code for non-production mode usage
-if (!process.env.NODE_ENV || !process.env.NODE_ENV === 'production') {
-require('appmetrics-dash').attach();
-}
 const express = require('express');
-const helmet = require('helmet');
 const health = require('@cloudnative/health-connect');
 const fs = require('fs');
-
-require('appmetrics-prometheus').attach();
+const http = require('http');
+const helmet = require('helmet');
 
 const app = express();
 app.use(helmet());
 
-const basePath = __dirname + '/user-app/';
+const server = http.createServer(app)
 ...
 ```
 
@@ -319,10 +328,12 @@ Since we have added a new module that is required, we must also update the depen
 ...
 "dependencies": {
     "@cloudnative/health-connect": "^2.0.0",
-    "appmetrics-prometheus": "^3.0.0",
-    "express": "~4.16.0",
+    "appmetrics-prometheus": "~3.1.0",
+    "express": "~4.17.1",
+    "express-pino-logger": "^4.0.0",
+    "pino": "^5.14.0",
     "helmet": "^3.21.1"
-},
+  },
 ...
 }
 ```
@@ -386,119 +397,6 @@ Hello from Appsody!*
 ```
 
 As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
-
-Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory.
-
-### 4. Use the new stack in our example application
-
-A final step is to switch the actual quote-frontend application we built in [Exercise 2](../exercise-2/README.md) to use our new stack (rather than the original `nodejs-express` stack).
-
-The formal way of doing this is to repeat the steps from Exercise 2, where the new project is initialized (using our new stack), and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
-
-```bash
-cd ~/appsody-apps/quote-frontend
-ls -la
-```
-
-You should see output similar to the following:
-
-```bash
-$ ls -al
-total 192
-drwxr-xr-x  16 henrynash  staff    512 15 Oct 12:42 .
-drwxr-xr-x+ 85 henrynash  staff   2720 17 Oct 21:37 ..
--rw-r--r--   1 henrynash  staff     64 19 Oct 11:10 .appsody-config.yaml
--rw-r--r--   1 henrynash  staff   1316 15 Oct 11:12 .gitignore
-drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:12 .vscode
--rw-rw-r--   1 henrynash  staff    806 15 Oct 12:50 app-deploy.yaml
--rw-r--r--   1 henrynash  staff    290 15 Oct 11:15 app.js
-drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:15 config
-drwxr-xr-x   2 henrynash  staff     64 15 Oct 11:16 node_modules
--rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_dc.log
--rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_restclient.log
--rw-r--r--@  1 henrynash  staff  73319 15 Oct 11:16 package-lock.json
--rw-r--r--   1 henrynash  staff    615 15 Oct 11:15 package.json
--rw-r--r--   1 henrynash  staff   2779 15 Oct 11:15 quote.js
-drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:12 test
-drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:15 views
-```
-
-Inspecting that file, reveals that it contains a pointer to the stack:
-
-```bash
-cat .appsody-config.yaml
-```
-
-Should output a configuration that uses `nodejs-express`:
-
-```ini
-project-name: quote-frontend
-stack: kabanero/nodejs-express:0.2
-```
-
-We can simply change the second line to, instead, point to our new stack, i.e.:
-
-> **NOTE**: When using a stack that is in development, it will carry semantic versioning derived from the original copied stack in addition to a latest tag.
-
-```bash
-project-name: quote-frontend
-stack: dev.local/appsody/my-nodejs-express:latest
-```
-
-Now re-run the frontend with `appsody run`:
-
-```bash
-appsody run
-```
-
-It should use our new stack:
-
-```bash
-$ appsody run
-Running development environment...
-Using local cache for image dev.local/appsody/my-nodejs-express:latest
-...
-[Container] App started on PORT 3000
-```
-
-We can confirm that our new HTTP protection is being used by, instead of using a browser, again using `curl` in verbose mode to hit the published endpoint:
-
-```bash
-curl -v localhost:3000
-```
-
-You should see output similar to the following:
-
-```bash
-$ curl -v localhost:3000
-*   Trying 127.0.0.1...
-* TCP_NODELAY set
-* Connected to localhost (127.0.0.1) port 3000 (#0)
-> GET / HTTP/1.1
-> Host: localhost:3000
-> User-Agent: curl/7.64.1
-> Accept: */*
->
-< HTTP/1.1 302 Found
-< X-DNS-Prefetch-Control: off
-< X-Frame-Options: SAMEORIGIN
-< Strict-Transport-Security: max-age=15552000; includeSubDomains
-< X-Download-Options: noopen
-< X-Content-Type-Options: nosniff
-< X-XSS-Protection: 1; mode=block
-< X-Powered-By: Express
-< Location: /quote
-< Vary: Accept
-< Content-Type: text/plain; charset=utf-8
-< Content-Length: 28
-< Date: Fri, 08 Nov 2019 19:51:50 GMT
-< Connection: keep-alive
-<
-* Connection #0 to host localhost left intact
-Found. Redirecting to /quote
-```
-
-We can tell our sample application is now using the new stack because it includes the new security related headers.
 
 Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory.
 
