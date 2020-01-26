@@ -74,7 +74,7 @@ The repo should look like this:
 
 ![Repo code base](../exercise-8/images/repo-code-base.png)
 
-### 1. Add the tasks to the collection
+### 2. Add the tasks to the collection
 
 In your local `collections/incubator/my-nodejs-express/pipelines` folder add a new folder called `custom-pipeline` and add two files `test-task.yaml` and `test-build-deploy-pipeline.yaml`. The file structure is seen below
 
@@ -85,6 +85,11 @@ incubator
         └── custom-pipeline/
               └── test-task.yaml
               └── test-build-deploy-pipeline.yaml
+```
+Change directory into your `collections/incubator/my-nodejs-express/pipelines` folder:
+
+```bash
+cd ~/appsody-apps/collections/incubator/my-nodejs-express/pipelines
 ```
 
 In `test-task.yaml` enter the following:
@@ -228,9 +233,13 @@ spec:
 ...
 ```
 
-### 2. Re-run the scripts
+### 3. Re-run the scripts
 
-Run `build.sh` and `release.sh` as before. From collections home run:
+Run `build.sh` and `release.sh` as before. Run:
+
+```bash
+cd ~/appsody-apps/collections
+```
 
 ```bash
 IMAGE_REGISTRY_ORG=$IMAGE_REGISTRY/$IMAGE_REGISTRY_ORG ./ci/build.sh
@@ -254,7 +263,7 @@ And that the generated `ci/release/kabanero-index.yaml` has a section like the f
     url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.3.0.pipeline.custom-pipeline.tar.gz
 ```
 
-### 3. Update the current release
+### 4. Update the current release
 
 Upload the changes
 
@@ -283,7 +292,7 @@ Clicking on the release name (0.2.1-custom) will allow you to edit the release. 
 
 ![Our own collection, page for version 0.2.1-custom](images/new-release-revise-0.2.1-custom.png)
 
-### 4. Update the Kabanero Custom Resource
+### 5. Update the Kabanero Custom Resource
 
 Use `oc get kabaneros -n kabanero` to obtain a list of all Kabanero CR instances in namespace `kabanero`. The default name for the CR instance is `kabanero`.
 
@@ -323,7 +332,7 @@ spec:
 
 When you are done editing, save your changes and exit the editor. The updated Kabanero CR instance will be applied to your cluster.
 
-### 1. Launch the Tekton dashboard
+### 6. Launch the Tekton dashboard
 
 You can launch the tekton dashboard by accessing the *Cloud Pak for Applications* dashboard and selecting the Tekton link. Revisit the [Pre-work](../pre-work/README.md) section if unable to recall how to access the *Cloud Pak for Applications* dashboard.
 
@@ -354,7 +363,7 @@ These are visible through the UI by clicking on `tasks` on the left side of the 
 
 ![Pre-Existing Tasks](../exercise-4/images/tekton_tasks.png)
 
-### 4. Add webhooks to Tekton to watch Github repo changes and testing it all out
+### 7. Add webhooks to Tekton to watch Github repo changes and testing it all out
 
 Configure the GitHub webhook to your repo. Go to `Webhooks` > `Add Webhook` and then create the webhook.
 
