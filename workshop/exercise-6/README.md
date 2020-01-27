@@ -153,7 +153,7 @@ default-image: my-nodejs-express
 default-pipeline: default
 images:
 - id: my-nodejs-express
-  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4
+  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4.1
 ```
 
 Edit the new file called `stack.yaml` in `collections/incubator/my-nodejs-express`. Update the name and description fields to add "with Helmet" and also replace the maintainer information with your information if desired (you will probably see a different version, **don't** change that and keep as-is):
@@ -284,21 +284,54 @@ git push --tags
 
 Navigating back to your GitHub repo, you should see a new release available:
 
-# ADD STEPS FOR RUNNING RELEASE UPLOAD SCRIPT HERE
-
 ![Our own collection, version 0.2.1-custom](images/new-release-0.2.1-custom.png)
 
-Clicking on the release name (0.2.1-custom) will allow you to edit the release.
+#### Uploading files to the release
 
-![Our own collection, page for version 0.2.1-custom](images/new-release-main-0.2.1-custom.png)
+Now we need to upload the collections we generated into the new release. From the command line run the following lines while replacing `<github username>` with your own username:
 
-Click on *Edit tag*. and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
+```bash
+export GITHUB_USER=<github username>
+```
 
-![Our own collection, upload files to release](images/edit-release.png)
+Then we need to get an Oauth token to authenticate with the GitHub API, run the following:
 
-Once you have uploaded the files you can publish your new collection by clicking *Publish release*, at the bottom of the page
+```bash
+`OAUTH token can be generated using the following:
+curl \
+  -u $GITHUB_USER \
+  -d '{"scopes":["repo"], "note":"Publish to GitHub Releases"}' \
+  https://api.github.com/authorizations
+```
 
-![Our own collection, published](images/new-release-published-0.2.1-custom.png)
+You will be asked for you GitHub password, enter it. If all is well you should notice some JSON output. Look for the property labeled `token` and copy the long string next to it as seen below:
+
+![token](./images/token.png)
+
+Then save the token as an environment variable with the following command:
+
+```bash
+export GITHUB_TOKEN=<token from previous step>
+```
+
+Next, from your collections directory, run the following commands:
+```bash
+curl https://gist.githubusercontent.com/odrodrig/3e280bc197aa1b6022f99bec9bf113f0/raw/92222ccf88d8de70e6a4db72ab3a893d954c48f7/GithubRelease.sh > GithubRelease.sh
+
+chmod +x GithubRelease.sh`
+```
+
+This will download a custom script that we will use to upload or delete files in our release.
+
+Now we can upload our newly generated files to our release. Run the following from you collections dir:
+
+```bash
+./GithubRelease.sh upload
+```
+
+When the script is done running you can go back to your collections repo in your browser and click on the `0.2.1-custom` release to view the files that we just uploaded.
+
+![collection files](./images/new-release-published-0.2.1-custom.png)
 
 You will note that the collection includes the `kabanero-index.yaml` file we edited earlier. The url to this index file is is what you will provide appsody as a link to your new custom repository (that is contained within the new collection. You normally obtain and copy the url (depending on your browser) by right (or secondary) clicking over the `kabanero-index.yaml` item in the list of files shown in the release. It should be of the form:
 

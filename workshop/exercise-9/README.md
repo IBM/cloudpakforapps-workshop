@@ -188,7 +188,7 @@ default-image: my-nodejs-express
 default-pipeline: my-nodejs-express-test-build-deploy-pipeline
 images:
 - id: my-nodejs-express
-  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4
+  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4.1
 ```
 
 Unusually in these exercises, we have been using a version of appsody that is ahead of the current level baked into some the standard kabanero tekton artifacts, so there is one additional change that is needed to get around this. You need to update a tag in the common `build-task.yaml` used for all stacks in the collection. This update will select a builder container that uses appsody 0.5.3 to support the private registry semantics used in these exercises.
@@ -278,19 +278,18 @@ git commit -m "Add custom task and pipeline"
 git push -u my-org
 ```
 
+Now we need to use the same script we used in exercise 6 to upload files.
 
+From the collections dir, run the following commands:
 
-# ADD STEPS TO RUN SCRIPT TO UPLOAD NEW RELEASE FILES
+```bash
+./GithubRelease.sh delete
 
+./GithubRelease.sh upload
 
+```
 
-Navigating back to your GitHub repo, select the current custom release:
-
-![Our own collection, version 0.2.1-custom](images/new-release-published-0.2.1-custom.png)
-
-Clicking on the release name (0.2.1-custom) will allow you to edit the release. Click on *Edit tag*. Click on the **x** to delete existing items from the release and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
-
-![Our own collection, page for version 0.2.1-custom](images/new-release-revise-0.2.1-custom.png)
+When that is done you can navigate to your collections repo and view the release in the browser to verify that files have been uploaded.
 
 ### 5. Update the Kabanero Custom Resource
 

@@ -149,7 +149,7 @@ You should see output similar to the following:
 ```bash
 $ appsody list dev.local
 REPO        ID                  VERSION     TEMPLATES           DESCRIPTION
-dev.local   my-nodejs-express   0.2.8       scaffold, *simple   Express web framework for Node.js
+dev.local   my-nodejs-express   0.4.1       scaffold, *simple   Express web framework for Node.js
 ```
 
 #### Run the new stack
