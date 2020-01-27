@@ -11,7 +11,16 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 5](../exercise-5/README.md). In addition, you need to ensure you have the following installed on your local machine:
+You should have already carried out the prerequisites defined in [Exercise 5](../exercise-5/README.md). 
+
+### Reauthenticate with you OpenShift cluster
+Now that it's the start of a new day, we should reauthenticate with you cluster. Open up the link to your OpenShift cluster that the instructor has provided for you. 
+
+Then once on the OpenShift dashboard, click on the dropdown at the top right and select `Copy Login Command`. This will automatically add the login command to your clipboard.
+
+![login command](./images/loginCommand.png)
+
+Next, all you have to do is paste it into your terminal and press enter.
 
 ## About custom Kabanero Repositories
 
@@ -76,8 +85,6 @@ experimental (or incubator, or stable)
 
 To actually use the stacks we need images, images will be hosted on openshift
 
-# ADD OC AUTH PROCESS HERE HERE
-
 ```bash
 oc new-project kabanero-noauth
 oc policy add-role-to-group registry-viewer system:unauthenticated -n kabanero-noauth
@@ -117,8 +124,6 @@ echo $IMAGE_REGISTRY
 $ echo $IMAGE_REGISTRY
 IMAGE_REGISTRY=docker-registry-default.henrycluster6-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-gb.containers.appdomain.cloud
 ```
-
-If `IMAGE_REGISTRY` is not set, then you need to set it up again, as described in [Exercise 3 - Access the internal docker registry](../exercise-3/README.md#2-access-the-internal-docker-registry)
 
 ### 4. Add our custom stack to the new collection
 
