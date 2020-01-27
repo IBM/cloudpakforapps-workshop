@@ -158,7 +158,7 @@ default-image: my-nodejs-express
 default-pipeline: default
 images:
 - id: my-nodejs-express
-  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4.1
+  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4
 ```
 
 Edit the new file called `stack.yaml` in `collections/incubator/my-nodejs-express`. Update the name and description fields to add "with Helmet" and also replace the maintainer information with your information if desired (you will probably see a different version, **don't** change that and keep as-is):
