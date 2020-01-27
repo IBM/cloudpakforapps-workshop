@@ -11,21 +11,16 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 5](../exercise-5/README.md). In addition, you need to ensure you have the following installed on your local machine:
+You should have already carried out the prerequisites defined in [Exercise 5](../exercise-5/README.md). 
 
-* yq
-* python3
-* pyYAML
+### Reauthenticate with you OpenShift cluster
+Now that it's the start of a new day, we should reauthenticate with you cluster. Open up the link to your OpenShift cluster that the instructor has provided for you. 
 
-On macOS, you can install the above with:
+Then once on the OpenShift dashboard, click on the dropdown at the top right and select `Copy Login Command`. This will automatically add the login command to your clipboard.
 
-```bash
-brew install yq
-brew install python
-pip install pyYAML
-```
+![login command](./images/loginCommand.png)
 
-> NOTE: do not install the python yq package, it has a different syntax than the yq application and will cause the build scripts to fail.
+Next, all you have to do is paste it into your terminal and press enter.
 
 ## About custom Kabanero Repositories
 
@@ -117,9 +112,9 @@ export IMAGE_REGISTRY_USERNAME=$(oc whoami)
 export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
 export TRAVIS_REPO_SLUG=<username>/collections
 export TRAVIS_TAG=0.2.1-custom
-```
+export IMAGE_REGISTRY=$(oc get route docker-registry -n default -o jsonpath="{.spec.host}")
 
-In addition to the above, the IMAGE_REGISTRY environment variable should still be set from [Exercise 3](../exercise-3/README.md), which you can check with:
+```
 
 ```bash
 echo $IMAGE_REGISTRY
@@ -129,8 +124,6 @@ echo $IMAGE_REGISTRY
 $ echo $IMAGE_REGISTRY
 IMAGE_REGISTRY=docker-registry-default.henrycluster6-5290c8c8e5797924dc1ad5d1b85b37c0-0001.eu-gb.containers.appdomain.cloud
 ```
-
-If `IMAGE_REGISTRY` is not set, then you need to set it up again, as described in [Exercise 3 - Access the internal docker registry](../exercise-3/README.md#2-access-the-internal-docker-registry)
 
 ### 4. Add our custom stack to the new collection
 
@@ -165,7 +158,7 @@ default-image: my-nodejs-express
 default-pipeline: default
 images:
 - id: my-nodejs-express
-  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.3
+  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4.1
 ```
 
 Edit the new file called `stack.yaml` in `collections/incubator/my-nodejs-express`. Update the name and description fields to add "with Helmet" and also replace the maintainer information with your information if desired (you will probably see a different version, **don't** change that and keep as-is):
@@ -298,22 +291,157 @@ Navigating back to your GitHub repo, you should see a new release available:
 
 ![Our own collection, version 0.2.1-custom](images/new-release-0.2.1-custom.png)
 
-Clicking on the release name (0.2.1-custom) will allow you to edit the release.
+#### Uploading files to the release
 
-![Our own collection, page for version 0.2.1-custom](images/new-release-main-0.2.1-custom.png)
+Now we need to upload the collections we generated into the new release. From the command line run the following lines while replacing `<github username>` with your own username:
 
-Click on *Edit tag*. and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
+```bash
+export GITHUB_USER=<github username>
+```
 
-![Our own collection, upload files to release](images/edit-release.png)
+Then we need to get an Oauth token to authenticate with the GitHub API, run the following:
 
-Once you have uploaded the files you can publish your new collection by clicking *Publish release*, at the bottom of the page
+```bash
+`OAUTH token can be generated using the following:
+curl \
+  -u $GITHUB_USER \
+  -d '{"scopes":["repo"], "note":"Publish to GitHub Releases"}' \
+  https://api.github.com/authorizations
+```
 
-![Our own collection, published](images/new-release-published-0.2.1-custom.png)
+You will be asked for you GitHub password, enter it. If all is well you should notice some JSON output. Look for the property labeled `token` and copy the long string next to it as seen below:
+
+![token](./images/token.png)
+
+Then save the token as an environment variable with the following command:
+
+```bash
+export GITHUB_TOKEN=<token from previous step>
+```
+
+Next, from your collections directory, run the following commands:
+```bash
+curl https://gist.githubusercontent.com/odrodrig/3e280bc197aa1b6022f99bec9bf113f0/raw/92222ccf88d8de70e6a4db72ab3a893d954c48f7/GithubRelease.sh > GithubRelease.sh
+
+chmod +x GithubRelease.sh`
+```
+
+This will download a custom script that we will use to upload or delete files in our release.
+
+Now we can upload our newly generated files to our release. Run the following from you collections dir:
+
+```bash
+./GithubRelease.sh upload
+```
+
+When the script is done running you can go back to your collections repo in your browser and click on the `0.2.1-custom` release to view the files that we just uploaded.
+
+![collection files](./images/new-release-published-0.2.1-custom.png)
 
 You will note that the collection includes the `kabanero-index.yaml` file we edited earlier. The url to this index file is is what you will provide appsody as a link to your new custom repository (that is contained within the new collection. You normally obtain and copy the url (depending on your browser) by right (or secondary) clicking over the `kabanero-index.yaml` item in the list of files shown in the release. It should be of the form:
 
 `https://github.com/<username>/collections/releases/download/0.2.1-custom/kabanero-index.yaml`
 
-You will need this url for the next exercise, where we will create an appsody application based on your new collection.
+You will need this url for the next section, where we will create an appsody application based on your new collection.
 
-**Congratulations!!** We've just created our own custom collection that included our own custom stack. Now we need to test our released collection using Appsody. On to the next exercise.
+### 8. Get the collection URL
+
+Obtain the URL to the collection repository. If a Git release was created for the collections, generally, the URL format will be: `https://<git repository>/<organization>/collections/releases/download/<release>/kabanero-index.yaml`
+
+In our workshop, it'll likely be:
+
+`https://github.com/<username>/collections/releases/download/0.2.1-custom/kabanero-index.yaml`
+
+* Replace `<username>` with your Github username
+
+### 9. Test the new stack and collection
+
+Now that we know the URL, let's add the repo to our local appsody replacing `<username>` with your GitHub username and adding your own collection URL.
+
+```bash
+appsody repo add <username> https://github.com/stevemar/collections/releases/download/0.2.1-custom/kabanero-index.yaml
+```
+
+Create a new directory to work in:
+
+```bash
+cd ~/appsody-apps
+mkdir test-custom-stack
+cd test-custom-stack
+```
+
+Initialize the appsody stack
+
+```bash
+appsody init <username>/my-nodejs-express
+```
+
+You should see output similar to the following:
+
+```bash
+$ appsody init stevemar/my-nodejs-express
+Running appsody init...
+Downloading my-nodejs-express template project from https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.2.8.templates.simple.tar.gz
+Download complete. Extracting files from /Users/stevemar/appsody-apps/testo/my-nodejs-express.tar.gz
+...
+Pulling docker image docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.2
+...
+docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.2 -c find /project -type f -name .appsody-init.sh
+Successfully initialized Appsody project
+```
+
+Run the stack:
+
+```bash
+appsody run
+```
+
+You should see output similar to the following:
+
+```bash
+$ appsody run
+Running development environment...
+...
+Running docker command: docker run --rm -p 3000:3000 -p 9229:9229 --name testo-dev -v /Users/stevemar/appsody-apps/testo/:/project/user-app -v testo-deps:/project/user-app/node_modules -v /Users/stevemar/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller docker-registry-default.cp4apps-workshop-prop-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.2 --mode=run
+[Container] Running APPSODY_PREP command: npm install --prefix user-app && npm audit fix --prefix user-app
+added 170 packages from 578 contributors and audited 295 packages in 2.989s
+[Container] found 0 vulnerabilities
+...
+Application Metrics 5.0.3.201908230949 (Agent Core 4.0.3)
+[Container] [Tue Nov 12 03:13:32 2019] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
+[Container] App started on PORT 3000
+```
+
+Test it out with `curl` and you'll see the helmet headers.
+
+Use the `appsody stop` command in another terminal in the same directory to stop the running application.
+
+### 10. Prepare the new application for deployment
+
+Before you can deploy this application using the pipeline you will be building in the upcoming exercises, there needs to be a deployment file added to the application. The deployment file is called `app-deploy.yaml`. This file was created automatically for you in day 1 exercise 3 with the `appsody deploy` command.
+
+It can also be created without deploying an application using the `--generate-only` flag. Run this command:
+
+```bash
+appsody deploy --generate-only
+```
+
+```bash
+$ appsody deploy --generate-only
+Extracting project from development environment
+Pulling docker image docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+Running command: docker pull docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+0.3: Pulling from kabanero-noauth/my-nodejs-express
+Digest: sha256:9145b3477ca00e2401d100380460a5d813a6f291ee149d10ac7d989f1923f1e3
+Status: Image is up to date for docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+Running command: docker run --name test-custom-stack-extract -v C:/Users/TimRobinson/appsody-apps/test-custom-stack/:/project/user-app --entrypoint /bin/bash docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3 -c cp -rfL /project /tmp/project
+...
+```
+
+After the command completes, check the contents of the application directory with `ls`
+
+```bash
+app.js  app-deploy.yaml  node_modules/  package.json  package-lock.json  test/
+```
+
+**Congratulations!!** We've just created our own custom collection that included our own custom stack and tested out the collection on a new application. On to the next exercise.

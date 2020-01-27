@@ -12,24 +12,69 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 8](../exercise-8/README.md).
+You should have already carried out the prerequisites defined in [Exercise 6](../exercise-6/README.md).
 
-* Delete the webhook from Exercise 8:
-  * Open the Tekton dashboard, and select `Webhooks`.
-  * Next, click on the box next to the `custom-slack-webhook` to select it and click on *Delete*.
-  * In the dialog, check the box to delete pipeline runs associated with the webhook and click on *Confirm*.
+### Get a GitHub Access Token
 
-* Delete the task and pipeline from Exercise 8, too.
+When using Tekton, building a pipeline will require code to be pulled from either a public or private repository. When configuring Tekton, for security reasons, we will create an *Access Token* instead of using a password.
 
-    ```bash
-    cd ~/appsody-apps/tekton-tasks
-    oc delete -f test-pipeline.yaml
-    oc delete -f test-task.yaml
-    ```
+To create an *Access Token*, from [Github.com](Github.com) click on your profile icon in the top left. Then go to `Settings` -> `Developer Settings` -> `Personal Access Tokens`. Or go directly to <https://github.com/settings/tokens>
+
+![Choose to create a new Access Token](../exercise-4/images/github_access_tokens.png)
+
+Here we want to generate a token, so `Click` on the `Generate a Token`. The token permissions need to be the `repo` which gives read and write access to the repository.
+
+![Generate a new Access Token](../exercise-4/images/github_create_token.png)
+
+Once the token is created, make sure to copy it down. We will need it later.
+
 
 ## Steps
 
-### 1. Add the tasks to the collection
+### 1. Upload custom stack test to GitHub
+
+From completing the previous exercise you should now have a code base in the following folder
+
+```bash
+cd ~/appsody-apps/test-custom-stack
+ls -la
+```
+
+Should result in output that looks like the following:
+
+```bash
+$ ls -la
+total 144
+drwxr-xr-x  14 stevemar  staff    448 19 Nov 14:20 .
+drwxr-xr-x   9 stevemar  staff    288 19 Nov 16:26 ..
+-rw-r--r--   1 stevemar  staff     70 15 Nov 10:02 .appsody-config.yaml
+-rw-r--r--   1 stevemar  staff   1316 15 Nov 10:02 .gitignore
+-rw-r--r--   1 stevemar  staff    130 15 Nov 10:12 app.js
+drwxr-xr-x   2 stevemar  staff     64 15 Nov 10:03 node_modules
+-rw-r--r--   1 stevemar  staff  51421 15 Nov 10:02 package-lock.json
+-rw-r--r--   1 stevemar  staff    455 19 Nov 12:52 package.json
+drwxr-xr-x   3 stevemar  staff     96 15 Nov 10:02 test
+```
+
+We will now upload that code to Github.
+
+Go to <https://github.com/new> and create a new repository, `test-custom-stack`. Do not initiatize the repos with a license file or README.
+
+From your `test-custom-stack` directory, run the commands below, replacing `<username>` with your own.
+
+```bash
+git init
+git add -A
+git commit -m "first commit"
+git remote add my-org https://github.com:<username>/test-custom-stack.git
+git push -u my-org master
+```
+
+The repo should look like this:
+
+![Repo code base](../exercise-8/images/repo-code-base.png)
+
+### 2. Add the tasks to the collection
 
 In your local `collections/incubator/my-nodejs-express/pipelines` folder add a new folder called `custom-pipeline` and add two files `test-task.yaml` and `test-build-deploy-pipeline.yaml`. The file structure is seen below
 
@@ -41,8 +86,13 @@ incubator
               └── test-task.yaml
               └── test-build-deploy-pipeline.yaml
 ```
+Change directory into your `collections/incubator/my-nodejs-express/pipelines` folder:
 
-The `test-task.yaml` is slightly updated from exercise 8 to pull in the relevant basename from any collection that uses it
+```bash
+cd ~/appsody-apps/collections/incubator/my-nodejs-express/pipelines
+```
+
+In `test-task.yaml` enter the following:
 
 ```yaml
 #Kabanero! on activate substitute CollectionId for text 'CollectionId'
@@ -83,7 +133,7 @@ spec:
           echo "I built my first Kabanero based Tekton task"
 ```
 
-And the `test-build-deploy-pipeline.yaml` is a modification of the defauly pipeline:
+And the `test-build-deploy-pipeline.yaml` is a modification of the default pipeline:
 
 ```yaml
 #Kabanero! on activate substitute CollectionId for text 'CollectionId'
@@ -138,7 +188,7 @@ default-image: my-nodejs-express
 default-pipeline: my-nodejs-express-test-build-deploy-pipeline
 images:
 - id: my-nodejs-express
-  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.3
+  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4.1
 ```
 
 Unusually in these exercises, we have been using a version of appsody that is ahead of the current level baked into some the standard kabanero tekton artifacts, so there is one additional change that is needed to get around this. You need to update a tag in the common `build-task.yaml` used for all stacks in the collection. This update will select a builder container that uses appsody 0.5.3 to support the private registry semantics used in these exercises.
@@ -183,9 +233,13 @@ spec:
 ...
 ```
 
-### 2. Re-run the scripts
+### 3. Re-run the scripts
 
-Run `build.sh` and `release.sh` as before. From collections home run:
+Run `build.sh` and `release.sh` as before. Run:
+
+```bash
+cd ~/appsody-apps/collections
+```
 
 ```bash
 IMAGE_REGISTRY_ORG=$IMAGE_REGISTRY/$IMAGE_REGISTRY_ORG ./ci/build.sh
@@ -209,7 +263,7 @@ And that the generated `ci/release/kabanero-index.yaml` has a section like the f
     url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.3.0.pipeline.custom-pipeline.tar.gz
 ```
 
-### 3. Update the current release
+### 4. Update the current release
 
 Upload the changes
 
@@ -224,15 +278,20 @@ git commit -m "Add custom task and pipeline"
 git push -u my-org
 ```
 
-Navigating back to your GitHub repo, select the current custom release:
+Now we need to use the same script we used in exercise 6 to upload files.
 
-![Our own collection, version 0.2.1-custom](images/new-release-published-0.2.1-custom.png)
+From the collections dir, run the following commands:
 
-Clicking on the release name (0.2.1-custom) will allow you to edit the release. Click on *Edit tag*. Click on the **x** to delete existing items from the release and then upload all the files in `collections/ci/release/` which were generated from the previous steps, by clicking on the *Attach binaries...* box.
+```bash
+./GithubRelease.sh delete
 
-![Our own collection, page for version 0.2.1-custom](images/new-release-revise-0.2.1-custom.png)
+./GithubRelease.sh upload
 
-### 4. Update the Kabanero Custom Resource
+```
+
+When that is done you can navigate to your collections repo and view the release in the browser to verify that files have been uploaded.
+
+### 5. Update the Kabanero Custom Resource
 
 Use `oc get kabaneros -n kabanero` to obtain a list of all Kabanero CR instances in namespace `kabanero`. The default name for the CR instance is `kabanero`.
 
@@ -265,20 +324,53 @@ metadata:
 spec:
   collections:
     repositories:
-    - name: custom
+    - name: central
       url: https://github.com/<username>/collections/releases/download/0.2.1-custom/kabanero-index.yaml
       activateDefaultCollections: true
 ```
 
 When you are done editing, save your changes and exit the editor. The updated Kabanero CR instance will be applied to your cluster.
 
-### 5. Test it all out
+### 6. Launch the Tekton dashboard
 
-If you go to the tekton dashboard, you should see the new pipeline and task (it was added when updating the Kabanero CR by the Kabanero Operator)
+You can launch the tekton dashboard by accessing the *Cloud Pak for Applications* dashboard and selecting the Tekton link. Revisit the [Pre-work](../pre-work/README.md) section if unable to recall how to access the *Cloud Pak for Applications* dashboard.
 
-![New pipelines!](images/new-pipelines.png)
+![Launch Tekton](../exercise-4/images/launch_tekton.png)
 
-Re-add the webhook, this time you should see the new pipeline as an option (without having to do `kubectl apply`). Use similar settings for the webhook as in Exercise 8:
+You can also obtain the URL for the tekton dashboard by using `oc get routes`. We want to use the address that looks like `tekton-dashboard-kabanero.xyz.domain.containers.appdomain.cloud`.
+
+```bash
+$ oc get routes --namespace kabanero
+NAME               HOST/PORT                                                                                                             PATH      SERVICES           PORT      TERMINATION          WILDCARD
+icpa-landing       ibm-cp-applications.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                   icpa-landing       <all>     reencrypt/Redirect   None
+kabanero-cli       kabanero-cli-kabanero.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud                 kabanero-cli       <all>     passthrough          None
+kabanero-landing   kabanero-landing-kabanero.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud             kabanero-landing   <all>     passthrough          None
+tekton-dashboard   tekton-dashboard-kabanero.cpa-workshop-dev-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud             tekton-dashboard   <all>     reencrypt/Redirect   None
+```
+
+#### Review pre-installed pipelines and tasks on Cloud Pak for Apps
+
+There are 5 **Pipelines**, one for each collection kabanero comes with (java microprofile, spring, nodejs, express, and loopback). **Pipelines** are a first class structure in Tekton. **Pipelines** are a series of **Tasks**.
+
+These are visible through the UI by clicking on `pipelines` on the left side of the Tekton dashboard:
+
+![Pre-Existing Pipelines](../exercise-4/images/tekton_pipelines.png)
+
+There are 10 **Tasks**, two for each collection kabanero comes with. Each collection has 2 **Tasks**, a *Build Task* and a *Deploy Task*.
+
+These are visible through the UI by clicking on `tasks` on the left side of the Tekton dashboard:
+
+![Pre-Existing Tasks](../exercise-4/images/tekton_tasks.png)
+
+### 7. Add webhooks to Tekton to watch Github repo changes and testing it all out
+
+Configure the GitHub webhook to your repo. Go to `Webhooks` > `Add Webhook` and then create the webhook.
+
+![new webhook options](../exercise-4/images/create-tekton-webhook.png)
+
+> Note that the first time creating a webhook a new access token must also be created. To do this, click on the green plus sign to the right of `Access token`, enter a name like `github-tekton', and use the access token from the earlier step:
+
+![Create an access token](../exercise-4/images/create-token.png)
 
 ```ini
 Name: custom-stack-webhook
