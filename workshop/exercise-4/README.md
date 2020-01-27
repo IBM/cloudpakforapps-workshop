@@ -50,7 +50,7 @@ Note, we still have the `insurance-quote` namespace, the `dacadoo-config` config
 
 You can launch the tekton dashboard by accessing the *Cloud Pak for Applications* dashboard and selecting the Tekton link. Revisit the [Pre-work](../pre-work/README.md) section if unable to recall how to access the *Cloud Pak for Applications* dashboard.
 
-![Launch Tekton](images/launch_tekton.png)
+![Launch Tekton](../exercise-4/images/launch_tekton.png)
 
 You can also obtain the URL for the tekton dashboard by using `oc get routes`. We want to use the address that looks like `tekton-dashboard-kabanero.xyz.domain.containers.appdomain.cloud`.
 
@@ -67,55 +67,13 @@ tekton-dashboard   tekton-dashboard-kabanero.cpa-workshop-dev-5290c8c8e5797924dc
 
 There are 5 **Pipelines**, one for each collection kabanero comes with (java microprofile, spring, nodejs, express, and loopback). **Pipelines** are a first class structure in Tekton. **Pipelines** are a series of **Tasks**.
 
-Run this command to see the available pipelines.
+These are visible through the UI by clicking on `pipelines` on the left side of the Tekton dashboard:
 
-```bash
-oc get pipeline -n kabanero
-```
-
-You will see something similar to this.
-
-```bash
-$ oc get pipeline -n kabanero
-NAME                                           AGE
-java-microprofile-build-deploy-pipeline        15d
-java-spring-boot2-build-deploy-pipeline        15d
-nodejs-build-deploy-pipeline                   15d
-nodejs-express-build-deploy-pipeline           15d
-nodejs-loopback-build-deploy-pipeline          15d
-pipeline0                                      15d
-```
-
-These are visible through the UI, too:
-
-![Pre-Existing Pipelines](images/tekton_pipelines.png)
+![Pre-Existing Pipelines](../exercise-4/images/tekton_pipelines.png)
 
 There are 10 **Tasks**, two for each collection kabanero comes with. Each collection has 2 **Tasks**, a *Build Task* and a *Deploy Task*.
 
-```bash
-oc get tasks -n kabanero
-```
-
-You will see something similar to this.
-
-```bash
-$ oc get tasks -n kabanero
-NAME                            AGE
-java-microprofile-build-task    27d
-java-microprofile-deploy-task   27d
-java-spring-boot2-build-task    27d
-java-spring-boot2-deploy-task   27d
-monitor-result-task             27d
-nodejs-build-task               27d
-nodejs-deploy-task              27d
-nodejs-express-build-task       27d
-nodejs-express-deploy-task      27d
-nodejs-loopback-build-task      27d
-nodejs-loopback-deploy-task     27d
-pipeline0-task                  27d
-```
-
-These are visible through the UI, too:
+These are visible through the UI by clicking on `tasks` on the left side of the Tekton dashboard:
 
 ![Pre-Existing Tasks](images/tekton_tasks.png)
 
@@ -279,7 +237,7 @@ Scroll down to see any payloads being delivered. There is currently a bug where 
 
 ### 5. Test it all out
 
-In your `quote-backend` repo, change the file `quote-backend/src/main/java/application/Quote.java`. Change a value in a logger statement. Then commit this change and push to your github repo, for example:
+In your `quote-backend` repo, change the file `quote-backend/src/main/java/application/Quote.java`. Change a value in a logger statement such as on line 61. Then commit this change and push to your github repo, for example:
 
 ```bash
 git add -u
@@ -291,7 +249,7 @@ This will trigger the `java-spring-boot2-build-deploy` tekton pipeline. Go to th
 
 ![See the java deploy pipeline](images/view-tasks.png)
 
-Wait until the task is complete, and then in your `quote-frontend` repo, change the file `quote-frontend/app.js`. Change a value in a comment statement. Then commit this change and push to your github repo, for example:
+Wait until the task is complete, and then in your `quote-frontend` repo, change the file `quote-frontend/app.js`. Change a value in a comment statement on line 9. Then commit this change and push to your github repo, for example:
 
 ```bash
 git add -u

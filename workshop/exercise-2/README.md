@@ -36,11 +36,101 @@ git clone https://github.com/IBM/cloudpakforapps-workshop
 ```
 
 ## Steps
+1. [Configure Appsody CLI](#1-configure-appsody-cli)
+1. [Create the frontend application and run it locally](#2-create-the-frontend-application-and-run-it-locally)
+1. [Create the backend application and run it locally](#3-create-the-backend-application-and-run-it-locally)
 
-1. [Create the frontend application and run it locally](#1-create-the-frontend-application-and-run-it-locally)
-1. [Create the backend application and run it locally](#2-create-the-backend-application-and-run-it-locally)
 
-### 1. Create the frontend application and run it locally
+### 1. Configure Appsody CLI
+
+In this section we'll configure our Appsody CLI to pull in Collections.
+
+#### List existing Appsody stacks
+
+The Appsody CLI gives you access to stacks, which are stored in stack repositories. These can be local, private to the Enterprise or public. To get the list of available repos, run this command.
+
+```bash
+appsody repo list
+```
+
+You should see output similar to the following:
+
+```bash
+$ appsody repo list
+NAME            URL
+*incubator      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+```
+
+The exact repo list may be different to the above. `incubator` is one of the repos in the appsody project public hub (`appsodyhub`). For this workshop we are going to use the private enterprise-grade collection of stacks that come with the Kabanero open source project (which is part of Cloud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
+
+#### Add Collection to Appsody
+
+From the Cloud Pak for Applications landing page get the `CollectionHub` URL, for example:
+
+`https://github.com/kabanero-io/collections/releases/download/0.2.1/kabanero-index.yaml`
+
+Use the appsody CLI to add the Collection repo.
+
+```bash
+appsody repo add kabanero https://github.com/kabanero-io/collections/releases/download/0.2.1/kabanero-index.yaml
+```
+
+Now when we get our list of repos, we should see Kabanero listed:
+
+```bash
+appsody repo list
+```
+
+You should see output similar to the following:
+
+```bash
+$ appsody repo list
+NAME            URL
+*incubator      https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+kabanero        https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
+```
+
+We can now list the appsody stacks available in the Collection:
+
+```bash
+appsody list kabanero
+```
+
+You should see output similar to the following:
+
+```bash
+$ appsody list kabanero
+REPO        ID                  VERSION     TEMPLATES           DESCRIPTION
+kabanero    java-microprofile   0.2.11      *default            Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
+kabanero    java-spring-boot2   0.3.9       *default, kotlin    Spring Boot using OpenJ9 and Maven
+kabanero    nodejs              0.2.5       *simple             Runtime for Node.js applications
+kabanero    nodejs-express      0.2.5       *simple, skaffold   Express web framework for Node.js
+kabanero    nodejs-loopback     0.1.4       *scaffold           LoopBack 4 API Framework for Node.js
+```
+
+Given that we'll exclusively be using the kabanero stacks in this workshop, for ease of use we can set the kabanero repository to be the default for the CLI:
+
+```bash
+appsody repo set-default kabanero
+```
+
+Now is we get the list of repos, we should see kabanero is the default:
+
+```bash
+appsody repo list
+```
+
+You should see output similar to the following:
+
+```bash
+$ appsody repo list
+NAME            URL
+*kabanero       https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
+incubator       https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+```
+
+
+### 2. Create the frontend application and run it locally
 
 The frontend application is written in Node.js Express. First let's initialize an Appsody project that uses the Node.js Express stack. Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 
@@ -167,7 +257,7 @@ appsody test
 
 This runs tests that come packaged with the stack (such as tests of the health and metrics endpoints), and of course you can add your own tests of your application as well. Look at tests that call `GET /quote` and `POST /quote` in `test/test.js` to how the frontend application is tested.
 
-### 2. Create the backend application and run it locally
+### 3. Create the backend application and run it locally
 
 The backend application is written in Spring Boot. Let's initialize an Appsody project that uses the Spring Boot 2 stack. Create a directory somewhere outside where you cloned this project and run the `appsody init` command shown below.
 

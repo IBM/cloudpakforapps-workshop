@@ -34,7 +34,7 @@ appsody 0.5.3
 1. [The role of a stack in the development process](#1-the-role-of-a-stack-in-the-development-process)
 1. [Stack structure](#2-stack-structure)
 1. [Create a new stack, based on an existing one](#3-create-a-new-stack-based-on-an-existing-one)
-1. [Use the new stack in our example application](#4-use-the-new-stack-in-our-example-application)
+
 
 ### 1. The role of a stack in the development process
 

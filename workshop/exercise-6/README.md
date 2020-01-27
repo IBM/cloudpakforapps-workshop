@@ -14,7 +14,9 @@ When you have completed this exercise, you will understand how to
 You should have already carried out the prerequisites defined in [Exercise 5](../exercise-5/README.md). 
 
 ### Reauthenticate with you OpenShift cluster
-Now that it's the start of a new day, we should reauthenticate with you cluster. Open up the link to your OpenShift cluster that the instructor has provided for you. 
+The tokens used to authenticate your cli with the OpenShift cluster are temporary and need to be refreshed once in a while.  
+
+To reauthenticate, open up the link to your OpenShift cluster that the instructor has provided for you. 
 
 Then once on the OpenShift dashboard, click on the dropdown at the top right and select `Copy Login Command`. This will automatically add the login command to your clipboard.
 
@@ -45,6 +47,9 @@ The default collections can be modified to meet an organization's unique needs.
 1. [Build the new collection](#5-build-the-new-collection)
 1. [Push collection images](#6-push-collection-images)
 1. [Update code repo and release a new collection](#7-update-code-repo-and-release-a-new-collection)
+1. [Get the collection URL](#8-get-the-collection-url)
+2. [Test the new stack and collection](#9-test-the-new-stack-and-collection)
+3. [Prepare the new application for deployment](#10-prepare-the-new-application-for-deployment)
 
 ### 1. Create a new repo to host your custom collection
 
