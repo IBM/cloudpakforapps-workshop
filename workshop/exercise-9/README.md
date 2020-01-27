@@ -188,7 +188,7 @@ default-image: my-nodejs-express
 default-pipeline: my-nodejs-express-test-build-deploy-pipeline
 images:
 - id: my-nodejs-express
-  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4.1
+  image: $IMAGE_REGISTRY_ORG/my-nodejs-express:0.4
 ```
 
 Unusually in these exercises, we have been using a version of appsody that is ahead of the current level baked into some the standard kabanero tekton artifacts, so there is one additional change that is needed to get around this. You need to update a tag in the common `build-task.yaml` used for all stacks in the collection. This update will select a builder container that uses appsody 0.5.3 to support the private registry semantics used in these exercises.
