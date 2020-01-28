@@ -8,7 +8,7 @@
 
 * [About Day 1](about-day-1/README.md)
     * [Lecture 1: Kabanero Overview](https://ibm.box.com/s/6jl4b7sj8xqgh7rvxtea5ykpsjyu1siz)
-    * [Exercise 2: Using Appsody CLI to develop, test, and debug applications](exercise-2/README.md)
+    * [Exercise 2: Using Appsody CLI to develop, test, and debug applications](./exercise-2/README.md)
     * [Exercise 3: Deploying to OpenShift with Appsody](exercise-3/README.md)
     * [Lecture 3: Adding value with IBM Cloud Pak for Applications](https://ibm.box.com/s/y4wh104vdos1vw5kdjwwuhebf8jgq580)
     * [Exercise 4: Use Tekton and Kabanero Pipelines to continuously deploy](exercise-4/README.md)
