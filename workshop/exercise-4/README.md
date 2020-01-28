@@ -150,7 +150,7 @@ Go to <https://github.com/new> and create two new repositories, `quote-frontend`
 
 Now we need to configure git to be able to authenticate with your account. Run the following commands replacing `you@example.com` with the email you used to sign up with GitHub and `Your Name` with your name.
 
-```
+```bash
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
 ```
@@ -168,8 +168,6 @@ git push -u origin master
 The repo for your backend code should look like this:
 
 ![Repo for backend](images/repo_backend.png)
-
-
 
 From your `quote-frontend` directory, run the commands below, replacing `<username>` with your own.
 

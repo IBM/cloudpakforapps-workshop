@@ -36,10 +36,10 @@ git clone https://github.com/IBM/cloudpakforapps-workshop
 ```
 
 ## Steps
+
 1. [Configure Appsody CLI](#1-configure-appsody-cli)
 1. [Create the frontend application and run it locally](#2-create-the-frontend-application-and-run-it-locally)
 1. [Create the backend application and run it locally](#3-create-the-backend-application-and-run-it-locally)
-
 
 ### 1. Configure Appsody CLI
 
@@ -128,6 +128,7 @@ NAME            URL
 *kabanero       https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
 incubator       https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
+
 We recommend creating a new directory from your user home to work with new Appsody based applications, i.e.:
 
 ```bash
@@ -167,7 +168,7 @@ You can see the output of the application by opening another browser tab to the 
 
 ```bash
 VM_IP=$(hostname -I | awk '{ print $2 }')
-echo $VM_IP:3000
+echo http://$VM_IP:3000
 ```
 
 Then copy the output of the previous command and paste it into your browser.
@@ -180,26 +181,36 @@ The Node.js Express stack also provides out-of-the-box health checking, applicat
 
 To test out these endpoints, go back to the terminal that is not running the `appsody run` command and enter the following commands to see the response for each health checking endpoint.
 
-* Health endpoint: 
-```
+* Health endpoint:
+
+```bash
 curl http://localhost:3000/health
 ```
-* Liveness endpoint: 
-```
+
+* Liveness endpoint:
+
+```bash
 curl http://localhost:3000/live
 ```
+
 * Readiness endpoint:
-```
+
+```bash
 curl http://localhost:3000/ready
 ```
-* Metrics endpoint: 
-```
+
+* Metrics endpoint:
+
+```bash
 curl http://localhost:3000/metrics
 ```
-* Dashboard endpoint: 
+
+* Dashboard endpoint:
+
+```bash
+echo http://$VM_IP:3000/appmetrics-dash
 ```
-echo echo $VM_IP:3000/appmetrics-dash
-```
+
 Copy the output from the command above and paste it in your browser to view the app metrics dashboard. (development only)
 
 While the containerized application is running you can edit the application and your changes will be reflected in the running container. You can test this by editing the app.js module and changing the message returned by the default endpoint. Watch the `appsody run` console session for the application to restart. Then refresh the application page in your browser and you will see the new message.
@@ -261,7 +272,7 @@ This is what the frontend looks like:
 You can see the application by running the following:
 
 ```bash
-echo $VM_IP:3000/quote
+echo http://$VM_IP:3000/quote
 ```
 
 Then copy the output of the previous command and paste it into your browser.
@@ -331,26 +342,33 @@ It's possible to run this application on your workstation immediately.
 appsody run
 ```
 
-Appsody builds a containerized version of the application for you and runs it in Docker. 
+Appsody builds a containerized version of the application for you and runs it in Docker.
 
 The Spring Boot 2 stack also provides out-of-the-box health checking and application metrics endpoints.
 
 To test out these endpoints, go back to the terminal that is not running the `appsody run` command and enter the following commands to see the response for each health checking endpoint.
 
-* Health endpoint: 
-```
+* Health endpoint:
+
+```bash
 curl http://localhost:8080/actuator/health
 ```
-* Liveness endpoint: 
-```
+
+* Liveness endpoint:
+
+```bash
 curl http://localhost:8080/actuator/liveness
 ```
+
 * Metrics endpoint:
-```
+
+```bash
 curl http://localhost:8080/actuator/metrics
 ```
+
 * Prometheus endpoint:
-```
+
+```bash
 curl http://localhost:8080/actuator/prometheus
 ```
 

@@ -25,9 +25,10 @@ You should have already carried out the prerequisites defined in the [Pre-work](
 1. [Deploy the frontend application to OpenShift](#4-deploy-the-frontend-application-to-openshift)
 
 ### Authenticate with you OpenShift cluster
-In order to interact with your OpenShift cluster we first need to authenticate with it through our terminal. 
 
-First, open up the link to your OpenShift cluster that the instructor has provided for you. 
+In order to interact with your OpenShift cluster we first need to authenticate with it through our terminal.
+
+First, open up the link to your OpenShift cluster that the instructor has provided for you.
 
 Then once on the OpenShift dashboard, click on the dropdown at the top right and select `Copy Login Command`. This will automatically add the login command to your clipboard.
 
@@ -242,7 +243,6 @@ Deployed project running at quote-backend-insurance-quote.cp4apps-workshop-prop-
 If you get an `unknown blob` error, retry the command.
 
 > **NOTE**: If the deployment times out, see the section [Pushing to the OpenShift registry times out](../instructor-guide/README.md#pushing-to-the-openshift-registry-times-out) in the Admin Guide.
-
 > **NOTE**: Running `appsody deploy` will install the [appsody operator](https://github.com/appsody/appsody-operator) on the *Default* namespace of the cluster.
 
 After the deployment completes, you can test the service using curl. The last line output (above) in the deploy gives you the url to the backend application. For simplicity, let's put that in an environment variable, i.e, for the example above:
