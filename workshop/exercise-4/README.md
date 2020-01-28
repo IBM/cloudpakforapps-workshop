@@ -187,7 +187,7 @@ The repo for your frontend code should look like this:
 
 ### 4. Add webhooks to Tekton to watch Github repo changes
 
-Configure the GitHub webhook to your repo. Go to `Webhooks` > `Add Webhook` and then create the webhook.
+Now we need to configure the GitHub webhook to your repo. From the Tekton dashboard, go to `Webhooks` > `Add Webhook` and then create the webhook with the information below.
 
 ![new webhook options](images/create-tekton-webhook.png)
 
@@ -237,10 +237,18 @@ Scroll down to see any payloads being delivered. There is currently a bug where 
 
 ### 5. Test it all out
 
-In your `quote-backend` repo, change the file `quote-backend/src/main/java/application/Quote.java`. Change a value in a logger statement such as on line 61. Then commit this change and push to your github repo, for example:
+Let's make a change to trigger the webhook. Enter the following commands to create a README file in the repo:
 
 ```bash
-git add -u
+cd ~/appsody-apps/quote-backend
+
+echo "This is the backend" > README.md
+```
+
+Then commit this change and push to your github repo, for example:
+
+```bash
+git add -A
 git commit -m "test change"
 git push -f -u origin master
 ```
@@ -249,10 +257,20 @@ This will trigger the `java-spring-boot2-build-deploy` tekton pipeline. Go to th
 
 ![See the java deploy pipeline](images/view-tasks.png)
 
-Wait until the task is complete, and then in your `quote-frontend` repo, change the file `quote-frontend/app.js`. Change a value in a comment statement on line 9. Then commit this change and push to your github repo, for example:
+<!-- Wait until the task is complete, and then in your `quote-frontend` repo, change the file `quote-frontend/app.js`.  -->
+
+Wait until the task is complete, then run the following commands to make a README file:
 
 ```bash
-git add -u
+cd ~/appsody-apps/quote-frontend
+
+echo "This is the frontend" > README.md
+```
+
+<!-- Change a value in a comment statement on line 9. Then commit this change and push to your github repo, for example: -->
+
+```bash
+git add -A
 git commit -m "test change"
 git push -f -u origin master
 ```
@@ -262,6 +280,10 @@ This should trigger another pipeline run to be created, using the `nodejs-expres
 ![Two PipelineRuns should appear](images/view-pipelines.png)
 
 Wait until the task is complete, then find the route using `oc get routes`:
+
+```bash
+oc get routes -n insurance-quote | grep frontend
+```
 
 ```bash
 $ oc get routes -n insurance-quote | grep frontend

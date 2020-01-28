@@ -128,7 +128,12 @@ NAME            URL
 *kabanero       https://github.com/kabanero-io/collections/releases/download/v0.1.2/kabanero-index.yaml
 incubator       https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
+We recommend creating a new directory from your user home to work with new Appsody based applications, i.e.:
 
+```bash
+cd ~
+mkdir appsody-apps
+```
 
 ### 2. Create the frontend application and run it locally
 
@@ -158,19 +163,46 @@ It's possible to run this application on your workstation immediately.
 appsody run
 ```
 
-You can see the output of the application by navigating to `http://localhost:3000` in a browser window.
+You can see the output of the application by opening another browser tab to the terminal environment and running the following:
 
-Appsody builds a containerized version of the application for you and runs it in Docker. You can enter `http://localhost:3000` in a browser to see the default endpoint served by the application.
+```bash
+VM_IP=$(hostname -I | awk '{ print $2 }')
+echo $VM_IP:3000
+```
+
+Then copy the output of the previous command and paste it into your browser.
+
+You should see a short `Hello from Appsody!` message as a response.
+
+Appsody builds a containerized version of the application for you and runs it in Docker. You can enter the following to view it in your browser
 
 The Node.js Express stack also provides out-of-the-box health checking, application metrics endpoints and performance monitoring. In development containers (i.e. during Rapid Local Development Mode), it also provides an analysis dashboard.
 
-* Health endpoint: <http://localhost:3000/health>
-* Liveness endpoint: <http://localhost:3000/live>
-* Readiness endpoint: <http://localhost:3000/ready>
-* Metrics endpoint: <http://localhost:3000/metrics>
-* Dashboard endpoint: <http://localhost:3000/appmetrics-dash> (development only)
+To test out these endpoints, go back to the terminal that is not running the `appsody run` command and enter the following commands to see the response for each health checking endpoint.
 
-While the containerized application is running you can edit the application and your changes will be reflected in the running container. You can test this by editing the app.js module and changing the message returned by the default endpoint. Watch the `appsody run` console session for the application to restart. Then re-enter `http://localhost:3000` in your browser and you will see the new message.
+* Health endpoint: 
+```
+curl http://localhost:3000/health
+```
+* Liveness endpoint: 
+```
+curl http://localhost:3000/live
+```
+* Readiness endpoint:
+```
+curl http://localhost:3000/ready
+```
+* Metrics endpoint: 
+```
+curl http://localhost:3000/metrics
+```
+* Dashboard endpoint: 
+```
+echo echo $VM_IP:3000/appmetrics-dash
+```
+Copy the output from the command above and paste it in your browser to view the app metrics dashboard. (development only)
+
+While the containerized application is running you can edit the application and your changes will be reflected in the running container. You can test this by editing the app.js module and changing the message returned by the default endpoint. Watch the `appsody run` console session for the application to restart. Then refresh the application page in your browser and you will see the new message.
 
 We're going to replace the starter code with the insurance quote frontend application. First you must edit the `package.json` file and add the following to the `dependencies` section:
 
@@ -191,9 +223,11 @@ We're going to replace the starter code with the insurance quote frontend applic
 }
 ```
 
+You can do this by either running `vi ~/appsody-apps/quote-frontend/package.json` or `nano ~/appsody-apps/quote-frontend/package.json` depending on which editor you prefer.
+
 The Node.js Express stack installs the package dependencies into the containerized application. However it won't do this when the containerized application is already running. You must stop the current application by entering `appsody stop` in a separate window, and then re-run `appsody run` to start it back up.
 
-`Note: You can also pres ctrl+c to kill the appsody run process.`
+`Note: You can also press ctrl+c to kill the appsody run process.`
 
 Now copy the files from the `quote-frontend` directory in the cloned git repo to your Appsody project, for example:
 
@@ -220,9 +254,17 @@ The resulting directory structure of your Appsody project should look like this:
 └── quote.js
 ```
 
-Watch for the container to restart and then refresh your browser again. You will see a form appear.
+This is what the frontend looks like:
 
 ![Sample web form](images/screenshot.png)
+
+You can see the application by running the following:
+
+```bash
+echo $VM_IP:3000/quote
+```
+
+Then copy the output of the previous command and paste it into your browser.
 
 You can fill in the form and hit the button to submit it and a response will appear. In this case the frontend application is not sending a request to the backend application. Instead it is configured to use a mock endpoint for testing purposes in development mode. This works as follows.
 
@@ -289,14 +331,28 @@ It's possible to run this application on your workstation immediately.
 appsody run
 ```
 
-Appsody builds a containerized version of the application for you and runs it in Docker. You can enter `http://localhost:8080` in a browser to see the default endpoint served by the application.
+Appsody builds a containerized version of the application for you and runs it in Docker. 
 
 The Spring Boot 2 stack also provides out-of-the-box health checking and application metrics endpoints.
 
-* Health endpoint: <http://localhost:8080/actuator/health>
-* Liveness endpoint: <http://localhost:8080/actuator/liveness>
-* Metrics endpoint: <http://localhost:8080/actuator/metrics>
-* Prometheus endpoint: <http://localhost:8080/actuator/prometheus>
+To test out these endpoints, go back to the terminal that is not running the `appsody run` command and enter the following commands to see the response for each health checking endpoint.
+
+* Health endpoint: 
+```
+curl http://localhost:8080/actuator/health
+```
+* Liveness endpoint: 
+```
+curl http://localhost:8080/actuator/liveness
+```
+* Metrics endpoint:
+```
+curl http://localhost:8080/actuator/metrics
+```
+* Prometheus endpoint:
+```
+curl http://localhost:8080/actuator/prometheus
+```
 
 We're going to replace the starter code with the insurance quote backend application. Edit the `pom.xml` file and add the following dependency to the dependencies section.
 
