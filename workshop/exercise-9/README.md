@@ -28,7 +28,6 @@ Here we want to generate a token, so `Click` on the `Generate a Token`. The toke
 
 Once the token is created, make sure to copy it down. We will need it later.
 
-
 ## Steps
 
 ### 1. Upload custom stack test to GitHub
@@ -86,6 +85,7 @@ incubator
               └── test-task.yaml
               └── test-build-deploy-pipeline.yaml
 ```
+
 Change directory into your `collections/incubator/my-nodejs-express/pipelines` folder:
 
 ```bash

@@ -11,12 +11,13 @@ When you have completed this exercise, you will understand how to
 
 ## Prerequisites
 
-You should have already carried out the prerequisites defined in [Exercise 5](../exercise-5/README.md). 
+You should have already carried out the prerequisites defined in [Exercise 5](../exercise-5/README.md).
 
 ### Reauthenticate with you OpenShift cluster
+
 The tokens used to authenticate your cli with the OpenShift cluster are temporary and need to be refreshed once in a while.  
 
-To reauthenticate, open up the link to your OpenShift cluster that the instructor has provided for you. 
+To reauthenticate, open up the link to your OpenShift cluster that the instructor has provided for you.
 
 Then once on the OpenShift dashboard, click on the dropdown at the top right and select `Copy Login Command`. This will automatically add the login command to your clipboard.
 
@@ -48,8 +49,8 @@ The default collections can be modified to meet an organization's unique needs.
 1. [Push collection images](#6-push-collection-images)
 1. [Update code repo and release a new collection](#7-update-code-repo-and-release-a-new-collection)
 1. [Get the collection URL](#8-get-the-collection-url)
-2. [Test the new stack and collection](#9-test-the-new-stack-and-collection)
-3. [Prepare the new application for deployment](#10-prepare-the-new-application-for-deployment)
+1. [Test the new stack and collection](#9-test-the-new-stack-and-collection)
+1. [Prepare the new application for deployment](#10-prepare-the-new-application-for-deployment)
 
 ### 1. Create a new repo to host your custom collection
 
@@ -325,6 +326,7 @@ export GITHUB_TOKEN=<token from previous step>
 ```
 
 Next, from your collections directory, run the following commands:
+
 ```bash
 curl https://gist.githubusercontent.com/odrodrig/3e280bc197aa1b6022f99bec9bf113f0/raw/92222ccf88d8de70e6a4db72ab3a893d954c48f7/GithubRelease.sh > GithubRelease.sh
 
