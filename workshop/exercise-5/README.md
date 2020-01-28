@@ -35,7 +35,6 @@ appsody 0.5.3
 1. [Stack structure](#2-stack-structure)
 1. [Create a new stack, based on an existing one](#3-create-a-new-stack-based-on-an-existing-one)
 
-
 ### 1. The role of a stack in the development process
 
 Developers use stacks to simplify building applications that require a specific set of technologies or development patterns. While there are numerous publicly available stacks to choose from, many enterprises want to build their own set of stacks that uphold their specific requirements and standards for how they want to their developers to build cloud native applications.

@@ -27,9 +27,9 @@ In this first day we'll learn how to use Appsody to run the *inner loop* of the 
 | Section | Description |
 | - | - |
 | **[Lecture 1: Kabanero Overview](https://ibm.box.com/s/6jl4b7sj8xqgh7rvxtea5ykpsjyu1siz)** | Learn about Kabanero. An open source project to rapidly create Cloud Native applications |
-| **[Exercise 2: Using Appsody CLI to develop, test, and debug applications](../exercise-2/README.md)** | Use the Appsody CLI to quickly create frontend and backend applications for a sample application using two different technologies (Spring and nodejs express) |
+| **[Exercise 2: Using Appsody CLI to develop, test, and debug applications](./exercise-2/README.md)** | Use the Appsody CLI to quickly create frontend and backend applications for a sample application using two different technologies (Spring and nodejs express) |
 | **[Lecture 3: Adding value with IBM Cloud Pak for Applications](https://ibm.box.com/s/y4wh104vdos1vw5kdjwwuhebf8jgq580)** | Learn about how IBM Cloud Pak for Applications bundles everything together |
-| **[Exercise 3: Deploying to OpenShift with Appsody](../exercise-3/README.md)** | Deploy the built applications to IBM Managed OpenShift with Appsody for dev/test purposes |
+| **[Exercise 3: Deploying to OpenShift with Appsody](./exercise-3/README.md)** | Deploy the built applications to IBM Managed OpenShift with Appsody for dev/test purposes |
 | **[Exercise 4: Use Tekton and Kabanero Pipelines to continuously deploy](exercise-4/README.md)** | Deploy the built applications to IBM Managed OpenShift using GitOps to trigger a Tekton pipeline |
 
 ### Day 2: Customizing Stacks, Pipelines in Collections
@@ -39,10 +39,10 @@ In the second day we'll learn about the Kabanero open source project and how to 
 | Section | Description |
 | - | - |
 | **[Lecture 4: Customizing Appsody and Kabanero](https://ibm.box.com/s/kbuympaqftxswyi1aoswdlqussmqf1ba)** | Learn about the stacks and repos |
-| **[Exercise 5: Customizing an existing Appsody Stack](../exercise-5/README.md)** | Create a custom stack, to be hosted in our custom repository |
-| **[Exercise 6: Building a custom Collection](../exercise-6/README.md)** | Create a collection that will contain custom appsody stacks and pipelines |
+| **[Exercise 5: Customizing an existing Appsody Stack](./exercise-5/README.md)** | Create a custom stack, to be hosted in our custom repository |
+| **[Exercise 6: Building a custom Collection](./exercise-6/README.md)** | Create a collection that will contain custom appsody stacks and pipelines |
 | **[Lecture 5: Tekton Overview](https://ibm.box.com/s/tg0f6nhs91trlzkb5pfnh5e1rdzg4wm6)** | Learn about Tekton CI/CD and how Kabanero uses it |
-| **[Exercise 9: Deploy an application with a custom Stack, custom Collection, and custom Pipeline](../exercise-9/README.md)** | Build and deploy an application using the custom stack, collection and pipelines built by the Architects' and Operators' tracks |
+| **[Exercise 9: Deploy an application with a custom Stack, custom Collection, and custom Pipeline](./exercise-9/README.md)** | Build and deploy an application using the custom stack, collection and pipelines built by the Architects' and Operators' tracks |
 
 ## Compatability
 
