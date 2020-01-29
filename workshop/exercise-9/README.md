@@ -107,7 +107,27 @@ The repo should look like this:
 
 ### 3. Add the tasks to the collection
 
-In your local `collections/incubator/my-nodejs-express/pipelines` folder add a new folder called `custom-pipeline` and add two files `test-task.yaml` and `test-build-deploy-pipeline.yaml`. The file structure is seen below
+In the next steps we are going to add a custom pipeline that contains a `task` and a `pipeline` within your local `collections/incubator/my-nodejs-express/pipelines` folder.
+
+First, change directory into your `collections/incubator/my-nodejs-express/pipelines` folder:
+
+```bash
+cd ~/appsody-apps/collections/incubator/my-nodejs-express/pipelines
+```
+
+Then use the following commands to create the `custom-pipeline` directory and the `test-task.yaml` and `test-build-deploy-pipeline.yaml` files:
+
+```bash
+mkdir custom-pipeline
+
+cd custom-pipeline
+
+touch test-task.yaml
+
+touch test-build-deploy-pipeline.yaml
+```
+
+The file structure should look like the example below
 
 ```ini
 incubator
@@ -116,12 +136,6 @@ incubator
         └── custom-pipeline/
               └── test-task.yaml
               └── test-build-deploy-pipeline.yaml
-```
-
-Change directory into your `collections/incubator/my-nodejs-express/pipelines` folder:
-
-```bash
-cd ~/appsody-apps/collections/incubator/my-nodejs-express/pipelines
 ```
 
 In `test-task.yaml` enter the following:

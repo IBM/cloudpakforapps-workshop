@@ -353,6 +353,8 @@ Then save the token as an environment variable with the following command:
 export GITHUB_TOKEN=<token from previous step>
 ```
 
+>Save the github token in a separate text document so you have it for later just in case your terminal instance refreshes.
+
 Next, from your collections directory, run the following commands:
 
 ```bash
