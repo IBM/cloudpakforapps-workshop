@@ -239,6 +239,18 @@ Go back to the `my-nodejs-express` directory.
 cd ~/appsody-apps/my-nodejs-express
 ```
 
+Open `image/project/server.js` in either vi or nano to edit the file by running either:
+
+```bash
+ vi ~/appsody-apps/my-nodejs-express/image/project/server.js
+```
+
+or
+
+```bash
+nano ~/appsody-apps/my-nodejs-express/image/project/server.js
+```
+
 The current code in `image/project/server.js` looks something like this:
 
 ```javascript
@@ -304,7 +316,9 @@ module.exports.PORT = PORT;
 
 ```
 
-We will modify this file by adding two lines, to import helmet (with `require()`), and to enable it with `app.use()`:
+We will modify this file by adding two lines, to import helmet (with `require()`), and to enable it with `app.use()`.
+
+Add `const helmet = require('helmet');` below the other require statements at the top of the page, and then add `app.use(helmet());` below `const app = express();` as seen below:
 
 ```javascript
 const express = require('express');
@@ -320,7 +334,9 @@ const server = http.createServer(app)
 ...
 ```
 
-Since we have added a new module that is required, we must also update the dependency management (package.json), to ensure this is pulled in:
+Since we have added a new module that is required, we must also update the dependency management (image/project/package.json), to ensure this is pulled in.
+
+Add `"helmet": "^3.21.1"` to the `dependencies` section of the `package.json` file as seen below:
 
 ```json
 {
@@ -397,6 +413,11 @@ Hello from Appsody!*
 
 As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
 
-Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory.
+Stop this current appsody run by running the following commands in the terminal window not running `appsody run`:
+
+```bash
+cd ~/appsody-apps/test-my-stack/
+appsody stop
+```
 
 **Congratulations**! We have successfully built and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.

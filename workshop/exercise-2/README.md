@@ -215,12 +215,9 @@ Copy the output from the command above and paste it in your browser to view the 
 
 While the containerized application is running you can edit the application and your changes will be reflected in the running container. You can test this by editing the app.js module and changing the message returned by the default endpoint. Watch the `appsody run` console session for the application to restart. Then refresh the application page in your browser and you will see the new message.
 
-We're going to replace the starter code with the insurance quote frontend application. First you must edit the `package.json` file and add the following to the `dependencies` section:
+We're going to replace the starter code with the insurance quote frontend application. First you must edit the `package.json` file and add the following `dependencies` section in between the `scripts` and `devDependencies` sections:
 
 ```json
-{
-  .
-  .
   "dependencies": {
     "body-parser": "^1.19.0",
     "config": "^3.2.0",
@@ -228,15 +225,55 @@ We're going to replace the starter code with the insurance quote frontend applic
     "pug": "^2.0.0",
     "request": "^2.88.0"
   },
-  .
-  .
-  .
+```
+
+Your `package.json` file should look like the following now:
+
+```json
+{
+  "name": "nodejs-express-simple",
+  "version": "0.1.0",
+  "description": "Simple Node.js Express application",
+  "license": "Apache-2.0",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appsody/stacks.git",
+    "directory": "incubator/nodejs-express/templates/simple"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "config": "^3.2.0",
+    "express-validator": "^6.2.0",
+    "pug": "^2.0.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "~6.1.0",
+    "request": "^2.88.0"
+  }
 }
 ```
 
 You can do this by either running `vi ~/appsody-apps/quote-frontend/package.json` or `nano ~/appsody-apps/quote-frontend/package.json` depending on which editor you prefer.
 
 The Node.js Express stack installs the package dependencies into the containerized application. However it won't do this when the containerized application is already running. You must stop the current application by entering `appsody stop` in a separate window, and then re-run `appsody run` to start it back up.
+
+In the terminal window that is not running the `appsody run` command, enter the following:
+
+```bash
+appsody stop
+```
+
+Switch back to the terminal window that was running `appsody run` and restart the appsody run:
+
+```bash
+appsody run
+```
 
 `Note: You can also press ctrl+c to kill the appsody run process.`
 

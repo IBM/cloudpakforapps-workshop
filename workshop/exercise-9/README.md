@@ -30,7 +30,37 @@ Once the token is created, make sure to copy it down. We will need it later.
 
 ## Steps
 
-### 1. Upload custom stack test to GitHub
+### 1. Prepare the new application for deployment
+
+Before you can deploy this application using the pipeline you will be building in the upcoming exercises, there needs to be a deployment file added to the application. The deployment file is called `app-deploy.yaml`. This file was created automatically for you in day 1 exercise 3 with the `appsody deploy` command.
+
+It can also be created without deploying an application using the `--generate-only` flag. Run these commands:
+
+```bash
+cd ~/appsody-apps/test-custom-stack
+
+appsody deploy --generate-only
+```
+
+```bash
+$ appsody deploy --generate-only
+Extracting project from development environment
+Pulling docker image docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+Running command: docker pull docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+0.3: Pulling from kabanero-noauth/my-nodejs-express
+Digest: sha256:9145b3477ca00e2401d100380460a5d813a6f291ee149d10ac7d989f1923f1e3
+Status: Image is up to date for docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3
+Running command: docker run --name test-custom-stack-extract -v C:/Users/TimRobinson/appsody-apps/test-custom-stack/:/project/user-app --entrypoint /bin/bash docker-registry-default.timro-roks1-5290c8c8e5797924dc1ad5d1b85b37c0-0001.us-east.containers.appdomain.cloud/kabanero-noauth/my-nodejs-express:0.3 -c cp -rfL /project /tmp/project
+...
+```
+
+After the command completes, check the contents of the application directory with `ls`
+
+```bash
+app.js  app-deploy.yaml  node_modules/  package.json  package-lock.json  test/
+```
+
+### 2. Upload custom stack test to GitHub
 
 From completing the previous exercise you should now have a code base in the following folder
 
@@ -59,21 +89,23 @@ We will now upload that code to Github.
 
 Go to <https://github.com/new> and create a new repository, `test-custom-stack`. Do not initiatize the repos with a license file or README.
 
-From your `test-custom-stack` directory, run the commands below, replacing `<username>` with your own.
+From your `test-custom-stack` directory, run the commands below.
 
 ```bash
 git init
 git add -A
 git commit -m "first commit"
-git remote add my-org https://github.com:<username>/test-custom-stack.git
+git remote add my-org https://github.com/$GITHUB_USER/test-custom-stack.git
 git push -u my-org master
 ```
+
+>If your GITHUB_USER variable is not set, run `export GITHUB_USER=<username>` while replacing `<username> with your github username.
 
 The repo should look like this:
 
 ![Repo code base](../exercise-8/images/repo-code-base.png)
 
-### 2. Add the tasks to the collection
+### 3. Add the tasks to the collection
 
 In your local `collections/incubator/my-nodejs-express/pipelines` folder add a new folder called `custom-pipeline` and add two files `test-task.yaml` and `test-build-deploy-pipeline.yaml`. The file structure is seen below
 
@@ -233,7 +265,7 @@ spec:
 ...
 ```
 
-### 3. Re-run the scripts
+### 4. Re-run the scripts
 
 Run `build.sh` and `release.sh` as before. Run:
 
@@ -263,7 +295,7 @@ And that the generated `ci/release/kabanero-index.yaml` has a section like the f
     url: https://github.com/stevemar/collections/releases/download/0.2.1-custom/incubator.my-nodejs-express.v0.3.0.pipeline.custom-pipeline.tar.gz
 ```
 
-### 4. Update the current release
+### 5. Update the current release
 
 Upload the changes
 
@@ -291,7 +323,7 @@ From the collections dir, run the following commands:
 
 When that is done you can navigate to your collections repo and view the release in the browser to verify that files have been uploaded.
 
-### 5. Update the Kabanero Custom Resource
+### 6. Update the Kabanero Custom Resource
 
 Use `oc get kabaneros -n kabanero` to obtain a list of all Kabanero CR instances in namespace `kabanero`. The default name for the CR instance is `kabanero`.
 
@@ -331,7 +363,7 @@ spec:
 
 When you are done editing, save your changes and exit the editor. The updated Kabanero CR instance will be applied to your cluster.
 
-### 6. Launch the Tekton dashboard
+### 7. Launch the Tekton dashboard
 
 You can launch the tekton dashboard by accessing the *Cloud Pak for Applications* dashboard and selecting the Tekton link. Revisit the [Pre-work](../pre-work/README.md) section if unable to recall how to access the *Cloud Pak for Applications* dashboard.
 
@@ -362,7 +394,7 @@ These are visible through the UI by clicking on `tasks` on the left side of the 
 
 ![Pre-Existing Tasks](../exercise-4/images/tekton_tasks.png)
 
-### 7. Add webhooks to Tekton to watch Github repo changes and testing it all out
+### 8. Add webhooks to Tekton to watch Github repo changes and testing it all out
 
 Configure the GitHub webhook to your repo. Go to `Webhooks` > `Add Webhook` and then create the webhook.
 
@@ -374,7 +406,7 @@ Configure the GitHub webhook to your repo. Go to `Webhooks` > `Add Webhook` and 
 
 ```ini
 Name: custom-stack-webhook
-Repository URL: http://github.com/{username}/test-custom-stack
+Repository URL: https://github.com/{username}/test-custom-stack
 Access Token: github-tekton
 
 Namespace: kabanero
