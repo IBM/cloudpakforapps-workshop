@@ -175,7 +175,7 @@ From your `quote-frontend` directory, run the commands below, replacing `<userna
 git init
 git add -A
 git commit -m "first commit"
-git remote add origin https://github.com/<username>/quote-backend.git
+git remote add origin https://github.com/<username>/quote-frontend.git
 git push -u origin master
 ```
 
@@ -197,7 +197,7 @@ Note that the first time creating a webhook a new access token must also be crea
 
 ```ini
 Name: backend-webhook
-Repository URL: http://github.com/{username}/quote-backend
+Repository URL: https://github.com/{username}/quote-backend
 Access Token: github-tekton
 
 Namespace: kabanero
@@ -206,11 +206,13 @@ Service account: kabanero-operator
 Docker Registry: docker-registry.default.svc:5000/insurance-quote
 ```
 
+> Be sure that the `Repository URL` starts with `https` not `http`.
+
 #### Create a webhook for the frontend
 
 ```ini
 Name: frontend-webhook
-Repository URL: http://github.com/{username}/quote-frontend
+Repository URL: https://github.com/{username}/quote-frontend
 Access Token: github-tekton
 
 Namespace: kabanero
@@ -218,6 +220,8 @@ Pipeline: nodejs-express-build-deploy-pipeline
 Service account: kabanero-operator
 Docker Registry: docker-registry.default.svc:5000/insurance-quote
 ```
+
+> Be sure that the `Repository URL` starts with `https` not `http`.
 
 Verify both are created successfully.
 
@@ -240,7 +244,7 @@ Let's make a change to trigger the webhook. Enter the following commands to crea
 ```bash
 cd ~/appsody-apps/quote-backend
 
-echo "This is the backend" > README.md
+echo "# This is the backend" > README.md
 ```
 
 Then commit this change and push to your github repo, for example:
@@ -262,7 +266,7 @@ Wait until the task is complete, then run the following commands to make a READM
 ```bash
 cd ~/appsody-apps/quote-frontend
 
-echo "This is the frontend" > README.md
+echo "# This is the frontend" > README.md
 ```
 
 <!-- Change a value in a comment statement on line 9. Then commit this change and push to your github repo, for example: -->
