@@ -1,5 +1,5 @@
 # Cloud Pak for Applications Workshop
 
-> The workshop is hosted at: [https://cloudpakforapplications.gitbook.io/workshop/](https://cloudpakforapplications.gitbook.io/workshop)
+> The workshop is hosted at: [https://ibm.github.io/cloudpakforapps-workshop](https://ibm.github.io/cloudpakforapps-workshop)
 
-!["cp4apps"](workshop/assets/images/cp4apps.png)
+!["cp4apps"](docs/assets/images/cp4apps.png)
