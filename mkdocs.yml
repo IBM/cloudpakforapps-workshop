@@ -1,0 +1,108 @@
+# Project information
+site_name: Cloud Pak for Apps Workshop
+site_url: https://ibm.github.io/cloudpakforapps-workshop
+site_author: IBM Developer
+
+# Repository
+repo_name: cloudpakforapps-workshop
+repo_url: https://github.com/ibm/cloudpakforapps-workshop
+edit_uri: edit/master/docs
+
+# Navigation
+nav:
+  - Welcome:
+    - About the workshop: README.md
+    - Pre-work: pre-work/README.md
+  - Workshop (Day 1):
+    - About Day 1: about-day-1/README.md
+    - Lab 1. Intro to Appsody and Codewind: exercise-1/README.md
+    - Lab 2. Using Appsody CLI to develop apps: exercise-2/README.md
+    - Lab 3. Deploying to OpenShift with Appsody: exercise-3/README.md
+    - Lab 4. Use Tekton to continuously deploy: exercise-4/README.md
+  - Workshop (Day 2):
+    - About Day 2: about-day-2/README.md
+    - Lab 5. Customize an existing Appsody Stack: exercise-5/README.md
+    - Lab 6. Build a custom Collection repository: exercise-6/README.md
+    - Lab 7. Use a custom Collection with Appsody: exercise-7/README.md
+    - Lab 8. Create a custom Tekton Task and Pipleline: exercise-8/README.md
+    - Lab 9. Deploy a customized Kabanero application: exercise-9/README.md
+  - References:
+    - Additional resources: resources/README.md
+  - Instructors:
+    - Instructor Guide: instructor-guide/README.md
+
+## DO NOT CHANGE BELOW THIS LINE
+
+# Copyright
+copyright: Copyright &copy; 2020 IBM Developer
+
+# Theme
+theme:
+  name: material
+  font:
+    text: IBM Plex Sans
+    code: IBM Plex Mono
+  icon:
+    logo: material/library
+  features:
+    - navigation.tabs
+    #- navigation.instant
+  palette:
+    scheme: default
+    primary: blue
+    accent: blue
+
+# Plugins
+plugins:
+  - search
+
+# Customization
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ibm
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/ibmdeveloper
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/ibm/
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/user/developerworks
+    - icon: fontawesome/brands/dev
+      link: https://dev.to/ibmdeveloper
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde

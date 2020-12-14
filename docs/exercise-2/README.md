@@ -276,6 +276,6 @@ You can use `appsody test` to run automated tests for this application.
 appsody test
 ```
 
-Look at [quote-backend/src/test/java/application/QuoteTests.java](quote-backend/src/test/java/application/QuoteTests.java) to see the tests for the backend application.
+Look at [exercise-backend/src/test/java/application/QuoteTests.java](https://github.com/IBM/cloudpakforapps-workshop/blob/master/exercise-backend/src/test/java/application/QuoteTests.java) to see the tests for the backend application.
 
 **Congratulations**! We have tested out our sample application locally and are ready to move on to the next step, deploying it!
