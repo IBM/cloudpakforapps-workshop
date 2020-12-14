@@ -7,7 +7,7 @@ Welcome to our workshop! In this workshop we'll be using the Cloud Pak for Appli
 * Create a custom Collection
 * Use Tekton CI to continuously deploy to OpenShift
 
-![Tools used in the workshop](.gitbook/images/tools-for-workshop.png)
+![Tools used in the workshop](assets/images/tools-for-workshop.png)
 
 ### About this workshop
 
@@ -72,7 +72,7 @@ Cloud Pak for Applications:
   * ...and more
 * ... can be deployed on any major cloud provider supporting OpenShift (IBM Cloud, AWS, Azure, GCP)
 
-![Cloud Pak for Application Stack](.gitbook/images/cp4apps.png)
+![Cloud Pak for Application Stack](assets/images/cp4apps.png)
 
 ## Credits
 
