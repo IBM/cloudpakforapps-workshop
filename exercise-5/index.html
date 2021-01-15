@@ -1,0 +1,1418 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <meta name="author" content="IBM Developer">
+      
+      
+        <link rel="canonical" href="https://ibm.github.io/cloudpakforapps-workshop/exercise-5/">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.4">
+    
+    
+      
+        <title>Lab 5. Customize an existing Appsody Stack - Cloud Pak for Apps Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.15aa0b43.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.75751829.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#2094f3">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,400i,700%7CIBM+Plex+Mono&display=fallback">
+        <style>body,input{font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"IBM Plex Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#exercise-5-customizing-an-existing-appsody-stack" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://ibm.github.io/cloudpakforapps-workshop" title="Cloud Pak for Apps Workshop" class="md-header-nav__button md-logo" aria-label="Cloud Pak for Apps Workshop">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            Cloud Pak for Apps Workshop
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              Lab 5. Customize an existing Appsody Stack
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/ibm/cloudpakforapps-workshop/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cloudpakforapps-workshop
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        Welcome
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../about-day-1/" class="md-tabs__link">
+        Workshop (Day 1)
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../about-day-2/" class="md-tabs__link md-tabs__link--active">
+        Workshop (Day 2)
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../resources/" class="md-tabs__link">
+        References
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../instructor-guide/" class="md-tabs__link">
+        Instructors
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://ibm.github.io/cloudpakforapps-workshop" title="Cloud Pak for Apps Workshop" class="md-nav__button md-logo" aria-label="Cloud Pak for Apps Workshop">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Cloud Pak for Apps Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/ibm/cloudpakforapps-workshop/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cloudpakforapps-workshop
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1" >
+    
+    <label class="md-nav__link" for="nav-1">
+      Welcome
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Welcome" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        <span class="md-nav__icon md-icon"></span>
+        Welcome
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href=".." class="md-nav__link">
+      About the workshop
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../pre-work/" class="md-nav__link">
+      Pre-work
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
+    
+    <label class="md-nav__link" for="nav-2">
+      Workshop (Day 1)
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Workshop (Day 1)" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon"></span>
+        Workshop (Day 1)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../about-day-1/" class="md-nav__link">
+      About Day 1
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../exercise-1/" class="md-nav__link">
+      Lab 1. Intro to Appsody and Codewind
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../exercise-2/" class="md-nav__link">
+      Lab 2. Using Appsody CLI to develop apps
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../exercise-3/" class="md-nav__link">
+      Lab 3. Deploying to OpenShift with Appsody
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../exercise-4/" class="md-nav__link">
+      Lab 4. Use Tekton to continuously deploy
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  
+
+
+  
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+    
+    <label class="md-nav__link" for="nav-3">
+      Workshop (Day 2)
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Workshop (Day 2)" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon"></span>
+        Workshop (Day 2)
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../about-day-2/" class="md-nav__link">
+      About Day 2
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Lab 5. Customize an existing Appsody Stack
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Lab 5. Customize an existing Appsody Stack
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    Steps
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-role-of-a-stack-in-the-development-process" class="md-nav__link">
+    1. The role of a stack in the development process
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The role of a stack in the development process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rapid-local-development-mode" class="md-nav__link">
+    Rapid, local development mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-and-deploy-mode" class="md-nav__link">
+    Build-and-deploy mode
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-stack-structure" class="md-nav__link">
+    2. Stack structure
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-a-new-stack-based-on-an-existing-one" class="md-nav__link">
+    3. Create a new stack, based on an existing one
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Create a new stack, based on an existing one">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initialize-the-stack" class="md-nav__link">
+    Initialize the stack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-your-new-stack" class="md-nav__link">
+    Build your new stack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-the-new-stack" class="md-nav__link">
+    Run the new stack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modify-your-custom-stack" class="md-nav__link">
+    Modify your custom stack
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-use-the-new-stack-in-our-example-application" class="md-nav__link">
+    4. Use the new stack in our example application
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../exercise-6/" class="md-nav__link">
+      Lab 6. Build a custom Collection repository
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../exercise-7/" class="md-nav__link">
+      Lab 7. Use a custom Collection with Appsody
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../exercise-8/" class="md-nav__link">
+      Lab 8. Create a custom Tekton Task and Pipleline
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../exercise-9/" class="md-nav__link">
+      Lab 9. Deploy a customized Kabanero application
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
+    
+    <label class="md-nav__link" for="nav-4">
+      References
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="References" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon"></span>
+        References
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../resources/" class="md-nav__link">
+      Additional resources
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+    
+    <label class="md-nav__link" for="nav-5">
+      Instructors
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Instructors" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        <span class="md-nav__icon md-icon"></span>
+        Instructors
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../instructor-guide/" class="md-nav__link">
+      Instructor Guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    Steps
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-role-of-a-stack-in-the-development-process" class="md-nav__link">
+    1. The role of a stack in the development process
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The role of a stack in the development process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rapid-local-development-mode" class="md-nav__link">
+    Rapid, local development mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-and-deploy-mode" class="md-nav__link">
+    Build-and-deploy mode
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-stack-structure" class="md-nav__link">
+    2. Stack structure
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-a-new-stack-based-on-an-existing-one" class="md-nav__link">
+    3. Create a new stack, based on an existing one
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Create a new stack, based on an existing one">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initialize-the-stack" class="md-nav__link">
+    Initialize the stack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-your-new-stack" class="md-nav__link">
+    Build your new stack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-the-new-stack" class="md-nav__link">
+    Run the new stack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modify-your-custom-stack" class="md-nav__link">
+    Modify your custom stack
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-use-the-new-stack-in-our-example-application" class="md-nav__link">
+    4. Use the new stack in our example application
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/ibm/cloudpakforapps-workshop/edit/master/docs/exercise-5/README.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="exercise-5-customizing-an-existing-appsody-stack">Exercise 5: Customizing an existing Appsody Stack<a class="headerlink" href="#exercise-5-customizing-an-existing-appsody-stack" title="Permanent link">&para;</a></h1>
+<p>The goals for this day are to customize each of the pre-configured asset from Day 1, meaning we will:</p>
+<ul>
+<li>extend an Appsody Stack</li>
+<li>publish a new Collections</li>
+<li>add a new Tekton task to our Tekton pipeline</li>
+</ul>
+<p>Specifically, when you have completed this exercise, you will understand how to:</p>
+<ul>
+<li>extend an Appsody stack to create a new asset to be used in our Collection</li>
+</ul>
+<p><img alt="Tools used during Exercise 5" src="images/ex5.png" /></p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>You should have already carried out the prerequisites defined in the <a href="../pre-work/">Pre-work</a>. Check that you have access to the Appsody CLI by typing (the exact version number my be greater than shown below):</p>
+<blockquote>
+<p><strong>NOTE:</strong> In the exercises that follow you will see the actual command to run, followed by a separate example of running the command with the expected output. You only need to run the first example and never need to run a command you see preceded by a "$". You can even use the copy button on the right side of the command to make copying easier.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code>appsody version
+</code></pre></div>
+<p>You should see output similar to the following:</p>
+<div class="highlight"><pre><span></span><code>$ appsody version
+appsody <span class="m">0</span>.5.3
+</code></pre></div>
+<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#1-the-role-of-a-stack-in-the-development-process">The role of a stack in the development process</a></li>
+<li><a href="#2-stack-structure">Stack structure</a></li>
+<li><a href="#3-create-a-new-stack-based-on-an-existing-one">Create a new stack, based on an existing one</a></li>
+<li><a href="#4-use-the-new-stack-in-our-example-application">Use the new stack in our example application</a></li>
+</ol>
+<h3 id="1-the-role-of-a-stack-in-the-development-process">1. The role of a stack in the development process<a class="headerlink" href="#1-the-role-of-a-stack-in-the-development-process" title="Permanent link">&para;</a></h3>
+<p>Developers use stacks to simplify building applications that require a specific set of technologies or development patterns. While there are numerous publicly available stacks to choose from, many enterprises want to build their own set of stacks that uphold their specific requirements and standards for how they want to their developers to build cloud native applications.</p>
+<p>In this exercise, you will learn how to modify an existing stack to more closely match your requirements. Before starting this, let's do a quick review of the design requirements for stacks. A stack is designed to support the developer in either a rapid, local development mode or a build-and-deploy mode.</p>
+<h4 id="rapid-local-development-mode">Rapid, local development mode<a class="headerlink" href="#rapid-local-development-mode" title="Permanent link">&para;</a></h4>
+<p>In this mode, the stack contains everything a developer needs to build a new application on a local machine, with the application always running in a local containerized Docker environment. Introducing containerization from the start of the application development process (as opposed to development solely in the user space of the local machine) decreases the introduction of subtle errors in the containerization process and removes the need for a developer to install the core technology components of their application.</p>
+<p>In this mode, the stack is required to have all the dependencies for the specific technologies pre-built into the Docker image, and also to dynamically compliment these with whatever dependencies the developer adds explicitly for his or her code.</p>
+<p>Rapid local development mode in Appsody consists of the Appsody CLI (hooked into a local IDE if required) communicating with a local Docker container that is running the application under development. With this mode, application code can be held on the local file system, while being mounted in the Docker container, so that a local change can automatically trigger a restart of the application.</p>
+<h4 id="build-and-deploy-mode">Build-and-deploy mode<a class="headerlink" href="#build-and-deploy-mode" title="Permanent link">&para;</a></h4>
+<p>In this mode, the stack enables the Appsody CLI to build a self-contained Docker image that includes both the core technologies in the stack plus the application code, along with the combined dependencies of both. You can deploy the resulting image manually or programmatically to any platform that supports Docker images (such as a local or public Kubernetes cluster).</p>
+<p>A pictorial view of how an application developer uses a stack, looks like this:</p>
+<p><img alt="Appsody Flow" src="images/appsody.png" /></p>
+<p>The above development flow shows the manual deployment to a Kubernetes cluster. In more production-orientated environments, GitOps might trigger the build and deploy steps and Tekton Pipelines would drive the deployment. <a href="https://github.com/kabanero-io/collections/">Collections</a>, which are a part of <a href="https://www.ibm.com/cloud/cloud-pak-for-applications">Cloud Pak for Applications</a>, bring together Appsody stacks, GitOps, and Tekton Pipelines to provide an enterprise-ready solution for cloud-native application development and deployment. We'll look at this in later exercises.</p>
+<h3 id="2-stack-structure">2. Stack structure<a class="headerlink" href="#2-stack-structure" title="Permanent link">&para;</a></h3>
+<p>Because a single Appsody stack can enable both rapid, local development and build-and-deploy modes, all stacks follow a standard structure. The structure below represents the source structure of a stack:</p>
+<div class="highlight"><pre><span></span><code><span class="na">my-stack</span>
+<span class="na">├── README.md</span>
+<span class="na">├── stack.yaml</span>
+<span class="na">├── image/</span>
+<span class="na">|   ├── config/</span>
+<span class="na">|   |   └── app-deploy.yaml</span>
+<span class="na">|   ├── project/</span>
+<span class="na">|   |   ├── [files that provide the technology components of the stack]</span>
+<span class="na">|   |   └── Dockerfile</span>
+<span class="na">│   ├── Dockerfile-stack</span>
+<span class="na">|   └── LICENSE</span>
+<span class="na">└── templates/</span>
+    <span class="na">├── my-template-1/</span>
+    <span class="na">|       └── [example files as a starter for the application, e.g. &quot;hello world&quot;]</span>
+    <span class="na">└── my-template-2/</span>
+            <span class="na">└── [example files as a starter for a more complex application]</span>
+</code></pre></div>
+<p>As a <em>Stack Architect</em> you must create the above structure, build it into an actual stack image ready for use by an <em>Application Developer</em> who bases their new application on your stack. Part of your role as a stack architect is to include one of more sample applications (known as <em>templates</em>) to help the application developer get started.</p>
+<p>Hence, when you build a stack, the structure above is processed and generates a Docker image for the stack, along with tar files of each of the templates, which can then all be stored and referenced in a local or public Appsody repo. The Appsody CLI can access the repo to use the stack to initiate local development.</p>
+<p>For this exercise we will modify the nodejs-express stack that we have been using for our quote-frontend, to add some additional security hardening (individual enterprises often have specific security standards that need to be met to allow deployment).</p>
+<blockquote>
+<p><strong>NOTE</strong>: For future reference, to make your own stack from scratch, instead of extending an existing one, follow <a href="https://developer.ibm.com/tutorials/create-appsody-stack/">this tutorial</a>.</p>
+</blockquote>
+<h3 id="3-create-a-new-stack-based-on-an-existing-one">3. Create a new stack, based on an existing one<a class="headerlink" href="#3-create-a-new-stack-based-on-an-existing-one" title="Permanent link">&para;</a></h3>
+<p>The goal of this step is to create a new Node.js Express stack by modifying the existing one. We'll copy it, build, and modify it.</p>
+<h4 id="initialize-the-stack">Initialize the stack<a class="headerlink" href="#initialize-the-stack" title="Permanent link">&para;</a></h4>
+<p>To create a new stack, you must first construct a scaffold of the above structure. Stacks are classified as being <code>stable</code>, <code>incubating</code> or <code>experimental</code>. You can read more about these classifications <a href="https://appsody.dev/docs/stacks/stacks-overview">here</a>. To make things easy, the Appsody CLI supports an <code>appsody stack create</code> command to create a new stack, by copying an existing one.</p>
+<p>By running the <code>appsody stack create</code> command, <em>nodejs-express</em> stack will be copied and moved, a directory will be created containing the new stack.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/appsody-apps
+appsody stack create my-nodejs-express --copy incubator/nodejs-express
+<span class="nb">cd</span> my-nodejs-express
+ls -al
+</code></pre></div>
+<p>You should see output similar to the following:</p>
+<div class="highlight"><pre><span></span><code>$ ls -la
+total <span class="m">24</span>
+drwxr-xr-x  <span class="m">6</span> henrynash  staff   <span class="m">192</span>  <span class="m">8</span> Nov <span class="m">11</span>:51 .
+drwxr-xr-x  <span class="m">5</span> henrynash  staff   <span class="m">160</span>  <span class="m">8</span> Nov <span class="m">11</span>:51 ..
+-rw-r--r--  <span class="m">1</span> henrynash  staff  <span class="m">5026</span>  <span class="m">8</span> Nov <span class="m">11</span>:51 README.md
+drwxr-xr-x  <span class="m">7</span> henrynash  staff   <span class="m">224</span>  <span class="m">8</span> Nov <span class="m">11</span>:51 image
+-rw-r--r--  <span class="m">1</span> henrynash  staff   <span class="m">319</span>  <span class="m">8</span> Nov <span class="m">11</span>:51 stack.yaml
+drwxr-xr-x  <span class="m">4</span> henrynash  staff   <span class="m">128</span>  <span class="m">8</span> Nov <span class="m">11</span>:51 templates
+</code></pre></div>
+<p>If you inspect the contents of the <code>image</code> directory, you will see how it matches the stack structure given earlier.</p>
+<h4 id="build-your-new-stack">Build your new stack<a class="headerlink" href="#build-your-new-stack" title="Permanent link">&para;</a></h4>
+<p>Before we make any changes, let's go through the steps of building (or <em>packaging</em>) a stack, to create a stack image (which is a Docker image) that the Appsody CLI can use to initiate a project using that stack.</p>
+<p>There is a Docker file (<code>Dockerfile-stack</code>) within the sample stack structure you copied. The <code>appsody stack package</code> command will use this to build the image.</p>
+<p>To build your new stack in this way, from the <code>my-nodejs-express</code> directory enter:</p>
+<div class="highlight"><pre><span></span><code>appsody stack package
+</code></pre></div>
+<p>This runs a Docker build, installs <code>my-nodejs-express</code> into a local Appsody repository (called <code>dev.local</code>), and runs some basic tests to make sure the file is well formed.</p>
+<p>Once the build is complete, use the <code>appsody list</code> command to check that it is now available in the local repo:</p>
+<div class="highlight"><pre><span></span><code>appsody list dev.local
+</code></pre></div>
+<p>You should see output similar to the following:</p>
+<div class="highlight"><pre><span></span><code>$ appsody list dev.local
+REPO        ID                  VERSION     TEMPLATES           DESCRIPTION
+dev.local   my-nodejs-express   <span class="m">0</span>.2.8       scaffold, *simple   Express web framework <span class="k">for</span> Node.js
+</code></pre></div>
+<h4 id="run-the-new-stack">Run the new stack<a class="headerlink" href="#run-the-new-stack" title="Permanent link">&para;</a></h4>
+<p>So, at this point, you have been carrying out your role as a stack architect to build and install your new (albeit unchanged) stack. Now it's time to try it out as an application developer.</p>
+<p>Create a new directory and initialize it with this new Appsody stack:</p>
+<div class="highlight"><pre><span></span><code>mkdir ~/appsody-apps/test-my-stack
+<span class="nb">cd</span> ~/appsody-apps/test-my-stack
+appsody init dev.local/my-nodejs-express
+</code></pre></div>
+<p>Now use <code>appsody run</code> to test running an application based on your copy of the stack:</p>
+<div class="highlight"><pre><span></span><code>appsody run
+</code></pre></div>
+<p>You should see output similar to the following:</p>
+<div class="highlight"><pre><span></span><code>$ appsody run
+Running development environment...
+Using <span class="nb">local</span> cache <span class="k">for</span> image dev.local/appsody/my-nodejs-express:0.2
+Running docker command: docker run --rm -p <span class="m">3000</span>:3000 -p <span class="m">9229</span>:9229 --name test73-dev -v /Users/henrynash/codewind-workspace/test73/:/project/user-app -v test73-deps:/project/user-app/node_modules -v /Users/henrynash/.appsody/appsody-controller:/appsody/appsody-controller -t --entrypoint /appsody/appsody-controller dev.local/appsody/my-nodejs-express:0.2 --mode<span class="o">=</span>run
+<span class="o">[</span>Container<span class="o">]</span> Running APPSODY_PREP command: npm install --prefix user-app <span class="o">&amp;&amp;</span> npm audit fix --prefix user-app
+added <span class="m">170</span> packages from <span class="m">578</span> contributors and audited <span class="m">295</span> packages <span class="k">in</span> <span class="m">3</span>.5s
+<span class="o">[</span>Container<span class="o">]</span> found <span class="m">0</span> vulnerabilities
+...
+<span class="o">[</span>Container<span class="o">]</span> App started on PORT <span class="m">3000</span>
+</code></pre></div>
+<p>To check it is running, in a separate terminal window we can use <code>curl</code> to hit the endpoint:</p>
+<div class="highlight"><pre><span></span><code>curl -v localhost:3000
+</code></pre></div>
+<p>So now we are ready to make change to our new stack. For this exercise we will harden the HTTP headers that an application, built using this stack, responds with. We can look at the current headers returned:</p>
+<div class="highlight"><pre><span></span><code>$ curl -v localhost:3000
+*   Trying <span class="m">127</span>.0.0.1...
+* TCP_NODELAY <span class="nb">set</span>
+* Connected to localhost <span class="o">(</span><span class="m">127</span>.0.0.1<span class="o">)</span> port <span class="m">3000</span> <span class="o">(</span><span class="c1">#0)</span>
+&gt; GET / HTTP/1.1
+&gt; Host: localhost:3000
+&gt; User-Agent: curl/7.64.1
+&gt; Accept: */*
+&gt;
+&lt; HTTP/1.1 <span class="m">200</span> OK
+&lt; X-Powered-By: Express
+&lt; Content-Type: text/html<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>utf-8
+&lt; Content-Length: <span class="m">19</span>
+&lt; ETag: W/<span class="s2">&quot;13-0ErcqB22cNteJ3vXrBgUhlCj8os&quot;</span>
+&lt; Date: Mon, <span class="m">21</span> Oct <span class="m">2019</span> <span class="m">12</span>:09:49 GMT
+&lt; Connection: keep-alive
+&lt;
+* Connection <span class="c1">#0 to host localhost left intact</span>
+Hello from Appsody!
+</code></pre></div>
+<p>Stop this current appsody run by running <code>appsody stop</code> in a separate terminal window, from within the same directory.</p>
+<p>For this exercise we will modify the stack to include the popular HTTP header security module <a href="https://helmetjs.github.io">helmet</a>, and hence this should change the headers we see returned to us. Note we will do this as a <em>stack architect</em> since we don't want to rely on <em>application developers</em> remembering to do this. By doing this in the stack itself, all applications built using our modified stack will have helmet automatically enabled.</p>
+<h4 id="modify-your-custom-stack">Modify your custom stack<a class="headerlink" href="#modify-your-custom-stack" title="Permanent link">&para;</a></h4>
+<p>When creating a custom stack, based on an existing stack, the first thing to do is to take a look at what the existing stack has provided. A more detailed description of the stack components can be found <a href="https://appsody.dev/docs/stacks/stack-structure">here</a>, but the key ones are:</p>
+<ul>
+<li>A Dockerfile (<code>image/Dockerfile-stack</code>) that builds your stack image. This is what the <code>appsody stack package</code> command used above to build a Docker image of your stack - which is, if you like, the eventual artifact that you deliver as a stack architect to application developers.</li>
+<li>A Dockerfile (<code>image/project/Dockerfile</code>) that builds the final application image. This final image will contain both your stack and their application, and this Dockerfile is processed by the application developer running <code>appsody build</code> and <code>appsody deploy</code>.</li>
+<li>Typically some kind of server side code that is enabling the application the developer will create and run. For this stack, this is <code>image/project/server.js</code>.</li>
+<li>Some kind of dependency management, ensuring both the correct inclusion of components defined by the stack, as well as, potentially, any added by the application developer. For this stack, this is <code>image/project/package.json</code>.</li>
+<li>At least one sample application (or <em>template</em>); these are stored in the <code>templates</code> directory.</li>
+</ul>
+<p>It is worth taking some time checking out the files given above to get a feel of the stack.</p>
+<p>For some stack modifications, you can actually use a form of stack inheritance - i.e. by using the existing stack images as the <code>FROM</code> image in <code>Dockerfile-stack</code>. An example of this might be where you just want to change one of the Dockerfile variables. In general, however, most modified stacks are effectively copies of an existing stack, with the additional changes added to gain the new, required functionality.</p>
+<p>Having examined the files above, you might have already spotted what we need to do to incorporate helmet into the new stack - namely to modify <code>image/project/server.js</code> to enable it.</p>
+<p>Go back to the <code>my-nodejs-express</code> directory.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/appsody-apps/my-nodejs-express
+</code></pre></div>
+<p>The current code in <code>image/project/server.js</code> looks something like this:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Requires statements and code for non-production mode usage</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">||</span> <span class="o">!</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="s1">&#39;production&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;appmetrics-dash&#39;</span><span class="p">).</span><span class="nx">attach</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">health</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@cloudnative/health-connect&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+
+<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;appmetrics-prometheus&#39;</span><span class="p">).</span><span class="nx">attach</span><span class="p">();</span>
+
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="kd">const</span> <span class="nx">basePath</span> <span class="o">=</span> <span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/user-app/&#39;</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">getEntryPoint</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">rawPackage</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">basePath</span> <span class="o">+</span> <span class="s1">&#39;package.json&#39;</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="kr">package</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">rawPackage</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="kr">package</span><span class="p">.</span><span class="nx">main</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Please define a primary entrypoint of your application by adding &#39;main: &lt;entrypoint&gt;&#39; to package.json.&quot;</span><span class="p">)</span>
+        <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kr">package</span><span class="p">.</span><span class="nx">main</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Register the users app. As this is before the health/live/ready routes,</span>
+<span class="c1">// those can be overridden by the user</span>
+<span class="kd">const</span> <span class="nx">userApp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">basePath</span> <span class="o">+</span> <span class="nx">getEntryPoint</span><span class="p">()).</span><span class="nx">app</span><span class="p">;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="nx">userApp</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">healthcheck</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">health</span><span class="p">.</span><span class="nx">HealthChecker</span><span class="p">();</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/live&#39;</span><span class="p">,</span> <span class="nx">health</span><span class="p">.</span><span class="nx">LivenessEndpoint</span><span class="p">(</span><span class="nx">healthcheck</span><span class="p">));</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/ready&#39;</span><span class="p">,</span> <span class="nx">health</span><span class="p">.</span><span class="nx">ReadinessEndpoint</span><span class="p">(</span><span class="nx">healthcheck</span><span class="p">));</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/health&#39;</span><span class="p">,</span> <span class="nx">health</span><span class="p">.</span><span class="nx">HealthEndpoint</span><span class="p">(</span><span class="nx">healthcheck</span><span class="p">));</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="s2">&quot;Not Found&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">||</span> <span class="mf">3000</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`App started on PORT </span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Export server for testing purposes</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">server</span> <span class="o">=</span> <span class="nx">server</span><span class="p">;</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">=</span> <span class="nx">PORT</span><span class="p">;</span>
+</code></pre></div>
+<p>We will modify this file by adding two lines, to import helmet (with <code>require()</code>), and to enable it with <code>app.use()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Requires statements and code for non-production mode usage</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">||</span> <span class="o">!</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="s1">&#39;production&#39;</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;appmetrics-dash&#39;</span><span class="p">).</span><span class="nx">attach</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">helmet</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;helmet&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">health</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@cloudnative/health-connect&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+
+<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;appmetrics-prometheus&#39;</span><span class="p">).</span><span class="nx">attach</span><span class="p">();</span>
+
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">helmet</span><span class="p">());</span>
+
+<span class="kd">const</span> <span class="nx">basePath</span> <span class="o">=</span> <span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/user-app/&#39;</span><span class="p">;</span>
+<span class="p">...</span>
+</code></pre></div>
+<p>Since we have added a new module that is required, we must also update the dependency management (package.json), to ensure this is pulled in:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="err">...</span>
+<span class="nt">&quot;dependencies&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;@cloudnative/health-connect&quot;</span><span class="p">:</span> <span class="s2">&quot;^2.0.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;appmetrics-prometheus&quot;</span><span class="p">:</span> <span class="s2">&quot;^3.0.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;express&quot;</span><span class="p">:</span> <span class="s2">&quot;~4.16.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;helmet&quot;</span><span class="p">:</span> <span class="s2">&quot;^3.21.1&quot;</span>
+<span class="p">},</span>
+<span class="err">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now that we have modified our stack, we need to re-package it, using the same command as before:</p>
+<div class="highlight"><pre><span></span><code>appsody stack package
+</code></pre></div>
+<blockquote>
+<p><strong>NOTE</strong> The <code>appsody run</code> command should pull down the latest packaged version, but in case this doesn't work, delete the directory and re-initialize.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/appsody-apps
+rm -rf test-my-stack
+mkdir test-my-stack
+<span class="nb">cd</span> test-my-stack
+appsody init dev.local/my-nodejs-express
+</code></pre></div>
+<p>This will have updated the dev.local index, so we can again go and run our application:</p>
+<div class="highlight"><pre><span></span><code>appsody run
+</code></pre></div>
+<p>If we now hit the endpoint as before with <code>curl</code> in verbose mode, we can see if the HTTP headers have changed:</p>
+<div class="highlight"><pre><span></span><code>curl -v localhost:3000
+</code></pre></div>
+<p>You should now see security related headers like <code>X-DNS-Prefetch-Control</code>, <code>Strict-Transport-Security</code>, and <code>X-Download-Options</code>:</p>
+<div class="highlight"><pre><span></span><code>$ curl -v localhost:3000
+*   Trying <span class="m">127</span>.0.0.1...
+* TCP_NODELAY <span class="nb">set</span>
+* Connected to localhost <span class="o">(</span><span class="m">127</span>.0.0.1<span class="o">)</span> port <span class="m">3000</span> <span class="o">(</span><span class="c1">#0)</span>
+&gt; GET / HTTP/1.1
+&gt; Host: localhost:3000
+&gt; User-Agent: curl/7.64.1
+&gt; Accept: */*
+&gt;
+&lt; HTTP/1.1 <span class="m">200</span> OK
+&lt; X-DNS-Prefetch-Control: off
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Strict-Transport-Security: max-age<span class="o">=</span><span class="m">15552000</span><span class="p">;</span> includeSubDomains
+&lt; X-Download-Options: noopen
+&lt; X-Content-Type-Options: nosniff
+&lt; X-XSS-Protection: <span class="m">1</span><span class="p">;</span> <span class="nv">mode</span><span class="o">=</span>block
+&lt; X-Powered-By: Express
+&lt; Content-Type: text/html<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>utf-8
+&lt; Content-Length: <span class="m">19</span>
+&lt; ETag: W/<span class="s2">&quot;13-0ErcqB22cNteJ3vXrBgUhlCj8os&quot;</span>
+&lt; Date: Fri, <span class="m">08</span> Nov <span class="m">2019</span> <span class="m">19</span>:39:22 GMT
+&lt; Connection: keep-alive
+&lt;
+* Connection <span class="c1">#0 to host localhost left intact</span>
+Hello from Appsody!*
+</code></pre></div>
+<p>As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.</p>
+<p>Stop this current appsody run by running <code>appsody stop</code> in a separate terminal window, from within the same directory.</p>
+<h3 id="4-use-the-new-stack-in-our-example-application">4. Use the new stack in our example application<a class="headerlink" href="#4-use-the-new-stack-in-our-example-application" title="Permanent link">&para;</a></h3>
+<p>A final step is to switch the actual quote-frontend application we built in <a href="../exercise-2/">Exercise 2</a> to use our new stack (rather than the original <code>nodejs-express</code> stack).</p>
+<p>The formal way of doing this is to repeat the steps from Exercise 2, where the new project is initialized (using our new stack), and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the <code>quote-frontend</code> directory you created in Exercise 2, you should see a file called <code>.appsody-config.yaml</code>, which was created by the <code>appsody init</code> step.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/appsody-apps/quote-frontend
+ls -la
+</code></pre></div>
+<p>You should see output similar to the following:</p>
+<div class="highlight"><pre><span></span><code>$ ls -al
+total <span class="m">192</span>
+drwxr-xr-x  <span class="m">16</span> henrynash  staff    <span class="m">512</span> <span class="m">15</span> Oct <span class="m">12</span>:42 .
+drwxr-xr-x+ <span class="m">85</span> henrynash  staff   <span class="m">2720</span> <span class="m">17</span> Oct <span class="m">21</span>:37 ..
+-rw-r--r--   <span class="m">1</span> henrynash  staff     <span class="m">64</span> <span class="m">19</span> Oct <span class="m">11</span>:10 .appsody-config.yaml
+-rw-r--r--   <span class="m">1</span> henrynash  staff   <span class="m">1316</span> <span class="m">15</span> Oct <span class="m">11</span>:12 .gitignore
+drwxr-xr-x   <span class="m">4</span> henrynash  staff    <span class="m">128</span> <span class="m">15</span> Oct <span class="m">11</span>:12 .vscode
+-rw-rw-r--   <span class="m">1</span> henrynash  staff    <span class="m">806</span> <span class="m">15</span> Oct <span class="m">12</span>:50 app-deploy.yaml
+-rw-r--r--   <span class="m">1</span> henrynash  staff    <span class="m">290</span> <span class="m">15</span> Oct <span class="m">11</span>:15 app.js
+drwxr-xr-x   <span class="m">4</span> henrynash  staff    <span class="m">128</span> <span class="m">15</span> Oct <span class="m">11</span>:15 config
+drwxr-xr-x   <span class="m">2</span> henrynash  staff     <span class="m">64</span> <span class="m">15</span> Oct <span class="m">11</span>:16 node_modules
+-rw-r--r--   <span class="m">1</span> henrynash  staff      <span class="m">0</span> <span class="m">15</span> Oct <span class="m">11</span>:19 nodejs_dc.log
+-rw-r--r--   <span class="m">1</span> henrynash  staff      <span class="m">0</span> <span class="m">15</span> Oct <span class="m">11</span>:19 nodejs_restclient.log
+-rw-r--r--@  <span class="m">1</span> henrynash  staff  <span class="m">73319</span> <span class="m">15</span> Oct <span class="m">11</span>:16 package-lock.json
+-rw-r--r--   <span class="m">1</span> henrynash  staff    <span class="m">615</span> <span class="m">15</span> Oct <span class="m">11</span>:15 package.json
+-rw-r--r--   <span class="m">1</span> henrynash  staff   <span class="m">2779</span> <span class="m">15</span> Oct <span class="m">11</span>:15 quote.js
+drwxr-xr-x   <span class="m">3</span> henrynash  staff     <span class="m">96</span> <span class="m">15</span> Oct <span class="m">11</span>:12 <span class="nb">test</span>
+drwxr-xr-x   <span class="m">3</span> henrynash  staff     <span class="m">96</span> <span class="m">15</span> Oct <span class="m">11</span>:15 views
+</code></pre></div>
+<p>Inspecting that file, reveals that it contains a pointer to the stack:</p>
+<div class="highlight"><pre><span></span><code>cat .appsody-config.yaml
+</code></pre></div>
+<p>Should output a configuration that uses <code>nodejs-express</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="na">project-name: quote-frontend</span>
+<span class="na">stack: kabanero/nodejs-express:0.2</span>
+</code></pre></div>
+<p>We can simply change the second line to, instead, point to our new stack, i.e.:</p>
+<blockquote>
+<p><strong>NOTE</strong>: When using a stack that is in development, it will carry semantic versioning derived from the original copied stack in addition to a latest tag.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code>project-name: quote-frontend
+stack: dev.local/appsody/my-nodejs-express:latest
+</code></pre></div>
+<p>Now re-run the frontend with <code>appsody run</code>:</p>
+<div class="highlight"><pre><span></span><code>appsody run
+</code></pre></div>
+<p>It should use our new stack:</p>
+<div class="highlight"><pre><span></span><code>$ appsody run
+Running development environment...
+Using <span class="nb">local</span> cache <span class="k">for</span> image dev.local/appsody/my-nodejs-express:latest
+...
+<span class="o">[</span>Container<span class="o">]</span> App started on PORT <span class="m">3000</span>
+</code></pre></div>
+<p>We can confirm that our new HTTP protection is being used by, instead of using a browser, again using <code>curl</code> in verbose mode to hit the published endpoint:</p>
+<div class="highlight"><pre><span></span><code>curl -v localhost:3000
+</code></pre></div>
+<p>You should see output similar to the following:</p>
+<div class="highlight"><pre><span></span><code>$ curl -v localhost:3000
+*   Trying <span class="m">127</span>.0.0.1...
+* TCP_NODELAY <span class="nb">set</span>
+* Connected to localhost <span class="o">(</span><span class="m">127</span>.0.0.1<span class="o">)</span> port <span class="m">3000</span> <span class="o">(</span><span class="c1">#0)</span>
+&gt; GET / HTTP/1.1
+&gt; Host: localhost:3000
+&gt; User-Agent: curl/7.64.1
+&gt; Accept: */*
+&gt;
+&lt; HTTP/1.1 <span class="m">302</span> Found
+&lt; X-DNS-Prefetch-Control: off
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Strict-Transport-Security: max-age<span class="o">=</span><span class="m">15552000</span><span class="p">;</span> includeSubDomains
+&lt; X-Download-Options: noopen
+&lt; X-Content-Type-Options: nosniff
+&lt; X-XSS-Protection: <span class="m">1</span><span class="p">;</span> <span class="nv">mode</span><span class="o">=</span>block
+&lt; X-Powered-By: Express
+&lt; Location: /quote
+&lt; Vary: Accept
+&lt; Content-Type: text/plain<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>utf-8
+&lt; Content-Length: <span class="m">28</span>
+&lt; Date: Fri, <span class="m">08</span> Nov <span class="m">2019</span> <span class="m">19</span>:51:50 GMT
+&lt; Connection: keep-alive
+&lt;
+* Connection <span class="c1">#0 to host localhost left intact</span>
+Found. Redirecting to /quote
+</code></pre></div>
+<p>We can tell our sample application is now using the new stack because it includes the new security related headers.</p>
+<p>Stop this current appsody run by running <code>appsody stop</code> in a separate terminal window, from within the same directory.</p>
+<p><strong>Congratulations</strong>! We have successfully built and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../about-day-2/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                About Day 2
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../exercise-6/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Lab 6. Build a custom Collection repository
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2020 IBM Developer
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+        
+        
+      
+      <a href="https://github.com/ibm" target="_blank" rel="noopener" title="github.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://twitter.com/ibmdeveloper" target="_blank" rel="noopener" title="twitter.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://www.linkedin.com/company/ibm/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://www.youtube.com/user/developerworks" target="_blank" rel="noopener" title="www.youtube.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://dev.to/ibmdeveloper" target="_blank" rel="noopener" title="dev.to" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M120.12 208.29c-3.88-2.9-7.77-4.35-11.65-4.35H91.03v104.47h17.45c3.88 0 7.77-1.45 11.65-4.35 3.88-2.9 5.82-7.25 5.82-13.06v-69.65c-.01-5.8-1.96-10.16-5.83-13.06zM404.1 32H43.9C19.7 32 .06 51.59 0 75.8v360.4C.06 460.41 19.7 480 43.9 480h360.2c24.21 0 43.84-19.59 43.9-43.8V75.8c-.06-24.21-19.7-43.8-43.9-43.8zM154.2 291.19c0 18.81-11.61 47.31-48.36 47.25h-46.4V172.98h47.38c35.44 0 47.36 28.46 47.37 47.28l.01 70.93zm100.68-88.66H201.6v38.42h32.57v29.57H201.6v38.41h53.29v29.57h-62.18c-11.16.29-20.44-8.53-20.72-19.69V193.7c-.27-11.15 8.56-20.41 19.71-20.69h63.19l-.01 29.52zm103.64 115.29c-13.2 30.75-36.85 24.63-47.44 0l-38.53-144.8h32.57l29.71 113.72 29.57-113.72h32.58l-38.46 144.8z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.93c04032.min.js"></script>
+      <script src="../assets/javascripts/bundle.83e5331e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: ['navigation.tabs'],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.8c7e0a7e.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
